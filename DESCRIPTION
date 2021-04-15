@@ -24,3 +24,4 @@ Depends:
     kableExtra,
     tibble,
     parallel
+RoxygenNote: 7.1.1
