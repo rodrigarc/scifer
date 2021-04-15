@@ -27,7 +27,7 @@ install.packages("/DOWNLOAD_FOLDER/ImSpectR_VERSION.tar.gz",
                      repos = NULL,
                      type  = "source")
 ```
-## How to use this package for processing single-cell sanger sequences data:
+## How to use this package for processing single-cell sanger sequence data:
 
 To get a summary in a dataframe format of the quality of every sequence in the folder, you can use the following function. 
 ```r
