@@ -1,0 +1,26 @@
+Package: RepertoiR
+Type: Package
+Date: 2021-04-15
+Title: B cell receptor immune repertoire quality control and analysis
+Version: 0.1.0
+Author: Rodrigo Arcoverde
+Maintainer: Rodrigo Arcoverde Cerveira <rodrigo.arcoverdi@gmail.com>
+Description: RepertoiR was created to do quality control of VDJ sequencing, 
+    combining single-cell sorted data and specificity with sanguer sequences. 
+    In addition, it also includes analysis tools of VDJ sequences from standard AIRR-compliant datasets.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Depends: 
+    knitr,
+    dplyr,
+    ggplot2,
+    gridExtra,
+    devtools,
+    DECIPHER,
+    Biostrings,
+    stringr,
+    sangerseqR,
+    kableExtra,
+    tibble,
+    parallel
