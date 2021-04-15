@@ -1,12 +1,14 @@
 # RepertoiR
 
-### B cell receptor repertoire package development 
+### B cell receptor repertoire package development  
 
-*Version: 0.1.0
-*Author and Maintainer: Rodrigo Arcoverde
 
-*Description: RepertoiR is being developed for quality control of sanger sequences, merging single-cell sorted specificity with sequencing data, and analysing/plotting repertoire data for exploratory analysis.  
 
+Version: 0.1.0  
+
+Author and Maintainer: Rodrigo Arcoverde  
+
+Description: RepertoiR is being developed for quality control of sanger sequences, merging single-cell sorted specificity with sequencing data, and analysing/plotting repertoire data for exploratory analysis.  
 
 ## Installation
 
