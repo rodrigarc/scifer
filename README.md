@@ -12,6 +12,12 @@ Description: RepertoiR is being developed for quality control of sanger sequence
 
 ## Installation
 
+Before the installation you should first install the following packages from Bioconductor:
+
+```r
+sangerseqr, DECIPHER
+```
+
 To install directly from GitHub, run this:
 
 ```r
