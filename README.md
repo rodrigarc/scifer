@@ -10,7 +10,7 @@ Author and Maintainer: Rodrigo Arcoverde
 
 Description: RepertoiR is being developed for quality control of sanger sequences, merging single-cell sorted specificity with sequencing data, and analysing/plotting repertoire data for exploratory analysis.  
 
-## Installation
+## Installation (since it is not yet in a public repo, to be able to install I need to provide a unique token)
 
 Before the installation you should first install the following packages from Bioconductor:
 
