@@ -1,15 +1,8 @@
 ---
-title: 'Sanger Sequence Quality Control Report '
-author: "Rodrigo Arcoverde"
+title: 'Sanger Sequence Quality Control Report'
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: html_document
 abstract: Short project description.
-knit: (function(inputFile, encoding) {
-          rmarkdown::render(inputFile,
-                            encoding = encoding, 
-                            output_file = paste0(
-                              xfun::sans_ext(inputFile), '_', Sys.Date(), '.html'),
-                                output_dir = "../results/lab_book/")})
 ---
 
 ```{r setup, include=FALSE}
@@ -19,12 +12,6 @@ knitr::opts_knit$set(echo = TRUE,
                      warning = FALSE, 
                      message = FALSE)
 
-result.dir <- paste0("results/",Sys.Date(),"/")
-
-## creates result.dir with date in if not existent
-ifelse(isFALSE(dir.exists(paste0("../",result.dir))), dir.create(paste0("../",result.dir),recursive = TRUE),"Result directory for today exists already!")
-ifelse(isFALSE(dir.exists(paste0("../",result.dir,"chromatrogram"))), dir.create(paste0("../",result.dir),recursive = TRUE),"Result directory for today exists already!")
-options(stringsAsFactors = FALSE) 
 ```
 
 ```{r logo, echo=FALSE}
@@ -78,7 +65,7 @@ The full script of filtering can be found on the Rmd file.
 #Trim.cutoff is a function on log scale and trims the begining and the end of sequences depending on the Phred quality score. Thus 0.1 = 10; 0.01 = 20; 0.001 = 30. The standard is 0.0001 (40))
 #sangeranalyzerR package does not exist anymore, thus, their functions are saved in sangeranalyse4.R file 
 
-sf <- summarise.quality(inputfolder,                           
+sf <- summarise.quality(input.folder = "../../test/teste_dataset/",                           
                            secondary.peak.ratio = 0.33, 
                            trim.cutoff = 0.01,
                            processors = 8)
