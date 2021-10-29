@@ -369,7 +369,7 @@ ape::write.dna(sangerbasecallfasta,
 
 ```{r loop_report, echo=FALSE, include=FALSE}
 
-for (i in unique(sf$summaries$ID)){ 
+for (i in unique(sf_filtered$ID)){ 
 rmarkdown::render("2021-03-04_template_animal.Rmd",  # file 2
                   output_file =  paste("report_", i, '_', Sys.Date(), ".html", sep=''), 
                   output_dir = paste0("../",result.dir, Sys.Date()))
