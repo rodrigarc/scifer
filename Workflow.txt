@@ -1,0 +1,9 @@
+1. Install R studio version 1.4, R version 4.0.5 (2021-03-31) on your desktop
+2. Enter on my repository: https://github.com/rodrigarc/RepertoiR and follow the instruction for the basic installation. 
+3. Go to uppmax and download "/proj/snic2020-16-131/rsv_ki/sanger_QC/sanger_QC_HC/src/"
+ and download "2021-03-04_template_all_HC.Rmd" and "2021-03-04_template_animal.Rmd". 
+4. Download some test dataset from our ab1 file sequences:
+	* /proj/snic2020-16-131/rsv_ki/sanger_QC/sanger_QC_HC/data/test_dataset"
+5. Open the "2021-03-04_template_all_HC.Rmd" and change the line 79 for the location where you downloaded the test_dataset folder. You can also change the number of threads by changing the "processors" argument, the default for me is 8.
+6. You should have a specific organization of the folders to work, you should have a "src" folder for the code, "data" folder containing the "test_dataset" folder, a "results" folder with a "lab_book" folder inside. 
+7. Save the Rmd file change you did, (ctrl+s) inside R studio. Click on "Knit" up on the the top of RStudio, it will run all the necessary code and generate the reports. (You can also send to uppmax to be rendered as a job, but I usually have this data on my desktop since its not so big, so I just run it like that. 

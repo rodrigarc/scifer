@@ -12,6 +12,15 @@ Description: RepertoiR is being developed for quality control of sanger sequence
 
 ## Installation
 
+Before the installation you should first install the following packages from Bioconductor:
+
+```r
+if (!requireNamespace("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+
+BiocManager::install(c("DECIPHER","sangerseqR"))
+```
+
 To install directly from GitHub, run this:
 
 ```r
@@ -23,10 +32,11 @@ devtools::install_github("rodrigarc/RepertoiR")
 If the devtools-based approach does not work, you can download one of the built tar-balls from the builds directory and manually install the package from source by executing the following lines (replace DOWNLOAD_FOLDER with the absolute path to the tar-ball and VERSION with the version number of the downloaded package):
 
 ```r
-install.packages("/DOWNLOAD_FOLDER/ImSpectR_VERSION.tar.gz",
+install.packages("/DOWNLOAD_FOLDER/RepertoiR_VERSION.tar.gz",
                      repos = NULL,
                      type  = "source")
 ```
+
 ## How to use this package for processing single-cell sanger sequence data:
 
 To get a summary in a dataframe format of the quality of every sequence in the folder, you can use the following function. 
