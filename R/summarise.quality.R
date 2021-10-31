@@ -7,7 +7,8 @@
 #' @return Factor variable.
 #'
 #' @examples
-#'sf <- summarise.abi.folder("abi/folder/path", secondary.peak.ratio = 0.33, trim.cutoff = 0.01, processors = 1)
+#'sf <- summarise.quality("abi/folder/path", secondary.peak.ratio = 0.33,
+#'                     trim.cutoff = 0.01, processors = 1)
 #'
 #' @export summarise.quality
 get.processors <- function(processors){

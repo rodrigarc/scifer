@@ -2,7 +2,10 @@
 title: 'Sanger Sequence Quality Control Report'
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: html_document
-abstract: Short project description.
+params:
+  output_dir: output_dir
+  data_folder: data_folder
+  processors: processors
 ---
 
 ```{r setup, include=FALSE}
@@ -65,10 +68,10 @@ The full script of filtering can be found on the Rmd file.
 #Trim.cutoff is a function on log scale and trims the begining and the end of sequences depending on the Phred quality score. Thus 0.1 = 10; 0.01 = 20; 0.001 = 30. The standard is 0.0001 (40))
 #sangeranalyzerR package does not exist anymore, thus, their functions are saved in sangeranalyse4.R file 
 
-sf <- summarise.quality(input.folder = "../../test/teste_dataset/",                           
+sf <- summarise.quality(input.folder = data_folder,             
                            secondary.peak.ratio = 0.33, 
                            trim.cutoff = 0.01,
-                           processors = 8)
+                        processors = processors)
 
 
 ```
@@ -79,7 +82,7 @@ sf$summaries <- sf$summaries %>%
   mutate(plate = folder.name) %>%
   mutate(well = gsub("\\-.*|\\_.*", "", file.name)) %>%
   mutate(chain = "HC") %>% 
-  mutate(ID = substr(folder.name, 4,7)) %>%
+  mutate(ID = str_replace_all(substr(folder.name, 4,7), "_","")) %>%
   mutate(file_ID = sub("_R","",paste(plate,well,chain,sep = "_")))
   
 sf$summaries[is.na(sf$summaries)] <- 0
@@ -100,7 +103,7 @@ sf_filtered <- sf$summaries %>%
     mutate(plate = paste(folder.name))%>%
   mutate(well = gsub("\\-.*|\\_.*", "", file.name)) %>%
   mutate(chain = "HC")%>% 
-  mutate(ID = substr(folder.name, 4,7)) %>%
+  mutate(ID = str_replace_all(substr(folder.name, 4,7), "_","")) %>%
   mutate(file_ID = sub("_R","",paste(plate,well,chain,sep = "_"))) %>%
 #group by file names (important if you have repetead sequences with the same name and you want to use the best one among them)
   group_by(file_ID) %>%
@@ -339,7 +342,7 @@ All the informations about the sequence primary basecall, quality scores, folder
 
 sf_filtered_csv <- sf_filtered %>% select(file.path, file_ID, ID, plate, well, chain, raw.mean.quality, trimmed.mean.quality,sec.peak.CDR3, sequence)
 
-sf_filtered_csv %>% select(file_ID, ID, plate, well, chain, raw.mean.quality, trimmed.mean.quality,sec.peak.CDR3, sequence) %>% write.csv(paste0("../",result.dir,"sanger_filtered.csv"), row.names = FALSE)
+sf_filtered_csv %>% select(file_ID, ID, plate, well, chain, raw.mean.quality, trimmed.mean.quality,sec.peak.CDR3, sequence) %>% write.csv(paste0(output_dir,"sanger_filtered.csv"), row.names = FALSE)
 
 ```
 
@@ -357,7 +360,7 @@ name_fasta <- sf_filtered_csv %>% mutate(name = file_ID)
 names(sangerbasecallfasta) <- name_fasta$name
   
 ape::write.dna(sangerbasecallfasta, 
-          file = paste0("../",result.dir,"HC_all.fasta"), 
+          file = paste0(output_dir,"HC_all.fasta"), 
           format = 'fasta', 
           nbcol = -1, 
           colsep = "",
@@ -370,9 +373,9 @@ ape::write.dna(sangerbasecallfasta,
 ```{r loop_report, echo=FALSE, include=FALSE}
 
 for (i in unique(sf_filtered$ID)){ 
-rmarkdown::render("2021-03-04_template_animal.Rmd",  # file 2
-                  output_file =  paste("report_", i, '_', Sys.Date(), ".html", sep=''), 
-                  output_dir = paste0("../",result.dir, Sys.Date()))
+rmarkdown::render("HC_individualized_report.Rmd",  # file 2
+                  output_file =  paste(Sys.Date(),i,"_report", ".html", sep=''), 
+                  output_dir = output_dir)
 }
 ```
 

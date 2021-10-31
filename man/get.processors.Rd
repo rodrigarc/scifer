@@ -16,6 +16,7 @@ Factor variable.
 RepertoiR was created to do quality control of VDJ sequencing, combining single-cell sorted data and specificity with sanguer sequences.
 }
 \examples{
-sf <- summarise.abi.folder("abi/folder/path", secondary.peak.ratio = 0.33, trim.cutoff = 0.01, processors = 1)
+sf <- summarise.quality("abi/folder/path", secondary.peak.ratio = 0.33,
+                    trim.cutoff = 0.01, processors = 1)
 
 }
