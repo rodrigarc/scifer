@@ -2,4 +2,8 @@
 .Rhistory
 .RData
 .Ruserdata
+.fasta
+.html
+.DS_Store
+.csv
 .DS_Store

@@ -1,0 +1,385 @@
+---
+title: 'Sanger Sequence Quality Control Report'
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: html_document
+params:
+  output_dir: output_dir
+  data_folder: data_folder
+  processors: processors
+---
+
+```{r setup, include=FALSE}
+knitr::opts_knit$set(echo = TRUE,
+                     root.dir = getwd(),
+                     fig.width = 6, fig.height = 5,
+                     warning = FALSE, 
+                     message = FALSE)
+
+```
+
+```{r logo, echo=FALSE}
+htmltools::img(src = knitr::image_uri(file.path(R.home("doc"), "html", "logo.jpg")), 
+               alt = 'logo', 
+               style = 'position:absolute; top:0; right:0; padding:10px;')
+
+```
+---
+
+This report includes an overview of all the sequences analyzed. For further information for each animal sequence, please check the reports per folder.name.
+
+```{r load_packages, include=FALSE, warning=FALSE, echo=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = F)
+#library("knitr")
+#library("dplyr")
+#library("ggplot2")
+#library("gridExtra")
+#library("devtools")
+#library("DECIPHER")
+#library("Biostrings")
+#library("stringr")
+#library("sangerseqR")
+#library("kableExtra")
+#library("tibble")
+library(ape)
+library(RepertoiR)
+
+```
+
+
+
+## Overall quality of sequences post-filtering
+
+Here is attached four plots to compare the filtered sequences by the proposed quality requirements, the graphs on the left are before the filtering and the graphs on the right are after filtering. The code was written to filter the best sequences, if they were repeated, it will select the best quality sequence after comparing both sequences quality scores.
+The y-axis contain quality score similar to Phread Quality Score, which is logarithmically related to the base-calling error probabilities. Thus, a score of 10 represents a basecalling error probability of 1 in 10 (90% accuracy), a quality score of 20, 1 in 100 (99% accuracy) etc.  
+The filtering was based on: 
+
+* Length of the sequences longer than 400 nucleotides
+* Contiguous good quality inside the sequence between positions 50 and 409 (JDV region)
+* Quality score after trimming the bad contiguous sequence
+* Number of secondary peaks inside the CDR3 region less than 5
+* If the sequence was repeated, it will select the one with the best quality
+
+The full script of filtering can be found on the Rmd file. 
+
+```{r dataset, echo=FALSE, results='hide'}
+#Summarise.abi.folder analyze all the abi files and provides a quality report depending on the Phred Score and secondary peaks.
+#If there are repeated sequences should have the same name, so only the best sequence will be selected
+#The secondary.peak.ratio is a parameter to check what is considered a secondary peak by the function. The standard and widely used is 0.33. We are using 0.5 which means that the secondary peak needs to be at least half size the primaty peak to be considered as a secondary basecall.
+#Trim.cutoff is a function on log scale and trims the begining and the end of sequences depending on the Phred quality score. Thus 0.1 = 10; 0.01 = 20; 0.001 = 30. The standard is 0.0001 (40))
+#sangeranalyzerR package does not exist anymore, thus, their functions are saved in sangeranalyse4.R file 
+
+sf <- summarise.quality(input.folder = data_folder,             
+                           secondary.peak.ratio = 0.33, 
+                           trim.cutoff = 0.01,
+                        processors = processors)
+
+
+```
+
+```{r filtering, echo=FALSE, warning=FALSE}
+#create same columns for the data frame not filtered
+sf$summaries <- sf$summaries %>%
+  mutate(plate = folder.name) %>%
+  mutate(well = gsub("\\-.*|\\_.*", "", file.name)) %>%
+  mutate(chain = "HC") %>% 
+  mutate(ID = str_replace_all(substr(folder.name, 4,7), "_","")) %>%
+  mutate(file_ID = sub("_R","",paste(plate,well,chain,sep = "_")))
+  
+sf$summaries[is.na(sf$summaries)] <- 0
+
+#filtering the dataset and piping the results to the next filtering (you should change all the parameters depending on your dataset)
+
+sf_filtered <- sf$summaries %>%
+  
+#filtering per length of sequence 
+  filter(raw.length >= 400) %>%
+  
+#filtering the sequences with contiguous good quality between the desired positions (50 and 409)
+  filter(trim.start < 50 & trim.finish > 409) %>%
+
+#filtering based on mean quality score and number of secondary peaks
+  filter(trimmed.mean.quality >= 30) %>%
+#create a column based on the the plate name, in this case the 5th position of the file.name is my plate name. Do the same for animal id, well, and chain (heavy and light). You can change it depending on how you named your sequence. 
+    mutate(plate = paste(folder.name))%>%
+  mutate(well = gsub("\\-.*|\\_.*", "", file.name)) %>%
+  mutate(chain = "HC")%>% 
+  mutate(ID = str_replace_all(substr(folder.name, 4,7), "_","")) %>%
+  mutate(file_ID = sub("_R","",paste(plate,well,chain,sep = "_"))) %>%
+#group by file names (important if you have repetead sequences with the same name and you want to use the best one among them)
+  group_by(file_ID) %>%
+#among the repeated sequences filter the one with the highest mean quality
+  filter(raw.mean.quality == max(raw.mean.quality)) %>%
+  ungroup()
+
+#here is the code used to create the listed S4 objects for secondary peaks detection and fasta file creation
+
+pathnames <- as.character(sf_filtered$file.path)
+sangerseqlisted <- sapply(pathnames, readsangerseq)
+sp <- lapply(sangerseqlisted, secondary.peaks, ratio = 0.33)
+
+```
+
+
+```{r CDR3, echo=FALSE, include=FALSE, warning=FALSE}
+#selecting CDR3 and creating a column in the data frame to say the number of secondary peaks in the CDR3 region7
+
+df <- lapply(sp, function (x) x[["secondary.peaks"]])
+df <- lapply(df, function(x) filter(x, position > 100 & position < 150))
+df <- lapply(df, function(x) ifelse(nrow(x) > 0 , nrow(x), 0))
+df <- tibble( sec.peak.CDR3 = as.numeric(as.character(df)), file.path = names(df))
+df <- df %>% filter(sec.peak.CDR3 <= 5)
+sf_filtered <- merge(sf_filtered, df, by.default = file.path)
+
+pathnames <- as.character(sf_filtered$file.path)
+sangerseqlisted <- sapply(pathnames, readsangerseq)
+```
+
+
+```{r plot_folder_name_quality, echo=FALSE, warning=FALSE, fig.align='center'}
+
+g1 <- sf$summaries %>%
+  ggplot(aes(x = folder.name, y = trimmed.mean.quality)) + 
+  geom_boxplot() +
+  ylim(0,60)+
+  ggtitle("Before filtering")+
+  theme(axis.text.x = element_text(angle = 60, hjust = 1))+
+  labs(y="Trimmed Mean Quality Score", x = NULL) 
+g2 <- sf_filtered %>%
+  ggplot(aes(x = folder.name, y = trimmed.mean.quality)) + 
+  geom_boxplot() +
+  ylim(0,60)+
+  ggtitle("After filtering") +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1))+
+  labs(y= NULL, x = NULL)
+grid.arrange(g1, g2, nrow = 1)
+
+```
+
+```{r plot_quality, echo = FALSE, warning=FALSE, fig.align='center'}
+#graph raw vs trimmed mean quality scores before and after filtering
+g3 <- sf$summaries %>% 
+               ggplot(aes(trimmed.mean.quality, 
+                          raw.mean.quality))+
+               geom_point()+
+               ylim(0,60)+
+               xlim(0,60)+
+               ggtitle("Not filtered")
+
+g4 <- sf_filtered %>% 
+               ggplot(aes(trimmed.mean.quality, 
+                          raw.mean.quality), label = file.name)+
+               geom_point()+
+               ylim(0,60)+
+               xlim(0,60)+
+               ggtitle("Filtered")
+grid.arrange(g3,g4,nrow = 1)
+```
+
+
+## Overall quality score 
+
+Here you can see a table containing the number of repeated sequences, total sequences, filtered sequences, and the percentage of the selected sequences out of the total  number of unique sequences (total-repeated).It also contain the quality score per plate, and standard deviation, based on the Phred Quality Score explained above. 
+
+
+```{r plate_quality, echo=FALSE, warning=FALSE, quietly = TRUE, fig.align='center'}
+
+options(dplyr.summarise.inform=F) 
+#This code is to create a general table containing the quality report per plate
+
+#Calculate the mean quality per folder.name
+folder.name_scores <- sf_filtered %>% 
+  group_by(folder.name) %>%
+  summarise(mean.quality = mean(raw.mean.quality), 
+            standard.deviation = sd(raw.mean.quality)) %>%
+  ungroup() 
+
+#Add the row containing the total, including the mean quality of all the filtered sequences and its standard deviation
+folder.name_scores <- folder.name_scores %>% 
+  add_row(
+    folder.name = "Total", 
+    mean.quality = mean(sf_filtered$raw.mean.quality),
+    standard.deviation = sd(sf_filtered$raw.mean.quality)) 
+options(digits=4)
+
+
+#Calculate the number of repeated sequences per folder.name
+n.repeated.seq <- sf$summaries %>%
+  group_by(folder.name) %>%
+  filter(str_detect(folder.name, "_R")) %>%
+  summarise(n_repeated = n()) %>%
+  data.frame()
+
+#calculate the total number of sequences per folder.name
+total.seq <- sf$summaries %>%
+  group_by(folder.name) %>%
+  summarise(n_total = n()) %>%
+  data.frame()
+
+#calculate the number of sequences post filtering per folder.name
+filtered.seq <- sf_filtered %>%
+  group_by(folder.name) %>%
+  summarise(n_filtered = n()) %>%
+  data.frame()
+
+#Merge all the different datasets created above
+x <- merge(n.repeated.seq, total.seq , by.default = folder.name, all = TRUE)
+x <- merge(x, filtered.seq, by.default = folder.name, all = TRUE)
+x[is.na(x)] <- 0
+#Caculated the percentage of sequences filtered out of the total unique sequences and add the value in a new column (not repeated)
+y <- x %>% 
+  mutate(n_unique = n_total-n_repeated) %>%
+  mutate(used_percentage = (n_filtered/(n_unique))*100) 
+
+#Add row with the total number 
+plates_used_sequences <- y %>%
+  add_row(
+    folder.name = "Total", 
+    n_repeated = sum(y$n_repeat),
+    n_total = sum(y$n_total),
+    n_unique = sum(y$n_unique),
+    n_filtered = sum(y$n_filtered),
+    used_percentage = mean(y$used_percentage))
+
+#By now you have to tables containing different information per plate, here it just merging them into one single table to plot it
+table.seq <- merge(plates_used_sequences, folder.name_scores, by.default = folder.name)
+kable(table.seq) %>%
+ kable_styling(bootstrap_options = "striped", full_width = F)
+  
+```
+
+```{r add_sequence, echo=FALSE, include=FALSE}
+#extract primary basecalls to a dataframe
+sangerbasecall.string <- sapply(sangerseqlisted, primarySeq, 
+                                string = TRUE)
+sangerbasecall.string <- sangerbasecall.string %>% 
+  data.frame() %>% 
+  rownames_to_column() 
+names(sangerbasecall.string)[names(sangerbasecall.string) == "rowname"] <- "file.path"
+names(sangerbasecall.string)[names(sangerbasecall.string) == "."] <- "sequence"
+
+#Merge data frames to add column with the sequence
+
+sf_filtered <- merge(sf_filtered, sangerbasecall.string, by.default = file.path )
+
+```
+
+## Secondary peaks inside the CDR3 region 
+
+If the algorithm detected a secondary peak on CDR3 region, in our case between position 100 and 150, it will plot automatically the chromatogram from the CDR3 region. Below you can see a histogram based on the number of secondary peaks detected inside the CDR3 region. The secondary.peak needed to be at least half the size (ratio = 0.5) of the primary peak to be considered a true secondary peak. 
+You can check the CDR3 chromatograms in the folder called __"chromatograms"__.
+
+
+```{r plot_CDR3, echo=FALSE, warning = FALSE, fig.align='center'}
+#plot number secondary peaks in CDR3
+g5 <- sf_filtered %>% ggplot(aes(sec.peak.CDR3>0)) + geom_bar() +
+  xlab("Secondary peaks CDR3 > 0")
+g6 <- sf_filtered %>% ggplot(aes(sec.peak.CDR3)) + 
+    geom_bar(aes(y = (..count..)/sum(..count..))) + 
+    scale_y_continuous(labels=scales::percent) +
+    ylab("relative frequencies") + 
+    xlab("Number of secondary peaks CDR3")
+grid.arrange(g5, g6, nrow = 1)
+
+
+```
+
+
+```{r chromatogram, echo=FALSE, include=FALSE, eval=FALSE}
+#alter the function from sangeranalyser package
+#It did not allow to trim the chromatogram and created an unwanted csv file
+secondary.peaks.diff <- function(s, ratio = 0.5, output.folder = NA, file.prefix = "seq", processors = NULL){
+  
+  basecalls = makeBaseCalls(s, ratio = ratio)
+  
+  primary = primarySeq(basecalls, string = TRUE)
+  secondary = secondarySeq(basecalls, string = TRUE)
+  
+
+  comp = compareStrings(primary, secondary)
+  diffs = str_locate_all(pattern ='\\?',comp)[[1]][,1]
+  primary.vector = strsplit(primary, split="")[[1]]
+  secondary.vector = strsplit(secondary, split="")[[1]]
+  
+  primary.basecall    = primary.vector[diffs]
+  secondary.basecall  = secondary.vector[diffs]
+  
+  r = data.frame("position" = diffs, "primary.basecall" = primary.basecall, "secondary.basecall" = secondary.basecall)
+  
+  if(!is.na(output.folder)){
+    if(dir.exists(output.folder)){
+      chromname = paste(file.prefix, "_", "chromatogram.pdf", sep='')
+      chrom = chromatogram(basecalls, width = 50, height = 2, showcalls = 'both', filename = file.path(output.folder, chromname), 
+                           trim5 = 100, 
+                           trim3 = nchar(primary)-150,)
+    }else{
+      warning(sprintf("Couldn't find directory '%s', no files saved", output.folder))
+    }
+  }
+  
+  return(list("secondary.peaks" = r, "read" = basecalls))
+  
+}
+
+
+#create chromatograms of CDR3 with higher than one peak
+chromatogram <- sf_filtered %>% filter(sec.peak.CDR3>0) %>%
+  select(file.path)
+
+name <- merge(sf_filtered, chromatogram, by.default = file.path)
+name$file_ID <- sub("HC_","",name$file_ID)
+chromatogramlisted <- sapply(name$file.path, readsangerseq)
+
+mapply(FUN = secondary.peaks, 
+       s = chromatogramlisted, 
+       file.prefix = name$file_ID, 
+       MoreArgs = list(output.folder = paste0("../",result.dir))
+
+```
+## Create a csv file from the filtered sequences
+
+All the informations about the sequence primary basecall, quality scores, folder.name, well, plate, secondary peaks etc. can be found in the csv file created inside the __"processing"__ folder.  
+```{r specificity, echo=FALSE, warning=FALSE, include=FALSE}
+
+sf_filtered_csv <- sf_filtered %>% select(file.path, file_ID, ID, plate, well, chain, raw.mean.quality, trimmed.mean.quality,sec.peak.CDR3, sequence)
+
+sf_filtered_csv %>% select(file_ID, ID, plate, well, chain, raw.mean.quality, trimmed.mean.quality,sec.peak.CDR3, sequence) %>% write.csv(paste0(output_dir,"sanger_filtered.csv"), row.names = FALSE)
+
+```
+
+## Fasta files 
+
+A fasta file containing all the filtered sequences was created on the folder called __"quality reports"__. 
+
+
+```{r fasta, echo=FALSE, include = FALSE}
+#fasta file creation
+filtered.filepath <- as.character(sf_filtered_csv$file.path)
+sangerseqfiltered <- sapply(filtered.filepath, readsangerseq)
+sangerbasecallfasta <- sapply(sangerseqfiltered, primarySeq)
+name_fasta <- sf_filtered_csv %>% mutate(name = file_ID) 
+names(sangerbasecallfasta) <- name_fasta$name
+  
+ape::write.dna(sangerbasecallfasta, 
+          file = paste0(output_dir,"HC_all.fasta"), 
+          format = 'fasta', 
+          nbcol = -1, 
+          colsep = "",
+          colw = 10000000,
+          append = F)
+
+```
+
+
+```{r loop_report, echo=FALSE, include=FALSE}
+
+for (i in unique(sf_filtered$ID)){ 
+rmarkdown::render("HC_individualized_report.Rmd",  # file 2
+                  output_file =  paste(Sys.Date(),i,"_report", ".html", sep=''), 
+                  output_dir = output_dir)
+}
+```
+
+```{r}
+sessionInfo()
+```
+
