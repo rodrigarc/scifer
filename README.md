@@ -8,7 +8,7 @@ Version: 0.1.0
 
 Author and Maintainer: Rodrigo Arcoverde  
 
-Description: RepertoiR is being developed for quality control of sanger sequences, merging single-cell sorted specificity with sequencing data, and analysing/plotting repertoire data for exploratory analysis.  
+Description: RepertoiR is being developed for quality control of Sanger sequences, merging single-cell sorted specificity with sequencing data, and analysing/plotting repertoire data for exploratory analysis.  
 
 ## Installation
 
