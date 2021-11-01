@@ -15,6 +15,8 @@ Description: RepertoiR is being developed for quality control of Sanger sequence
 Before the installation you should first install the following packages from Bioconductor:
 
 ```r
+# just copy and run the following to check for the needed packages and install them if needed
+
 if (!requireNamespace("BiocManager", quietly = TRUE))
   install.packages("BiocManager")
 
@@ -24,6 +26,8 @@ BiocManager::install(c("DECIPHER","sangerseqR","ape"))
 To install directly from GitHub, run this:
 
 ```r
+# just copy and run the following to install RepetoiR
+
 if (!require("devtools"))
 install.packages("devtools")
 devtools::install_github("rodrigarc/RepertoiR")
