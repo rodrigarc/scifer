@@ -44,7 +44,7 @@ The function should be run as the following:
 # outputfile is the name for the report
 # output_dir is the directory to add the files
 # processors are the number of cores available in your computer for multithreading, 
-#leave as 1 to run as single-thread, or ```r NULL``` to automatically detect the number of cores
+#leave as 1 to run as single-thread, or NULL to automatically detect the number of cores
   
 quality.report(data_folder = "test/teste_dataset/",
                outputfile = paste0(Sys.Date(),"_HC-QC-report.html"),
