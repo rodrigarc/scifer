@@ -54,7 +54,7 @@ The ```quality.report``` report function will look recursively on the selected f
 
 The function should be run as the following:
 
-```
+```r
 # data_folder is the root folder containing the ab1 file
 # outputfile is the name for the report
 # output_dir is the directory to add the files
