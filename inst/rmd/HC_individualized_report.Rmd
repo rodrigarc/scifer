@@ -43,14 +43,18 @@ g1 <- sf_summary %>%
   ylim(0,60)+
   ggtitle("Before filtering")+
   theme(axis.text.x = element_text(angle = 60, hjust = 1))+
-  labs(y="Mean Quality Score", x = NULL)
+  labs(y="Mean Quality Score", x = NULL) +
+  theme_bw()
+  
 g2 <- sf_summary_filtered %>%
   ggplot(aes(x = folder.name, y = raw.mean.quality)) + 
   geom_boxplot() +
   ylim(0,60)+
   ggtitle("After filtering") +
   theme(axis.text.x = element_text(angle = 60, hjust = 1))+
-  labs(y= NULL, x = NULL)
+  labs(y= NULL, x = NULL) +
+  theme_bw()
+
 grid.arrange(g1, g2, nrow = 1)
 
 ```
@@ -63,14 +67,16 @@ g3 <- sf_summary %>%
                geom_point()+
                ylim(0,60)+
                xlim(0,60)+
-               ggtitle("Not filtered")
+               ggtitle("Not filtered") +
+  theme_bw()
 g4 <- sf_summary_filtered %>%
                ggplot(aes(trimmed.mean.quality, 
                           raw.mean.quality), label = file.name)+
                geom_point()+
                ylim(0,60)+
                xlim(0,60)+
-               ggtitle("Filtered")
+               ggtitle("Filtered")+
+  theme_bw()
 grid.arrange(g3,g4,nrow = 1)
 ```
 
@@ -158,12 +164,15 @@ Below you can see a histogram based on the number of secondary peaks detected in
 ```{r CDR3_indiv, echo=FALSE, fig.align='center'}
 #plot number secondary peaks in CDR3
 g5 <- sf_summary_filtered %>% ggplot(aes(sec.peak.CDR3>0)) + geom_bar() +
-  xlab("Secondary peaks CDR3 > 0")
+  xlab("Secondary peaks CDR3 > 0") +
+  theme_bw()
 g6 <- sf_summary_filtered %>% ggplot(aes(sec.peak.CDR3)) + 
     geom_bar(aes(y = (..count..)/sum(..count..))) + 
     scale_y_continuous(labels=scales::percent) +
     ylab("relative frequencies") + 
-    xlab("Number of secondary peaks CDR3")
+    xlab("Number of secondary peaks CDR3") +
+  theme_bw()
+
 grid.arrange(g5, g6, nrow = 1)
 ```
 
