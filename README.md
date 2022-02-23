@@ -48,7 +48,7 @@ The function should be run as the following:
 #leave as 1 to run as single-thread, or NULL to automatically detect the number of cores
   
 quality.report(data_folder = "test/teste_dataset/",
-               outputfile = paste0(Sys.Date(),"_HC-QC-report.html"),
+               outputfile = "HC-QC-report.html",
                output_dir = "test/",
                processors = 1)
 
