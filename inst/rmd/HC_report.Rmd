@@ -383,7 +383,7 @@ ape::write.dna(sangerbasecallfasta,
 
 for (i in unique(sf_filtered$ID)){ 
 rmarkdown::render("HC_individualized_report.Rmd",  # file 2
-                  output_file =  paste(Sys.Date(),i,"_report", ".html", sep=''), 
+                  output_file =  paste(Sys.Date(),"_",i,"_report", ".html", sep=''), 
                   output_dir = output_dir)
 }
 ```
