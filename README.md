@@ -47,9 +47,9 @@ The function should be run as the following:
 # processors are the number of cores available in your computer for multithreading, 
 #leave as 1 to run as single-thread, or NULL to automatically detect the number of cores
   
-quality.report(data_folder = "test/teste_dataset/",
+quality.report(data_folder = "full_path_to/test/teste_dataset/",
                outputfile = "HC-QC-report.html",
-               output_dir = "test/",
+               output_dir = "full_path_to/test_output_folder",
                processors = 1)
 
 ```
