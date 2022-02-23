@@ -103,7 +103,7 @@ sf_filtered <- sf$summaries %>%
     mutate(plate = paste(folder.name))%>%
   mutate(well = gsub("\\-.*|\\_.*", "", file.name)) %>%
   mutate(chain = "HC")%>% 
-  mutate(ID = str_replace_all(substr(folder.name, 4,7), "_","")) %>%
+  mutate(ID = gsub("\\-.*|\\_.*","",folder.name)) %>%
   mutate(file_ID = sub("_R","",paste(plate,well,chain,sep = "_"))) %>%
 #group by file names (important if you have repetead sequences with the same name and you want to use the best one among them)
   group_by(file_ID) %>%
