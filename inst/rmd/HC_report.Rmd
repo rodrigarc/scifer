@@ -82,7 +82,7 @@ sf$summaries <- sf$summaries %>%
   mutate(plate = folder.name) %>%
   mutate(well = gsub("\\-.*|\\_.*", "", file.name)) %>%
   mutate(chain = "HC") %>% 
-  mutate(ID = str_replace_all(substr(folder.name, 4,7), "_","")) %>%
+  mutate(ID = gsub("\\-.*|\\_.*","",folder.name)) %>%
   mutate(file_ID = sub("_R","",paste(plate,well,chain,sep = "_")))
   
 sf$summaries[is.na(sf$summaries)] <- 0
