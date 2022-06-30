@@ -32,32 +32,32 @@ summarise.abi.file <- function(seq.abif, trim.cutoff = 0.0001, secondary.peak.ra
   # have called makeBaseCalls. And that this means the trim locations and the
   # secondary peak locations do not match, since makeBaseCalls usually calls
   # fewer bases than the standard ABI calls.
-  secondary.peaks.data = secondary.peaks(seq.sanger, secondary.peak.ratio, output.folder, prefix, processors = processors)
-  secondary.peaks = secondary.peaks.data$secondary.peaks
-  seq.sanger = secondary.peaks.data$read
+  secondary.peaks.data <- secondary.peaks(seq.sanger, secondary.peak.ratio, output.folder, prefix, processors = processors)
+  secondary.peaks <- secondary.peaks.data$secondary.peaks
+  seq.sanger <- secondary.peaks.data$read
 
   # now we trim the sequence
   trims = trim.mott(seq.abif, cutoff = trim.cutoff)
   qual = seq.abif@data$PCON.2
   qual.trimmed = qual[trims$start:trims$finish]
 
-  if(length(qual.trimmed)==0){qual.trimmed = c(NA)} # so we can summarise later
+  if(length(qual.trimmed)==0){qual.trimmed <- c(NA)} # so we can summarise later
 
-  # now we fix up the trim locations to correspond to the sangerseq primary seq object
+  # fix up the trim locations to correspond to the sangerseq primary seq object
   if(trims$start==1 && trims$finish==nchar(as.character(seq.abif@data$PBAS.2))){
-    # there's nothing to do, because we didn't trim anything
-    trim.start = 1
-    trim.finish = length(primarySeq(seq.sanger))
+    # Do nothing if we didn't trim anything
+    trim.start <- 1
+    trim.finish <- length(primarySeq(seq.sanger))
 
   }else{
-    trims.fixed = fix.trims(trims, seq.sanger, seq.abif, processors)
-    trim.start = trims.fixed$start
-    trim.finish = trims.fixed$finish
+    trims.fixed <- fix.trims(trims, seq.sanger, seq.abif, processors)
+    trim.start <- trims.fixed$start
+    trim.finish <- trims.fixed$finish
   }
 
   # get trimmed and untrimmed version of raw data
-  seq.trimmed = seq.sanger@primarySeq[trim.start:trim.finish]
-  secondary.peaks.trimmed = subset(secondary.peaks, position >= trim.start & position <= trim.finish)
+  seq.trimmed <- seq.sanger@primarySeq[trim.start:trim.finish]
+  secondary.peaks.trimmed <- subset(secondary.peaks, position >= trim.start & position <= trim.finish)
 
   print(qual.trimmed)
   read.summary = c("raw.length"                       = length(seq.sanger@primarySeq),
@@ -71,10 +71,8 @@ summarise.abi.file <- function(seq.abif, trim.cutoff = 0.0001, secondary.peak.ra
                    "raw.min.quality"                  = min(qual),
                    "trimmed.min.quality"              = min(qual.trimmed)
   )
-  #edited by rodrigo
   qual_position = cbind.data.frame("score" = as.numeric(seq.abif@data$PCON.2),
                                    "position" = c(1:length(seq.abif@data$PCON.2)))
-  #edited by rodrigo
   return(list("summary" = read.summary, "quality_score" = qual_position))
 
 }
