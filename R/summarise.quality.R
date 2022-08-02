@@ -7,13 +7,14 @@
 #' @return Factor variable.
 #'
 #' @examples
-#'sf <- summarise.quality("abi/folder/path", secondary.peak.ratio = 0.33,
-#'                     trim.cutoff = 0.01, processors = 1)
+#' sf <- summarise.quality("abi/folder/path",
+#'   secondary.peak.ratio = 0.33,
+#'   trim.cutoff = 0.01, processors = 1
+#' )
 #'
 #' @export summarise.quality
-get.processors <- function(processors){
-
-  if(Sys.info()["sysname"] == 'Windows'){
+get.processors <- function(processors) {
+  if (Sys.info()["sysname"] == "Windows") {
     # mclapply is not supported on windows
     # so we give a single processor,
     # in which case mclapply calls fall back
@@ -21,16 +22,14 @@ get.processors <- function(processors){
     return(1)
   }
 
-  if(is.null(processors)){
+  if (is.null(processors)) {
     processors <- detectCores(all.tests = FALSE, logical = FALSE)
   }
 
   return(processors)
-
 }
 
-summarise.quality <- function(input.folder, trim.cutoff = 0.01, secondary.peak.ratio = 0.33, write.secondary.peak.files = FALSE, processors = NULL){
-
+summarise.quality <- function(input.folder, trim.cutoff = 0.01, secondary.peak.ratio = 0.33, write.secondary.peak.files = FALSE, processors = NULL) {
   processors <- get.processors(processors)
 
   print("Looking for .ab1 files...")
@@ -45,11 +44,11 @@ summarise.quality <- function(input.folder, trim.cutoff = 0.01, secondary.peak.r
   print("Calculating read summaries...")
   # now make a data.frame of summaries of all the files
   summaries.dat <- mclapply(abi.seqs,
-                           summarise.abi.file,
-                           trim.cutoff = trim.cutoff,
-                           secondary.peak.ratio = secondary.peak.ratio,
-                           processors = 1,
-                           mc.cores = processors
+    summarise.abi.file,
+    trim.cutoff = trim.cutoff,
+    secondary.peak.ratio = secondary.peak.ratio,
+    #   processors = 1,
+    mc.cores = processors
   )
 
   print("Cleaning up")
@@ -63,11 +62,9 @@ summarise.quality <- function(input.folder, trim.cutoff = 0.01, secondary.peak.r
   qual_scores <- mclapply(summaries.dat, function(x) x[["quality_score"]], mc.cores = processors)
   names(qual_scores) <- as.character(abi.fnames)
   return(list("summaries" = summaries, "quality_scores" = qual_scores))
-
 }
 
-loadread <- function(fname, trim, trim.cutoff, revcomp, max.secondary.peaks, secondary.peak.ratio, min.length, processors){
-
+loadread <- function(fname, trim, trim.cutoff, revcomp, max.secondary.peaks, secondary.peak.ratio, min.length, processors) {
   read.abi <- read.abif(fname)
 
   s <- summarise.abi.file(read.abi, trim.cutoff, secondary.peak.ratio, processors = processors)
@@ -81,12 +78,11 @@ loadread <- function(fname, trim, trim.cutoff, revcomp, max.secondary.peaks, sec
   d <- c(DNAStringSet(s$read@primarySeq), DNAStringSet(s$read@secondarySeq))
   read <- ConsensusSequence(d)[[1]]
 
-  if(trim == TRUE){
+  if (trim == TRUE) {
     trim.start <- summary["trim.start"]
     trim.finish <- summary["trim.finish"]
     sp <- summary["trimmed.secondary.peaks"]
-
-  }else if(trim == FALSE){
+  } else if (trim == FALSE) {
     trim.start <- 1
     trim.finish <- length(read)
     sp <- summary["raw.secondary.peaks"]
@@ -95,21 +91,20 @@ loadread <- function(fname, trim, trim.cutoff, revcomp, max.secondary.peaks, sec
   # FILTER read based on user specified limits
   read <- read[trim.start:trim.finish]
 
-  if(!is.null(max.secondary.peaks)){
-    if(sp > max.secondary.peaks){
+  if (!is.null(max.secondary.peaks)) {
+    if (sp > max.secondary.peaks) {
       read <- NULL
     }
   }
 
-  if(length(read) < min.length){
+  if (length(read) < min.length) {
     read <- NULL
   }
 
-  if(!is.null(read)) {
-    if(revcomp == TRUE){
+  if (!is.null(read)) {
+    if (revcomp == TRUE) {
       read <- reverseComplement(read)
     }
   }
-  return(list('read' = read, summary = summary))
-
+  return(list("read" = read, summary = summary))
 }
