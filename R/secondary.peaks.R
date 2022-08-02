@@ -18,8 +18,7 @@
 #'
 #' @export secondary.peaks
 #'
-secondary.peaks <- function(s, ratio = 0.5, output.folder = NA, file.prefix = "seq", processors = NULL){
-
+secondary.peaks <- function(s, ratio = 0.5, output.folder = NA, file.prefix = "seq", processors = NULL) {
   basecalls <- makeBaseCalls(s, ratio = ratio)
 
   primary <- primarySeq(basecalls, string = TRUE)
@@ -27,37 +26,37 @@ secondary.peaks <- function(s, ratio = 0.5, output.folder = NA, file.prefix = "s
 
 
   comp <- compareStrings(primary, secondary)
-  diffs <- str_locate_all(pattern ='\\?',comp)[[1]][,1]
-  primary.vector <- strsplit(primary, split="")[[1]]
-  secondary.vector <- strsplit(secondary, split="")[[1]]
+  diffs <- str_locate_all(pattern = "\\?", comp)[[1]][, 1]
+  primary.vector <- strsplit(primary, split = "")[[1]]
+  secondary.vector <- strsplit(secondary, split = "")[[1]]
 
-  primary.basecall  <- primary.vector[diffs]
-  secondary.basecall  <- secondary.vector[diffs]
+  primary.basecall <- primary.vector[diffs]
+  secondary.basecall <- secondary.vector[diffs]
 
   r <- data.frame("position" = diffs, "primary.basecall" = primary.basecall, "secondary.basecall" = secondary.basecall)
 
-  if(!is.na(output.folder)){
-    if(dir.exists(output.folder)){
-      chromname <- paste(file.prefix, "_", "chromatogram.pdf", sep='')
-      chrom <- chromatogram(basecalls, width = 50, height = 2, showcalls = 'both', filename = file.path(output.folder, chromname),
-                           trim5 = 100,
-                           trim3 = nchar(primary)-150,)
-    }else{
+  if (!is.na(output.folder)) {
+    if (dir.exists(output.folder)) {
+      chromname <- paste(file.prefix, "_", "chromatogram.pdf", sep = "")
+      chrom <- chromatogram(basecalls,
+        width = 50, height = 2, showcalls = "both", filename = file.path(output.folder, chromname),
+        trim5 = 100,
+        trim3 = nchar(primary) - 150,
+      )
+    } else {
       warning(sprintf("Couldn't find directory '%s', no files saved", output.folder))
     }
   }
 
   return(list("secondary.peaks" = r, "read" = basecalls))
-
 }
 
-trim.mott <- function(abif.seq, cutoff = 0.0001){
-
-  if(class(cutoff)!='numeric' | cutoff < 0){
+trim.mott <- function(abif.seq, cutoff = 0.0001) {
+  if (class(cutoff) != "numeric" | cutoff < 0) {
     stop("cutoff must be a number of at least 0")
   }
 
-  if(class(abif.seq)!='abif'){
+  if (class(abif.seq) != "abif") {
     stop("abif.seq must be an 'abif' object from the sangerseqR package")
   }
 
@@ -71,29 +70,29 @@ trim.mott <- function(abif.seq, cutoff = 0.0001){
   qual <- abif.seq$PCON.2
 
   # calculate base score
-  score_list <- cutoff - (10 ** (qual / -10.0))
+  score_list <- cutoff - (10**(qual / -10.0))
 
   # calculate cummulative score
   # if cumulative value < 0, set it to 0
   # the BioPython implementation always trims the first base,
   # this implementation does not.
-  score = score_list[1]
-  if(score < 0){
+  score <- score_list[1]
+  if (score < 0) {
     score <- 0
-  }else{
+  } else {
     trim_start <- 1
     start <- TRUE
   }
 
   cummul_score <- c(score)
 
-  for(i in 2:length(score_list)){
+  for (i in 2:length(score_list)) {
     score <- cummul_score[length(cummul_score)] + score_list[i]
-    if(score <= 0){
+    if (score <= 0) {
       cummul_score <- c(cummul_score, 0)
-    }else{
+    } else {
       cummul_score <- c(cummul_score, score)
-      if(start == FALSE){
+      if (start == FALSE) {
         trim_start <- i
         start <- TRUE
       }
@@ -102,24 +101,24 @@ trim.mott <- function(abif.seq, cutoff = 0.0001){
     # trim_finish = index of highest cummulative score,
     # marking the end of sequence segment with highest cummulative score
     trim_finish <- which.max(cummul_score)
-
   }
 
   # fix an edge case, where all scores are worse than the cutoff
   # in this case you wouldn't want to keep any bases at all
-  if(sum(cummul_score)==0){trim_finish <- 0}
+  if (sum(cummul_score) == 0) {
+    trim_finish <- 0
+  }
 
   return(list("start" = trim_start, "finish" = trim_finish))
-
 }
 
-fix.trims <- function(trims, seq.sanger, seq.abif, processors){
+fix.trims <- function(trims, seq.sanger, seq.abif, processors) {
 
   # transfer trim locations from one sequence (denoted in the trims list, and which
   # correspond to the seq.abif object to another
   # the primarySeq(seq.sanger) from the seq.sanger object
 
-  if(trims$start == 0 & trims$finish == 0){
+  if (trims$start == 0 & trims$finish == 0) {
     # no need to do anything fancy here...
     return(trims)
   }
@@ -136,13 +135,17 @@ fix.trims <- function(trims, seq.sanger, seq.abif, processors){
 
   # 3. Get the sequence out, and find the first and last gaps.
   aligned.trimmed <- as.character(pa[[1]])
-  not.gaps <- str_locate_all(aligned.trimmed, pattern = "[^-]")[[1]][,1]
+  not.gaps <- str_locate_all(aligned.trimmed, pattern = "[^-]")[[1]][, 1]
 
   start <- min(not.gaps)
   finish <- max(not.gaps)
 
-  if(start < 1){start <- 1}
-  if(finish > nchar(recalled)){finish <- nchar(recalled)}
+  if (start < 1) {
+    start <- 1
+  }
+  if (finish > nchar(recalled)) {
+    finish <- nchar(recalled)
+  }
 
   return(list("start" = start, "finish" = finish))
 }
