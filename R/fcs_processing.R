@@ -1,12 +1,35 @@
-library(RepertoiR)
-library(flowCore)
-library(scales)
-
-fsc.processing <- function(file.path = "test/teste_dataset/fcs_file/",
+#' Extract index sorting information from flow cytometry data
+#'
+#' @param folder_path Folder containing all the flow data index filex (.fcs). Files should be named with their sample/plate ID.   eg. "E11_01.fcs"
+#' @param compensation Logical argument, TRUE or FALSE, to indicate if the index files were compensated or not. If TRUE, it will apply its compensation prior assigning specificities.
+#' @param plate_wells Type of plate used for single-cell sorting. eg. "96" or "384"
+#' @param probe1 Name of the first channel used for the probe or the custom name assigned to the channel in the index file. eg. "FSC.A", "FSC.H", "SSC.A","DsRed.A", "PE.Cy5_5.A", "PE.Cy7.A","BV650.A", "BV711.A","Alexa.Fluor.700.A" "APC.Cy7.A","PerCP.Cy5.5.A","Time".
+#' @param probe2 Name of the second channel used for the probe or the custom name assigned to the channel in the index file. eg. "FSC.A", "FSC.H", "SSC.A","DsRed.A", "PE.Cy5_5.A", "PE.Cy7.A","BV650.A", "BV711.A","Alexa.Fluor.700.A" "APC.Cy7.A","PerCP.Cy5.5.A","Time".
+#' @param posvalue_probe1 Threshold used for fluorescence intensities to be considered as positive for the first probe.
+#' @param posvalue_probe2 Threshold used for fluorescence intensities to be considered as positive for the second probe.
+#'
+#' @return Print plot for selected thresholds and probes, plus a table to be used for extracting index sorting plate location.
+#'
+#' @import scales dplyr ggplot2
+#' @rawNamespace import(flowCore, except = filter)
+#' @importFrom data.table rbindlist
+#' @importFrom plyr mapvalues
+#' @importFrom stats na.omit
+#' @importFrom rlang .data
+#'
+#' @examples
+#' \dontrun{
+#' index_sort_data <- fsc.processing(folder_path = "test/test_dataset/fcs_files/",
+#' compensation = TRUE, plate_wells = 96,
+#' probe1 = "Pre.F", probe2 = "Post.F",
+#' posvalue_probe1 = 600, posvalue_probe2 = 400)
+#'}
+#' @export
+fcs_processing <- function(folder_path = "test/test_dataset/fcs_files/",
                            compensation = TRUE, plate_wells = 96,
                            probe1 = "Pre.F", probe2 = "Post.F",
                            posvalue_probe1 = 600, posvalue_probe2 = 400) {
-  fs <- read.flowSet(path = file.path, truncate_max_range = FALSE)
+  fs <- read.flowSet(path = folder_path, truncate_max_range = FALSE)
 
   if (compensation == TRUE) {
     comp <- fsApply(fs, function(x) spillover(x)[[1]], simplify = FALSE)
@@ -27,16 +50,16 @@ fsc.processing <- function(file.path = "test/teste_dataset/fcs_file/",
     # Extract single-cell sorted plate position
     if (plate_wells == 96) {
       df_fs_comp <- getIndexSort(x) %>% mutate(
-        row = plyr::mapvalues(XLoc, from = seq(0, 7), to = LETTERS[1:8]),
-        column = plyr::mapvalues(YLoc, from = seq(0, 11), to = sprintf("%02d", as.numeric(seq(1:12)))),
-        well_ID = paste0(row, column)
+        row = plyr::mapvalues(.data$XLoc, from = seq(0, 7), to = LETTERS[1:8]),
+        column = plyr::mapvalues(.data$YLoc, from = seq(0, 11), to = sprintf("%02d", as.numeric(seq(1:12)))),
+        well_ID = paste0(.data$row, .data$column)
       )
       print("96-well plates were used for sorting.")
     } else if (plate_wells == 384) {
       df_fs_comp <- getIndexSort(x) %>% mutate(
-        row = plyr::mapvalues(XLoc, from = seq(0, 15), to = LETTERS[1:16]),
-        column = plyr::mapvalues(YLoc, from = seq(0, 23), to = sprintf("%02d", as.numeric(seq(1:24)))),
-        well_ID = paste0(row, column)
+        row = plyr::mapvalues(.data$XLoc, from = seq(0, 15), to = LETTERS[1:16]),
+        column = plyr::mapvalues(.data$YLoc, from = seq(0, 23), to = sprintf("%02d", as.numeric(seq(1:24)))),
+        well_ID = paste0(.data$row, .data$column)
       )
       print("384-well plates were used for sorting.")
     } else {
@@ -83,10 +106,3 @@ fsc.processing <- function(file.path = "test/teste_dataset/fcs_file/",
   print(plot_thresholds)
   return(joined_fsc_table)
 }
-
-x <- fsc.processing(
-  file.path = "test/teste_dataset/fcs_file/",
-  compensation = TRUE, plate_wells = 96,
-  probe1 = "Pre.F", probe2 = "Post.F",
-  posvalue_probe1 = 600, posvalue_probe2 = 400
-)
