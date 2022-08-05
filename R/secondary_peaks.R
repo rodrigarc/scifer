@@ -3,10 +3,10 @@
 #' This function finds and reports secondary peaks in a sangerseq object. It returns a table of secondary peaks, and optionally saves an annotated chromatogram and a csv file of the peak locations.
 #'
 #' @param s a sangerseq s4 object from the sangerseqR package
-#' @param ratio the ratio of the height of a secondary peak to a primary peak. Secondary peaks higher than this ratio are annotated. Those below the ratio are not.
+#' @param ratio Ratio of the height of a secondary peak to a primary peak. Secondary peaks higher than this ratio are annotated. Those below the ratio are not.
 #' @param output.folder If output.folder is NA (the default) no files are written. If a valid folder is provided, two files are written to that folder: a .csv file of the secondary peaks (see description below) and a .pdf file of the chromatogram.
 #' @param file.prefix If output.folder is specified, this is the prefix which will be appended to the .csv and the .pdf file. The default is "seq".
-#' @param processors The number of processors to use, or NULL (the default) for all available processors
+#' @param processors Number of processors to use, or NULL (the default) for all available processors
 #'
 #' @return A list with two elements:
 #'          \enumerate{
@@ -15,10 +15,13 @@
 #'          }
 #'
 #' @keywords chromatogram, peak, mismatch
+#' @rawNamespace import(Biostrings, except = c(collapse, union, intersect, setdiff, setequal))
+#' @importFrom sangerseqR primarySeq makeBaseCalls secondarySeq chromatogram
+#' @importFrom DECIPHER AlignSeqs
+#' @importFrom stringr str_locate_all
 #'
-#' @export secondary.peaks
-#'
-secondary.peaks <- function(s, ratio = 0.5, output.folder = NA, file.prefix = "seq", processors = NULL) {
+#' @export
+secondary_peaks <- function(s, ratio = 0.5, output.folder = NA, file.prefix = "seq", processors = NULL) {
   basecalls <- makeBaseCalls(s, ratio = ratio)
 
   primary <- primarySeq(basecalls, string = TRUE)
@@ -114,12 +117,7 @@ trim.mott <- function(abif.seq, cutoff = 0.0001) {
 
 fix.trims <- function(trims, seq.sanger, seq.abif, processors) {
 
-  # transfer trim locations from one sequence (denoted in the trims list, and which
-  # correspond to the seq.abif object to another
-  # the primarySeq(seq.sanger) from the seq.sanger object
-
   if (trims$start == 0 & trims$finish == 0) {
-    # no need to do anything fancy here...
     return(trims)
   }
 
