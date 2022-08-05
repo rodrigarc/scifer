@@ -1,4 +1,6 @@
 # RepertoiR
+[![R build
+status](https://github.com/rodrigarc/RepertoiR/workflows/R-CMD-check/badge.svg)](https://github.com/rodrigarc/RepertoiR/actions)
 
 ### B cell receptor repertoire package development  
 
