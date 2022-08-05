@@ -10,12 +10,13 @@
 #'
 #' @return Print plot for selected thresholds and probes, plus a table to be used for extracting index sorting plate location.
 #'
-#' @import scales dplyr ggplot2
+#' @import dplyr ggplot2
 #' @rawNamespace import(flowCore, except = filter)
 #' @importFrom data.table rbindlist
 #' @importFrom plyr mapvalues
 #' @importFrom stats na.omit
 #' @importFrom rlang .data
+#' @importFrom scales trans_breaks trans_format math_format
 #'
 #' @examples
 #' \dontrun{
@@ -69,26 +70,29 @@ fcs_processing <- function(folder_path = "test/test_dataset/fcs_files/",
     return(df_fs_comp)
   })
 
-  joined_fsc_table <- data.table::rbindlist(fs_comp)
+  joined_fsc_table <- data.table::rbindlist(fs_comp, idcol = TRUE) %>%
+    rename(sample_ID = .data$.id) %>%
+    mutate(sample_ID = gsub(".fcs", "", .data$sample_ID))
 
-  # Classifying sorted single-cells according to specificity
+  # Classify sorted single-cells according to specificity
   joined_fsc_table <- joined_fsc_table %>%
     mutate(specificity = case_when(
       get(probe1) > posvalue_probe1 & get(probe2) > posvalue_probe2 ~ "DP",
       get(probe1) > posvalue_probe1 & get(probe2) < posvalue_probe2 ~ probe1,
       get(probe1) < posvalue_probe1 ~ probe2
     ))
-
+  # Plot classification according to selected thresholds
+  .x <- NULL
   plot_thresholds <- joined_fsc_table %>%
     ggplot(aes(x = get(probe1), y = get(probe2))) +
     geom_point(size = .7, color = "grey40") +
     scale_x_log10(
-      breaks = trans_breaks("log10", function(x) 10^x),
-      labels = trans_format("log10", math_format(10^.x))
+      breaks = scales::trans_breaks("log10", function(x) 10^x),
+      labels = scales::trans_format("log10", scales::math_format(10^.x))
     ) +
     scale_y_log10(
-      breaks = trans_breaks("log10", function(x) 10^x),
-      labels = trans_format("log10", math_format(10^.x))
+      breaks = scales::trans_breaks("log10", function(x) 10^x),
+      labels = scales::trans_format("log10", scales::math_format(10^.x))
     ) +
     geom_vline(xintercept = posvalue_probe1) +
     geom_hline(yintercept = posvalue_probe2) +
