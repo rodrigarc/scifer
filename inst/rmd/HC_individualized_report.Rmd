@@ -9,10 +9,11 @@ output:
 ---
 
 ```{r logo_indiv, echo=FALSE}
-htmltools::img(src = knitr::image_uri(file.path(R.home("doc"), "html", "logo.jpg")), 
-               alt = 'logo', 
-               style = 'position:absolute; top:0; right:0; padding:10px;')
-
+htmltools::img(
+  src = knitr::image_uri(file.path(R.home("doc"), "html", "logo.jpg")),
+  alt = "logo",
+  style = "position:absolute; top:0; right:0; padding:10px;"
+)
 ```
 ---
 
@@ -20,10 +21,9 @@ htmltools::img(src = knitr::image_uri(file.path(R.home("doc"), "html", "logo.jpg
 ```{r setup_indiv, include=FALSE, warning=FALSE, echo=FALSE, message=FALSE}
 knitr::opts_chunk$set(echo = F)
 
- sf_summary <- sf$summaries %>% filter(ID == i)  
-  sf_summary_filtered <- sf_filtered %>% filter(ID == i)
-  merged_summary_csv <- sf_filtered_csv %>% filter(ID == i)
-
+sf_summary <- sf$summaries %>% filter(ID == i)
+sf_summary_filtered <- sf_filtered %>% filter(ID == i)
+merged_summary_csv <- sf_filtered_csv %>% filter(ID == i)
 ```
 
 ## Overall quality of sequences post-filtering
@@ -35,49 +35,52 @@ The full script can be found on the Rmd file.
 
 
 ```{r plot_indiv, echo=FALSE, warning=FALSE, fig.align='center'}
-#I organized the sequences on different folders named with the identification I wanted. In this way, the folder.name gives me the ID that I can use to plot what I need. Here I wanted to compare the repeated sequences before and after filtering. You can change the axis depending on what you want to show here.
+# I organized the sequences on different folders named with the identification I wanted. In this way, the folder.name gives me the ID that I can use to plot what I need. Here I wanted to compare the repeated sequences before and after filtering. You can change the axis depending on what you want to show here.
 
 g1 <- sf_summary %>%
-  ggplot(aes(x = folder.name, y = raw.mean.quality)) + 
+  ggplot(aes(x = folder.name, y = raw.mean.quality)) +
   geom_boxplot() +
-  ylim(0,60)+
-  ggtitle("Before filtering")+
-  theme(axis.text.x = element_text(angle = 60, hjust = 1))+
-  labs(y="Mean Quality Score", x = NULL) +
+  ylim(0, 60) +
+  ggtitle("Before filtering") +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+  labs(y = "Mean Quality Score", x = NULL) +
   theme_bw()
-  
+
 g2 <- sf_summary_filtered %>%
-  ggplot(aes(x = folder.name, y = raw.mean.quality)) + 
+  ggplot(aes(x = folder.name, y = raw.mean.quality)) +
   geom_boxplot() +
-  ylim(0,60)+
+  ylim(0, 60) +
   ggtitle("After filtering") +
-  theme(axis.text.x = element_text(angle = 60, hjust = 1))+
-  labs(y= NULL, x = NULL) +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+  labs(y = NULL, x = NULL) +
   theme_bw()
 
-grid.arrange(g1, g2, nrow = 1)
-
+gridExtra::grid.arrange(g1, g2, nrow = 1)
 ```
 
 ```{r plot_indiv_2, echo = FALSE, fig.align='center'}
-#graph raw vs trimmed mean quality scores before and after filtering
-g3 <- sf_summary %>% 
-               ggplot(aes(trimmed.mean.quality, 
-                          raw.mean.quality))+
-               geom_point()+
-               ylim(0,60)+
-               xlim(0,60)+
-               ggtitle("Not filtered") +
+# graph raw vs trimmed mean quality scores before and after filtering
+g3 <- sf_summary %>%
+  ggplot(aes(
+    trimmed.mean.quality,
+    raw.mean.quality
+  )) +
+  geom_point() +
+  ylim(0, 60) +
+  xlim(0, 60) +
+  ggtitle("Not filtered") +
   theme_bw()
 g4 <- sf_summary_filtered %>%
-               ggplot(aes(trimmed.mean.quality, 
-                          raw.mean.quality), label = file.name)+
-               geom_point()+
-               ylim(0,60)+
-               xlim(0,60)+
-               ggtitle("Filtered")+
+  ggplot(aes(
+    trimmed.mean.quality,
+    raw.mean.quality
+  ), label = file.name) +
+  geom_point() +
+  ylim(0, 60) +
+  xlim(0, 60) +
+  ggtitle("Filtered") +
   theme_bw()
-grid.arrange(g3,g4,nrow = 1)
+gridExtra::grid.arrange(g3, g4, nrow = 1)
 ```
 
 
@@ -88,71 +91,72 @@ Here you can see a table containing the number of repeated sequences, total sequ
 
 
 ```{r quality_indiv, echo=FALSE, fig.align='center'}
-#This code is to create a general table containing the quality report per plate
+# This code is to create a general table containing the quality report per plate
 
-#Calculate the mean quality per plate number
-plate_scores <- sf_summary_filtered %>% 
+# Calculate the mean quality per plate number
+plate_scores <- sf_summary_filtered %>%
   group_by(plate) %>%
-  summarise(mean.quality = mean(raw.mean.quality), 
-            standard.deviation = sd(raw.mean.quality)) %>%
+  summarise(
+    mean.quality = mean(raw.mean.quality),
+    standard.deviation = sd(raw.mean.quality)
+  ) %>%
   ungroup()
 
-#Add the row containing the total, including the mean quality of all the sequences and its standard deviation
-plate_scores <- plate_scores %>% 
+# Add the row containing the total, including the mean quality of all the sequences and its standard deviation
+plate_scores <- plate_scores %>%
   add_row(
-    plate = "Total", 
+    plate = "Total",
     mean.quality = mean(sf_filtered$raw.mean.quality),
-    standard.deviation = sd(sf_filtered$raw.mean.quality)) 
-options(digits=4)
+    standard.deviation = sd(sf_filtered$raw.mean.quality)
+  )
+options(digits = 4)
 
 
-#Calculate the number of repeated sequences per plate
+# Calculate the number of repeated sequences per plate
 n.repeated.seq <- sf_summary %>%
   group_by(plate) %>%
   filter(str_detect(folder.name, "_R")) %>%
   summarise(n_repeated = n()) %>%
   data.frame()
 
-#calculate the total number of sequences per plate
+# calculate the total number of sequences per plate
 total.seq <- sf_summary %>%
   group_by(plate) %>%
   summarise(n_total = n()) %>%
   data.frame()
 
-#calculate the number of sequences post filtering per plate
+# calculate the number of sequences post filtering per plate
 filtered.seq <- sf_summary_filtered %>%
   group_by(plate) %>%
   summarise(n_filtered = n()) %>%
   data.frame()
 
-#Merge all the different datasets created above
+# Merge all the different datasets created above
 x <- merge(n.repeated.seq, total.seq, by.default = plate, all = TRUE)
 x <- merge(x, filtered.seq, by.default = plate, all = TRUE)
 x[is.na(x)] <- 0
 
-#Caculated the percentage of sequences filtered out of the total unique sequences and add the value in a new column (not repeated)
-y <- x %>% 
+# Caculated the percentage of sequences filtered out of the total unique sequences and add the value in a new column (not repeated)
+y <- x %>%
   mutate(n_unique = n_total - n_repeated) %>%
-  mutate(used_percentage = (n_filtered/(n_unique))*100) 
+  mutate(used_percentage = (n_filtered / (n_unique)) * 100)
 
-#Add row with the total number 
+# Add row with the total number
 plates_used_sequences <- y %>%
   add_row(
-    plate = "Total", 
+    plate = "Total",
     n_repeated = sum(y$n_repeat),
     n_total = sum(y$n_total),
     n_unique = sum(y$n_unique),
     n_filtered = sum(y$n_filtered),
-    used_percentage = mean(y$used_percentage))
+    used_percentage = mean(y$used_percentage)
+  )
 
 
-#By now you have to tables containing different information per plate, here it just merging them into one single table to plot it
+# By now you have to tables containing different information per plate, here it just merging them into one single table to plot it
 table.seq <- merge(plates_used_sequences, plate_scores, by.default = "plate")
 kable(table.seq) %>%
- kable_styling(bootstrap_options = "striped", full_width = F)
-  
-
-
+  kable_styling(bootstrap_options = "striped", full_width = F)
 ```
 Obs.: After merging, sequences without a index sorting (specificity) were deleted. Those sequences were in general empty wells but also double negative. In total `r nrow(sf_summary_filtered)-nrow(merged_summary_csv)` sequences were subtracted from the total filtered sequences, thus the csv file contains `r nrow(merged_summary_csv)` of this animal.
 
@@ -162,41 +166,32 @@ Obs.: After merging, sequences without a index sorting (specificity) were delete
 Below you can see a histogram based on the number of secondary peaks detected inside the CDR3 region.
 
 ```{r CDR3_indiv, echo=FALSE, fig.align='center'}
-#plot number secondary peaks in CDR3
-g5 <- sf_summary_filtered %>% ggplot(aes(sec.peak.CDR3>0)) + geom_bar() +
+# plot number secondary peaks in CDR3
+g5 <- sf_summary_filtered %>% ggplot(aes(sec.peak.CDR3 > 0)) +
+  geom_bar() +
   xlab("Secondary peaks CDR3 > 0") +
   theme_bw()
-g6 <- sf_summary_filtered %>% ggplot(aes(sec.peak.CDR3)) + 
-    geom_bar(aes(y = (..count..)/sum(..count..))) + 
-    scale_y_continuous(labels=scales::percent) +
-    ylab("relative frequencies") + 
-    xlab("Number of secondary peaks CDR3") +
+g6 <- sf_summary_filtered %>% ggplot(aes(sec.peak.CDR3)) +
+  geom_bar(aes(y = (..count..) / sum(..count..))) +
+  scale_y_continuous(labels = scales::percent) +
+  ylab("relative frequencies") +
+  xlab("Number of secondary peaks CDR3") +
   theme_bw()
 
-grid.arrange(g5, g6, nrow = 1)
+gridExtra::grid.arrange(g5, g6, nrow = 1)
 ```
 
 ## Fasta file 
 
 A fasta file containing the filtered of this animal was created on the folder called __"fasta"__. 
-
-
 ```{r fasta_indiv, echo=FALSE}
-#fasta file creation
-filtered.filepath.animal <- as.character(merged_summary_csv$file.path)
-sangerseqfiltered.animal <- sapply(filtered.filepath.animal, readsangerseq)
-sangerbasecallfasta.animal <- sapply(sangerseqfiltered.animal, primarySeq)
-name_fasta.animal <-   merged_summary_csv %>% mutate(name = file_ID)
-names(sangerbasecallfasta.animal) <- name_fasta.animal$name
-
-
-write.dna(sangerbasecallfasta.animal, 
-          file = paste(output_dir,i,".fasta",sep = ""), 
-          format = 'fasta', 
-          nbcol = -1, 
-          colsep = "",
-          colw = 10000000,
-          append = TRUE)
+# fasta file creation
+df_to_fasta(
+  sequence_name = merged_summary_csv$file_ID,
+  sequence_strings = merged_summary_csv$sequence,
+  file_name = paste0(i, ".fasta"),
+  output_dir = output_dir
+)
 ```
 
 
@@ -214,4 +209,3 @@ write.dna(sangerbasecallfasta.animal,
 ```{r session_indv}
 sessionInfo()
 ```
-
