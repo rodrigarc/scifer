@@ -4,8 +4,8 @@
 #' @param trim.cutoff the cutoff at which you consider a base to be bad. This works on a logarithmic scale, such that if you want to consider a score of 10 as bad, you set cutoff to 0.1; for 20 set it at 0.01; for 30 set it at 0.001; for 40 set it at 0.0001; and so on. Contiguous runs of bases below this quality will be removed from the start and end of the sequence. Given the high quality reads expected of most modern ABI sequencers, the defualt is 0.0001.
 #' @param secondary.peak.ratio the ratio of the height of a secondary peak to a primary peak. Secondary peaks higher than this ratio are annotated. Those below the ratio are not.
 #' @param output.folder If output.folder is NA (the default) no files are written. If a valid folder is provided, two files are written to that folder: a .csv file of the secondary peaks (see description below) and a .pdf file of the chromatogram.
-#' @param file.prefix If output.folder is specified, this is the prefix which will be appended to the .csv and the .pdf file. The default is "seq".
-#' @param processors The number of processors to use, or NULL (the default) for all available processors
+#' @param prefix If output.folder is specified, this is the prefix which will be appended to the .csv and the .pdf file. The default is "seq".
+#' @param processors Number of processors to use, or NULL (the default) for all available processors
 #'
 #' @return A numeric vector including:
 #'          \enumerate{
@@ -20,10 +20,12 @@
 #'              \item {raw.min.quality}: the minimum quality score of the raw sequence \cr
 #'              \item {trimmed.min.quality}: the minimum quality score of the trimmed sequence \cr
 #'          }
-#'
-#' @export summarise.abi.file
-
-summarise.abi.file <- function(seq.abif, trim.cutoff = 0.0001, secondary.peak.ratio = 0.33, output.folder = NA, prefix = "seq", processors = NULL) {
+#' @rawNamespace import(Biostrings, except = c(collapse, union, intersect, setdiff, setequal))
+#' @import dplyr
+#' @importFrom sangerseqR sangerseq primarySeq
+#' @importFrom rlang .data
+#' @export
+summarise_abi_file <- function(seq.abif, trim.cutoff = 0.0001, secondary.peak.ratio = 0.33, output.folder = NA, prefix = "seq", processors = NULL) {
   seq.sanger <- sangerseq(seq.abif)
 
   # first we get the secondary peaks
@@ -31,9 +33,9 @@ summarise.abi.file <- function(seq.abif, trim.cutoff = 0.0001, secondary.peak.ra
   # have called makeBaseCalls. And that this means the trim locations and the
   # secondary peak locations do not match, since makeBaseCalls usually calls
   # fewer bases than the standard ABI calls.
-  secondary.peaks.data <- secondary.peaks(seq.sanger, secondary.peak.ratio, output.folder, prefix, processors = processors)
-  secondary.peaks <- secondary.peaks.data$secondary.peaks
-  seq.sanger <- secondary.peaks.data$read
+  secondary.peaks.data <- secondary_peaks(seq.sanger, secondary.peak.ratio, output.folder, prefix, processors = processors)
+  secondary.peaks <- secondary.peaks.data[["secondary.peaks"]]
+  seq.sanger <- secondary.peaks.data[["read"]]
 
   # now we trim the sequence
   trims <- trim.mott(seq.abif, cutoff = trim.cutoff)
@@ -57,10 +59,10 @@ summarise.abi.file <- function(seq.abif, trim.cutoff = 0.0001, secondary.peak.ra
 
   # get trimmed and untrimmed version of raw data
   seq.trimmed <- seq.sanger@primarySeq[trim.start:trim.finish]
-  secondary.peaks.trimmed <- subset(secondary.peaks, position >= trim.start & position <= trim.finish)
+  secondary.peaks.trimmed <- secondary.peaks %>% filter(.data$position >= trim.start, .data$position <= trim.finish)
 
   print(qual.trimmed)
-  read.summary <- c(
+  read_summary <- c(
     "raw.length" = length(seq.sanger@primarySeq),
     "trimmed.length" = length(seq.trimmed),
     "trim.start" = trim.start,
@@ -76,5 +78,5 @@ summarise.abi.file <- function(seq.abif, trim.cutoff = 0.0001, secondary.peak.ra
     "score" = as.numeric(seq.abif@data$PCON.2),
     "position" = c(1:length(seq.abif@data$PCON.2))
   )
-  return(list("summary" = read.summary, "quality_score" = qual_position))
+  return(list("summary" = read_summary, "quality_score" = qual_position))
 }
