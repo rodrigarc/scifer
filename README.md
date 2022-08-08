@@ -85,20 +85,22 @@ abi_file <- summarise_abi_file("/path/to/ab1/file", processors = 1)
 ```
 
 ### FAQ
-* I have an Mac with a M1 processer, how can I install the packages?
+* I have a Mac with a M1 processor and I am getting errors while intalling this package. How can I install it?
         
-    First, install xcode:
-        ```
-        su - user - myyser -c 'xcode-select --install'
-        ```
+First, install xcode:
 
-    Then install devtools, decipher, sangerseq, and ape.
+```
+    su - user - my_user -c 'xcode-select --install'   
+```
 
-        ```r
-        install. packages("devtools")
+Then install devtools, decipher, sangerseq, and ape.
+   
 
-        if (!requireNamespace("BiocManager", quietly = TRUE))
-          install.packages("BiocManager")
+```r
+    install. packages("devtools")
 
-        BiocManager::install(c("DECIPHER","sangerseqR","ape"), force = TRUE)
-        ```
+    if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+    BiocManager::install(c("DECIPHER","sangerseqR","ape"), force = TRUE)
+```
