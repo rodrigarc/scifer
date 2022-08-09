@@ -2,7 +2,7 @@
 % Please edit documentation in R/summarise_abi_file.R
 \name{summarise_abi_file}
 \alias{summarise_abi_file}
-\title{Create a detailed summary of a single ABI sequencing file}
+\title{Create a summary of a single ABI sequencing file}
 \usage{
 summarise_abi_file(
   seq.abif,
@@ -42,5 +42,5 @@ A numeric vector including:
          }
 }
 \description{
-Create a detailed summary of a single ABI sequencing file
+Create a summary of a single ABI sequencing file
 }

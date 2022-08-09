@@ -10,8 +10,13 @@
 #' @export
 #' @examples
 #' \dontrun{
+#' df_to_fasta(sequence_name = c("myseq1", "myseq2"),
+#' sequence_strings = c("GATCGAT","ATCGTAG"),
+#' file_name = "my_fasta.fasta",
+#' output_dir = "path/to/output")
+#'
 #' df_to_fasta(sequence_name = df$sequence_name,
-#' sequence_strings = df$sequence_name,
+#' sequence_strings = df$sequence,
 #' file_name = "my_fasta.fasta",
 #' output_dir = "path/to/output")
 #' }

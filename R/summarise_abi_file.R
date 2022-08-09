@@ -1,4 +1,4 @@
-#' Create a detailed summary of a single ABI sequencing file
+#' Create a summary of a single ABI sequencing file
 #'
 #' @param seq.abif an abif.seq s4 object from the sangerseqR package
 #' @param trim.cutoff the cutoff at which you consider a base to be bad. This works on a logarithmic scale, such that if you want to consider a score of 10 as bad, you set cutoff to 0.1; for 20 set it at 0.01; for 30 set it at 0.001; for 40 set it at 0.0001; and so on. Contiguous runs of bases below this quality will be removed from the start and end of the sequence. Given the high quality reads expected of most modern ABI sequencers, the defualt is 0.0001.

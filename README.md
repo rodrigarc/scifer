@@ -6,6 +6,7 @@ status](https://github.com/rodrigarc/scifer/workflows/R-CMD-check/badge.svg)](ht
 
 
 
+
 Version: 0.1.0  
 
 Author and Maintainer: Rodrigo Arcoverde  
