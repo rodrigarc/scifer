@@ -1,4 +1,4 @@
-# RepertoiR: Single-cell Immunglobulin Filtering of Sanger sequences
+# RepertoiR: Single-cell Immunoglobulin Filtering of Sanger sequences
 [![R build
 status](https://github.com/rodrigarc/RepertoiR/workflows/R-CMD-check/badge.svg)](https://github.com/rodrigarc/RepertoiR/actions)
 
@@ -10,7 +10,7 @@ Version: 0.1.0
 
 Author and Maintainer: Rodrigo Arcoverde  
 
-Description: Have you ever index sorted cells in a 96 or 384-well plate and then sequenced using Sanger sequencing? If so, you probably had some strungle to either check the chromatograms of each cell sequenced manually, or identify which cell was sorted where after sequencing the plate. Scifer was developed to solve this issue by performing basic quality control of Sanger sequences and merging flow cytometry data from probed single-cell sorted B cells with sequencing data. RepertoiR can export summary tables, fasta files, chromatograms for visual inspection, and generate an interactive report.
+Description: Have you ever index sorted cells in a 96 or 384-well plate and then sequenced using Sanger sequencing? If so, you probably had some strungle to either check the chromatograms of each cell sequenced manually, or identify which cell was sorted where after sequencing the plate. Scifer was developed to solve this issue by performing basic quality control of Sanger sequences and merging flow cytometry data from probed single-cell sorted B cells with sequencing data. Scifer can export summary tables, fasta files, chromatograms for visual inspection, and generate an interactive report.
 
 ## Installation
 
