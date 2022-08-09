@@ -12,13 +12,13 @@ df_to_fasta(
 )
 }
 \arguments{
-\item{sequence_name}{Vector containing the names for each sequence, usually a column from a `data.frame`. eg. df$sequence_name}
+\item{sequence_name}{Vector containing the names for each sequence, usually a column from a data.frame. eg. df$sequence_name}
 
-\item{sequence_strings}{Vector containing the sequences (DNA, RNA, AA), usually a column from a `data.frame`. eg. df$sequences}
+\item{sequence_strings}{Vector containing the DNA or RNA or AA sequences, usually a column from a data.frame. eg. df$sequences}
 
-\item{file_name}{Output file name to be saved as a fasta file.}
+\item{file_name}{Output file name to be saved as a fasta file}
 
-\item{output_dir}{Output directory for the fasta file. Default is the working directory.}
+\item{output_dir}{Output directory for the fasta file. Default is the working directory}
 }
 \value{
 Saves a fasta file in the desired location, and also returns the stringset as BStringSet if saved as an object.
@@ -28,8 +28,13 @@ Fasta file creation from dataframe columns and/or vectors.
 }
 \examples{
 \dontrun{
+df_to_fasta(sequence_name = c("myseq1", "myseq2"),
+sequence_strings = c("GATCGAT","ATCGTAG"),
+file_name = "my_fasta.fasta",
+output_dir = "path/to/output")
+
 df_to_fasta(sequence_name = df$sequence_name,
-sequence_strings = df$sequence_name,
+sequence_strings = df$sequence,
 file_name = "my_fasta.fasta",
 output_dir = "path/to/output")
 }

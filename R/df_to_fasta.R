@@ -1,9 +1,9 @@
 #' Fasta file creation from dataframe columns and/or vectors.
 #'
-#' @param sequence_name Vector containing the names for each sequence, usually a column from a `data.frame`. eg. df$sequence_name
-#' @param sequence_strings Vector containing the sequences (DNA, RNA, AA), usually a column from a `data.frame`. eg. df$sequences
-#' @param file_name Output file name to be saved as a fasta file.
-#' @param output_dir Output directory for the fasta file. Default is the working directory.
+#' @param sequence_name Vector containing the names for each sequence, usually a column from a data.frame. eg. df$sequence_name
+#' @param sequence_strings Vector containing the DNA or RNA or AA sequences, usually a column from a data.frame. eg. df$sequences
+#' @param file_name Output file name to be saved as a fasta file
+#' @param output_dir Output directory for the fasta file. Default is the working directory
 #'
 #' @return Saves a fasta file in the desired location, and also returns the stringset as BStringSet if saved as an object.
 #' @importFrom Biostrings BStringSet writeXStringSet

@@ -21,7 +21,9 @@ summarise_quality(
 \item{processors}{Number of processors to use, or NULL (the default) for all available processors}
 }
 \value{
-Factor variable.
+List containing two items:
+* summaries: contains all the summary results from the processed abi files,
+* quality_scores: contains all the Phred quality score for each position.
 }
 \description{
 Generate a report for combininf flow cytometry data and sanger sequencing QC.

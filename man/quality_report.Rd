@@ -10,35 +10,76 @@ quality_report(
   output_dir = "test/",
   processors = 1,
   folder_path_fcs = "path/to/fcs_datasets",
-  plot_chromatogram = FALSE
+  plot_chromatogram = FALSE,
+  raw_length = 400,
+  trim_start = 50,
+  trim_finish = 409,
+  trimmed_mean_quality = 30,
+  compensation = TRUE,
+  plate_wells = "96",
+  probe1 = "Pre.F",
+  probe2 = "Post.F",
+  posvalue_probe1 = 600,
+  posvalue_probe2 = 400,
+  cdr3_start = 100,
+  cdr3_end = 150
 )
 }
 \arguments{
-\item{data_folder}{Full file directory for searching all ab1 files in a recursive search method (all files including files in subfolders)}
+\item{data_folder}{Full file directory for searching all ab1 files in a recursive search method. It includes all files in subfolders}
 
 \item{outputfile}{Output file name for the report generation}
 
 \item{output_dir}{Output directory for all the different output files that are generated during the report}
 
-\item{processors}{Number of processors to use, or NULL (the default) for all available processors}
+\item{processors}{Number of processors to use, you can set to NULL to detect automatically all available processors}
 
-\item{folder_path_fcs}{Full file directory for searching all flow cytometry index files (.fcs) in a recursive search method (all files including files in subfolders)}
+\item{folder_path_fcs}{Full file directory for searching all flow cytometry index files, files with .fcs extensions, in a recursive search method}
 
-\item{plot_chromatogram}{Logical argument, TRUE or FALSE, to indicate if chromatograms should be plotted or not. Default is FALSE.}
+\item{plot_chromatogram}{Logical argument, TRUE or FALSE, to indicate if chromatograms should be plotted or not. Default is FALSE}
+
+\item{raw_length}{Minimum sequence length for filtering. Default is 400 for B cell receptors}
+
+\item{trim_start}{Starting position where the sequence should start to have a good base call accuracy. Default is 50 for B cell receptors}
+
+\item{trim_finish}{Last position where the sequence should have a good base call accuracy. Default is 409 for B cell receptors}
+
+\item{trimmed_mean_quality}{Minimum Phred quality score expected for an average sequence. Default is 30, which means average of 99.9\% base call accuracy}
+
+\item{compensation}{Logical argument, TRUE or FALSE, to indicate if the index files were compensated or not. If TRUE, it will apply its compensation prior assigning specificities}
+
+\item{plate_wells}{Type of plate used for single-cell sorting. eg. "96" or "384"}
+
+\item{probe1}{Name of the first channel used for the probe or the custom name assigned to the channel in the index file. eg. "FSC.A", "FSC.H", "SSC.A","DsRed.A", "PE.Cy5_5.A", "PE.Cy7.A","BV650.A", "BV711.A","Alexa.Fluor.700.A" "APC.Cy7.A","PerCP.Cy5.5.A","Time"}
+
+\item{probe2}{Name of the second channel used for the probe or the custom name assigned to the channel in the index file. eg. "FSC.A", "FSC.H", "SSC.A","DsRed.A", "PE.Cy5_5.A", "PE.Cy7.A","BV650.A", "BV711.A","Alexa.Fluor.700.A" "APC.Cy7.A","PerCP.Cy5.5.A","Time"}
+
+\item{posvalue_probe1}{Threshold used for fluorescence intensities to be considered as positive for the first probe}
+
+\item{posvalue_probe2}{Threshold used for fluorescence intensities to be considered as positive for the second probe}
+
+\item{cdr3_start}{Expected CDR3 starting position, that depends on your primer set. Default is position 100}
+
+\item{cdr3_end}{Expected CDR3 end position, that depends on your primer set. Default is position 150}
 }
 \value{
-HTML reports, fasta files, csv file
+Saves HTML reports, fasta files, csv files
 }
 \description{
 This function uses the other functions already described to create a HTML report based on sequency quality. Besides the HTML reports, it also creates fasta files with all the sequences and individualized sequences, in addition to a csv file with the quality scores and sequences considered as good quality.
 }
 \examples{
 \dontrun{
-quality.report(
-  data_folder = "test/test_dataset/sanger_sequences",
+quality_report(
+  data_folder = "~/test/test_dataset/sanger_sequences",
   outputfile = "QC-report.html",
-  output_dir = "test/",
-  processors = 1
+  output_dir = "~/test/",
+  folder_path_fcs = "~/path/to/fcs_datasets"
+  processors = 4, compensation = TRUE, plate_wells = "96",
+  probe1 = "Pre.F", probe2 = "Post.F",
+  posvalue_probe1 = 600, posvalue_probe2 = 400,
+  cdr3_start = 100,
+  cdr3_end = 150
 )
 }
 }
