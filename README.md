@@ -84,7 +84,7 @@ fcs_data <- fcs_processing(folder_path = "~/Desktop/project_folder/fcs_files",
 
 ```
 
-## Inpecting sanger sequencing quality of single-cell sorts
+## Inspecting sanger sequencing quality of single-cell sorts
 
 After identifying which probes and threshold you wish to use for selecting what is positive and which channel name you should use. You can also inspect the sequencing data. This process takes longer than the previous steps depending on the number of sequences to be analyzed.
 
