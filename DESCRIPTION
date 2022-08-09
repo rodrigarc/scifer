@@ -10,6 +10,8 @@ Authors@R:
              email = "rodrigo.arcoverdi@gmail.com",
              comment = c(ORCID = "0000-0002-1145-2534")))
 Maintainer: Rodrigo Arcoverde Cerveira <rodrigo.arcoverdi@gmail.com>
+URL: https://github.com/rodrigarc/scifer
+BugReports:	https://github.com/rodrigarc/scifer/issues
 Description: Have you ever index sorted cells in a 96 or 384-well plate and then sequenced using Sanger sequencing? 
     If so, you probably had some strungle to either check the chromatograms of each cell sequenced manually, 
     or when you tried to identify which cell was sorted where after sequencing the plate. 
@@ -20,8 +22,8 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Depends: 
-    dplyr
-Imports: rmarkdown,
+Imports: dplyr,
+    rmarkdown,
     data.table,
     Biostrings,
     parallel,

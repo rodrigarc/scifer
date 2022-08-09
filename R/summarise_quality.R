@@ -5,7 +5,9 @@
 #' @param secondary.peak.ratio Ratio of the height of a secondary peak to a primary peak. Secondary peaks higher than this ratio are annotated, while those below the ratio are not.
 #' @param processors Number of processors to use, or NULL (the default) for all available processors
 #'
-#' @return Factor variable.
+#' @return List containing two items:
+#' * summaries: contains all the summary results from the processed abi files,
+#' * quality_scores: contains all the Phred quality score for each position.
 #' @importFrom parallel detectCores mclapply
 #' @importFrom sangerseqR read.abif
 #' @importFrom DECIPHER ConsensusSequence

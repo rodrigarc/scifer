@@ -17,20 +17,21 @@ fcs_processing(
 \arguments{
 \item{folder_path}{Folder containing all the flow data index filex (.fcs). Files should be named with their sample/plate ID.   eg. "E11_01.fcs"}
 
-\item{compensation}{Logical argument, TRUE or FALSE, to indicate if the index files were compensated or not. If TRUE, it will apply its compensation prior assigning specificities.}
+\item{compensation}{Logical argument, TRUE or FALSE, to indicate if the index files were compensated or not. If TRUE, it will apply its compensation prior assigning specificities}
 
 \item{plate_wells}{Type of plate used for single-cell sorting. eg. "96" or "384"}
 
-\item{probe1}{Name of the first channel used for the probe or the custom name assigned to the channel in the index file. eg. "FSC.A", "FSC.H", "SSC.A","DsRed.A", "PE.Cy5_5.A", "PE.Cy7.A","BV650.A", "BV711.A","Alexa.Fluor.700.A" "APC.Cy7.A","PerCP.Cy5.5.A","Time".}
+\item{probe1}{Name of the first channel used for the probe or the custom name assigned to the channel in the index file. eg. "FSC.A", "FSC.H", "SSC.A","DsRed.A", "PE.Cy5_5.A", "PE.Cy7.A","BV650.A", "BV711.A","Alexa.Fluor.700.A" "APC.Cy7.A","PerCP.Cy5.5.A","Time"}
 
-\item{probe2}{Name of the second channel used for the probe or the custom name assigned to the channel in the index file. eg. "FSC.A", "FSC.H", "SSC.A","DsRed.A", "PE.Cy5_5.A", "PE.Cy7.A","BV650.A", "BV711.A","Alexa.Fluor.700.A" "APC.Cy7.A","PerCP.Cy5.5.A","Time".}
+\item{probe2}{Name of the second channel used for the probe or the custom name assigned to the channel in the index file. eg. "FSC.A", "FSC.H", "SSC.A","DsRed.A", "PE.Cy5_5.A", "PE.Cy7.A","BV650.A", "BV711.A","Alexa.Fluor.700.A" "APC.Cy7.A","PerCP.Cy5.5.A","Time"}
 
-\item{posvalue_probe1}{Threshold used for fluorescence intensities to be considered as positive for the first probe.}
+\item{posvalue_probe1}{Threshold used for fluorescence intensities to be considered as positive for the first probe}
 
-\item{posvalue_probe2}{Threshold used for fluorescence intensities to be considered as positive for the second probe.}
+\item{posvalue_probe2}{Threshold used for fluorescence intensities to be considered as positive for the second probe}
 }
 \value{
-Print plot for selected thresholds and probes, plus a table to be used for extracting index sorting plate location.
+If saved as an object, it returns a table containing all the processed flow cytometry index files, with their fluorescence intensities for each channel and well position.
+At the same time, it also plots a traditional flow density plot with the sorted cells and the selected thresholds for the two probes.
 }
 \description{
 Extract index sorting information from flow cytometry data

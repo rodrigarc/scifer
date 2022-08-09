@@ -8,7 +8,18 @@ params:
   processors: processors
   plot_chromatogram: plot_chromatogram
   folder_path_fcs: folder_path_fcs
-  
+  raw_length: raw_length
+  trim_start: trim_start
+  trim_finish: trim_finish
+  trimmed_mean_quality: trimmed_mean_quality
+  compensation: compensation
+  plate_wells: plate_wells
+  probe1: probe1
+  probe2: probe2
+  posvalue_probe1: posvalue_probe1 
+  posvalue_probe2: posvalue_probe2
+  cdr3_start: cdr3_start
+  cdr3_end: cdr3_end
 ---
 
 ```{r setup, include=FALSE}
@@ -36,7 +47,7 @@ This report includes an overview of all the sequences analyzed. For further info
 ```{r load_packages, include=FALSE, warning=FALSE, echo=FALSE, message=FALSE}
 knitr::opts_chunk$set(echo = F)
 library(ggplot2)
-library(RepertoiR)
+library(scifer)
 ```
 
 ## Overall quality of sequences post-filtering
@@ -94,9 +105,9 @@ sf$summaries[is.na(sf$summaries)] <- 0
 sf_filtered <- sf[["summaries"]] %>%
   # Filter per length, trimmed quality position, and overall trimmed quality.
   filter(
-    raw.length >= 400,
-    trim.start < 50 & trim.finish > 409,
-    trimmed.mean.quality >= 30
+    raw.length >= raw_length,
+    trim.start <= trim_start & trim.finish >= trim_finish,
+    trimmed.mean.quality >= trimmed_mean_quality
   ) %>%
   # group by file names (important if you have repetead sequences with the same name and you want to use the best one among them)
   group_by(file_ID) %>%
@@ -115,7 +126,7 @@ sp <- lapply(sangerseqlisted, secondary_peaks, ratio = 0.33)
 # selecting CDR3 and creating a column in the data frame to say the number of secondary peaks in the CDR3 region
 
 df <- lapply(sp, function(x) x[["secondary.peaks"]])
-df <- lapply(df, function(x) filter(x, position > 100 & position < 150))
+df <- lapply(df, function(x) filter(x, position > cdr3_start & position < cdr3_end))
 df <- lapply(df, function(x) ifelse(nrow(x) > 0, nrow(x), 0))
 df <- tibble(sec.peak.CDR3 = as.numeric(as.character(df)), file.path = names(df))
 df <- df %>% filter(sec.peak.CDR3 <= 5)
@@ -322,7 +333,7 @@ if (is.null(folder_path_fcs)) {
 ```
 
 ```{r processing_flow_data, warning=FALSE, include=process_fcs_data, eval=process_fcs_data}
-processed_index <- fcs_processing(folder_path = folder_path_fcs, compensation = TRUE, plate_wells = "96", probe1 = "Pre.F", probe2 = "Post.F", posvalue_probe1 = 600, posvalue_probe2 = 400)
+processed_index <- fcs_processing(folder_path = folder_path_fcs, compensation = compensation, plate_wells = plate_wells, probe1 = probe1, probe2 = probe2, posvalue_probe1 = posvalue_probe1, posvalue_probe2 = posvalue_probe2)
 
 processed_index <- processed_index %>%
   mutate(file_ID = paste(sample_ID, well_ID, sep = "_"),

@@ -11,3 +11,10 @@ combining single-cell sorted data (FACS) and specificity with Sanger sequencing 
 \author{
 Rodrigo Arcoverde Cerveira \email{rodrigo.arcoverdi@gmail.com}
 }
+\keyword{AIRR,}
+\keyword{B}
+\keyword{QC,}
+\keyword{cell}
+\keyword{receptor,}
+\keyword{sanger}
+\keyword{sequencing}
