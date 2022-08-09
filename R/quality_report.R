@@ -31,7 +31,7 @@
 #'
 #' @export
 quality_report <- function(data_folder, outputfile = "QC_report.html", output_dir = "test/", processors = 1, folder_path_fcs = "path/to/fcs_datasets",plot_chromatogram = FALSE) {
-  input <- system.file("rmd", "HC_report.Rmd", package = "RepertoiR")
+  input <- system.file("rmd", "HC_report.Rmd", package = "scifer")
 
   render(input,
     output_dir = output_dir,
