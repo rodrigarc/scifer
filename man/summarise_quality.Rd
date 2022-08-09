@@ -2,7 +2,7 @@
 % Please edit documentation in R/summarise_quality.R
 \name{summarise_quality}
 \alias{summarise_quality}
-\title{B cell receptor immune repertoire quality control and analysis}
+\title{Generate a report for combininf flow cytometry data and sanger sequencing QC.}
 \usage{
 summarise_quality(
   folder_sequences = "input.folder",
@@ -24,11 +24,11 @@ summarise_quality(
 Factor variable.
 }
 \description{
-RepertoiR was created to do quality control of VDJ sequencing, combining single-cell sorted data and specificity with sanguer sequences.
+Generate a report for combininf flow cytometry data and sanger sequencing QC.
 }
 \examples{
 \dontrun{
-sf <- summarise_quality("abi/folder/path",
+sf <- summarise_quality(folder_sequences = "abi/folder/path",
   secondary.peak.ratio = 0.33,
   trim.cutoff = 0.01, processors = 1
 )

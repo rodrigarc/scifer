@@ -1,6 +1,6 @@
-# RepertoiR
+# scifer
 
-### B cell receptor repertoire package development  
+### Single-cell Immunoglobulin Filtering of Sanger sequences 
 
 
 
@@ -30,7 +30,7 @@ To install directly from GitHub, run this:
 
 if (!require("devtools"))
 install.packages("devtools")
-devtools::install_github("rodrigarc/RepertoiR")
+devtools::install_github("rodrigarc/scifer")
 ```
 
 ## Generating reports and output files
