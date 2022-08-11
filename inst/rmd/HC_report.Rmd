@@ -4,7 +4,7 @@ date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: html_document
 params:
   output_dir: output_dir
-  data_folder: data_folder
+  folder_sequences: folder_sequences
   processors: processors
   plot_chromatogram: plot_chromatogram
   folder_path_fcs: folder_path_fcs
@@ -45,7 +45,6 @@ htmltools::img(
 This report includes an overview of all the sequences analyzed. For further information for each animal sequence, please check the reports per folder.name.
 
 ```{r load_packages, include=FALSE, warning=FALSE, echo=FALSE, message=FALSE}
-knitr::opts_chunk$set(echo = F)
 library(ggplot2)
 library(scifer)
 ```
@@ -58,26 +57,28 @@ The filtering was based on:
 -   Length of the sequences longer than 400 nucleotides
 -   Contiguous good quality inside the sequence between positions 50 and 409 (JDV region)
 -   Quality score after trimming the bad contiguous sequence
--   Number of secondary peaks inside the CDR3 region less than 5
+-   Number of secondary peaks inside the CDR3 region less than 5 (CDR3 default position is between 100-150 bp)
 -   If the sequence was repeated, it will select the one with the best quality
 
 The full script of filtering can be found on the Rmd file.
 
 ```{r dataset, echo=FALSE, results='hide'}
 sf <- summarise_quality(
-  folder_sequences = data_folder,
-  secondary.peak.ratio = 0.33,
-  trim.cutoff = 0.01,
-  processors = processors
+  folder_sequences=folder_sequences,
+  secondary.peak.ratio=0.33,
+  trim.cutoff=0.01,
+  processors=processors
 )
 ```
 
 ```{r error_checkings, results='hide', echo=FALSE, warning=FALSE}
 if (is.null(dim(sf[["summaries"]]))) {
-  print("No files were processed, knitting was stopped early. Please double check the folder location provided for `data_folder` with ab1 files.")
+  print("No files were processed, knitting was stopped early. 
+        Please double check the folder location provided for `folder_sequences` with ab1 files.")
   knitr::knit_exit()
 } else if (is.null(sf[["summaries"]][["raw.length"]]) | is.na(sf[["summaries"]][["raw.length"]])) {
-  print("Columns inside sf_summaries are empty (NA or NULL). Please double check the folder location provided for `data_folder` with ab1 files.")
+  print("Columns inside sf_summaries are empty (NA or NULL). 
+        Please double check the folder location provided for `folder_sequences` with ab1 files.")
   knitr::knit_exit()
 } else if (c("raw.legnth", "trimmed.mean.quality", "trim.start") %in% colnames(sf[["summaries"]])) {
   print("Columns exist in sf_summaries and are not empty, knitting can proceed.")
@@ -128,7 +129,7 @@ sp <- lapply(sangerseqlisted, secondary_peaks, ratio = 0.33)
 df <- lapply(sp, function(x) x[["secondary.peaks"]])
 df <- lapply(df, function(x) filter(x, position > cdr3_start & position < cdr3_end))
 df <- lapply(df, function(x) ifelse(nrow(x) > 0, nrow(x), 0))
-df <- tibble(sec.peak.CDR3 = as.numeric(as.character(df)), file.path = names(df))
+df <- tibble(sec.peak.CDR3=as.numeric(as.character(df)), file.path=names(df))
 df <- df %>% filter(sec.peak.CDR3 <= 5)
 sf_filtered <- merge(sf_filtered, df, by.default = file.path)
 
@@ -139,7 +140,7 @@ sangerseqlisted <- sapply(pathnames, sangerseqR::readsangerseq)
 ```{r plot_folder_name_quality, echo=FALSE, warning=FALSE, fig.align='center'}
 
 g1 <- sf[["summaries"]] %>%
-  ggplot(aes(x = folder.name, y = trimmed.mean.quality)) +
+  ggplot(aes(x=folder.name, y=trimmed.mean.quality)) +
   geom_boxplot() +
   ylim(0, 60) +
   ggtitle("Before filtering") +
@@ -147,7 +148,7 @@ g1 <- sf[["summaries"]] %>%
   labs(y = "Trimmed Mean Quality Score", x = NULL) +
   theme_bw()
 g2 <- sf_filtered %>%
-  ggplot(aes(x = folder.name, y = trimmed.mean.quality)) +
+  ggplot(aes(x=folder.name, y=trimmed.mean.quality)) +
   geom_boxplot() +
   ylim(0, 60) +
   ggtitle("After filtering") +
@@ -175,14 +176,14 @@ g4 <- sf_filtered %>%
   ggplot(aes(
     trimmed.mean.quality,
     raw.mean.quality
-  ), label = file.name) +
+  ), label=file.name) +
   geom_point() +
   ylim(0, 60) +
   xlim(0, 60) +
   ggtitle("Filtered") +
   theme_bw()
 
-gridExtra::grid.arrange(g3, g4, nrow = 1)
+gridExtra::grid.arrange(g3, g4, nrow=1)
 ```
 
 ## Overall quality score
@@ -191,7 +192,7 @@ Here you can see a table containing the number of repeated sequences, total sequ
 
 ```{r plate_quality, echo=FALSE, warning=FALSE, quietly = TRUE, fig.align='center'}
 
-options(dplyr.summarise.inform = F)
+options(dplyr.summarise.inform=FALSE)
 # This code is to create a general table containing the quality report per plate
 
 # Calculate the mean quality per folder.name
@@ -206,9 +207,9 @@ folder.name_scores <- sf_filtered %>%
 # Add the row containing the total, including the mean quality of all the filtered sequences and its standard deviation
 folder.name_scores <- folder.name_scores %>%
   add_row(
-    folder.name = "Total",
-    mean.quality = mean(sf_filtered$raw.mean.quality),
-    standard.deviation = sd(sf_filtered$raw.mean.quality)
+    folder.name="Total",
+    mean.quality=mean(sf_filtered$raw.mean.quality),
+    standard.deviation=sd(sf_filtered$raw.mean.quality)
   )
 options(digits = 4)
 
@@ -233,7 +234,7 @@ filtered.seq <- sf_filtered %>%
   data.frame()
 
 # Merge all the different datasets created above
-x <- merge(n.repeated.seq, total.seq, by.default = folder.name, all = TRUE)
+x <- merge(n.repeated.seq, total.seq, by.default=folder.name, all=TRUE)
 x <- merge(x, filtered.seq, by.default = folder.name, all = TRUE)
 x[is.na(x)] <- 0
 # Caculated the percentage of sequences filtered out of the total unique sequences and add the value in a new column (not repeated)
@@ -253,15 +254,15 @@ plates_used_sequences <- y %>%
   )
 
 # By now you have to tables containing different information per plate, here it just merging them into one single table to plot it
-table.seq <- merge(plates_used_sequences, folder.name_scores, by.default = folder.name)
+table.seq <- merge(plates_used_sequences, folder.name_scores, by.default=folder.name)
 kableExtra::kable(table.seq) %>%
-  kableExtra::kable_styling(bootstrap_options = "striped", full_width = F)
+  kableExtra::kable_styling(bootstrap_options="striped", full_width=FALSE)
 ```
 
 ```{r add_sequence, echo=FALSE, include=FALSE}
 # extract primary basecalls to a dataframe
 sangerbasecall.string <- sapply(sangerseqlisted, sangerseqR::primarySeq,
-  string = TRUE
+  string=TRUE
 )
 sangerbasecall.string <- sangerbasecall.string %>%
   data.frame() %>%
@@ -276,7 +277,7 @@ sf_filtered <- merge(sf_filtered, sangerbasecall.string, by.default = file.path)
 
 ## Secondary peaks inside the CDR3 region
 
-If the algorithm detected a secondary peak on CDR3 region, in our case between position 100 and 150, it will plot automatically the chromatogram from the CDR3 region. Below you can see a histogram based on the number of secondary peaks detected inside the CDR3 region. The secondary.peak needed to be at least half the size (ratio = 0.5) of the primary peak to be considered a true secondary peak. You can check the CDR3 chromatograms in the folder called **"chromatograms"**.
+If the algorithm detected a secondary peak on CDR3 region, in our case between position 100 and 150, it will plot automatically the chromatogram from the CDR3 region. Below you can see a histogram based on the number of secondary peaks detected inside the CDR3 region. The secondary.peak needed to be at least 1/3 the size (ratio = 0.33) of the primary peak to be considered a true secondary peak. You can check the CDR3 chromatograms in the folder called **"chromatograms"**.
 
 ```{r plot_CDR3, echo=FALSE, warning = FALSE, fig.align='center'}
 # plot number secondary peaks in CDR3
@@ -285,8 +286,8 @@ g5 <- sf_filtered %>% ggplot(aes(sec.peak.CDR3 > 0)) +
   xlab("Secondary peaks CDR3 > 0") +
   theme_bw()
 g6 <- sf_filtered %>% ggplot(aes(sec.peak.CDR3)) +
-  geom_bar(aes(y = (..count..) / sum(..count..))) +
-  scale_y_continuous(labels = scales::percent) +
+  geom_bar(aes(y=(..count..) / sum(..count..))) +
+  scale_y_continuous(labels=scales::percent) +
   ylab("relative frequencies") +
   xlab("Number of secondary peaks CDR3") +
   theme_bw()
@@ -300,16 +301,16 @@ chromatogram <- sf_filtered %>%
   filter(sec.peak.CDR3 > 0) %>%
   select(file.path)
 
-name <- merge(sf_filtered, chromatogram, by.default = file.path)
+name <- merge(sf_filtered, chromatogram, by.default=file.path)
 name$file_ID <- sub("HC_", "", name$file_ID)
 chromatogramlisted <- sapply(name$file.path, sangerseqR::readsangerseq)
 
-dir.create(paste0(output_dir, "/chromatograms"), showWarnings = FALSE, recursive = TRUE)
+dir.create(paste0(output_dir, "/chromatograms"), showWarnings=FALSE, recursive=TRUE)
 mapply(
-  FUN = secondary_peaks,
-  s = chromatogramlisted,
-  file.prefix = name$file_ID,
-  MoreArgs = list(output.folder = paste0(output_dir, "/chromatograms"))
+  FUN=secondary_peaks,
+  s=chromatogramlisted,
+  file.prefix=name$file_ID,
+  MoreArgs=list(output.folder = paste0(output_dir, "/chromatograms"))
 )
 ```
 
@@ -368,10 +369,10 @@ A fasta file containing all the filtered sequences was created on the folder cal
 ```{r fasta, echo=FALSE, include = FALSE}
 # Fasta file creation
 df_to_fasta(
-  sequence_name = sf_filtered_csv$file_ID,
-  sequence_strings = sf_filtered_csv$sequence,
-  file_name = "combined_sequences.fasta",
-  output_dir = output_dir
+  sequence_name=sf_filtered_csv$file_ID,
+  sequence_strings=sf_filtered_csv$sequence,
+  file_name="combined_sequences.fasta",
+  output_dir=output_dir
 )
 ```
 
@@ -379,8 +380,8 @@ df_to_fasta(
 
 for (i in unique(sf_filtered$ID)) {
   rmarkdown::render("HC_individualized_report.Rmd", # file 2
-    output_file = paste(Sys.Date(), "_", i, "_report", ".html", sep = ""),
-    output_dir = output_dir
+    output_file=paste(Sys.Date(), "_", i, "_report", ".html", sep = ""),
+    output_dir=output_dir
   )
 }
 ```

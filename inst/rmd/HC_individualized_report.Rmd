@@ -19,7 +19,6 @@ htmltools::img(
 
 
 ```{r setup_indiv, include=FALSE, warning=FALSE, echo=FALSE, message=FALSE}
-knitr::opts_chunk$set(echo = F)
 
 sf_summary <- sf$summaries %>% filter(ID == i)
 sf_summary_filtered <- sf_filtered %>% filter(ID == i)
