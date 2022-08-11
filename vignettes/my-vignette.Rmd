@@ -143,7 +143,7 @@ sf$summaries[4:10]
 
 ## Joining flow cytometry and sanger sequencing datasets
 
-Finally, probably the most useful function of `scifer` is `quality_report()`. This function aims to basically merge the two datasets, assign sorting specificity based on the selected thresholds for each channel/probe and write different files.
+Finally, the function you will use to integrate both datasets and export data from `scifer` is `quality_report()`. This function aims to basically merge the two datasets, assign sorting specificity based on the selected thresholds for each channel/probe and write different files.
 
 This function generated the following files:
 * general quality report (.html)
