@@ -16,7 +16,7 @@ Description: Have you ever index sorted cells in a 96 or 384-well plate and then
     or when you tried to identify which cell was sorted where after sequencing the plate. 
     Scifer was developed to solve this issue by performing basic quality control of Sanger sequences 
     and merging flow cytometry data from probed single-cell sorted B cells with sequencing data. 
-    scifer can export summary tables, 'fasta' files, chromatograms for visual inspection, and generate an interactive report.
+    scifer can export summary tables, 'fasta' files, chromatograms for visual inspection, and generate reports.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
