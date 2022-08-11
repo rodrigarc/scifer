@@ -89,7 +89,7 @@ fcs_data <- fcs_processing(folder_path = system.file("/extdata/fcs_index_sorting
 
 Finally, the above data used compensation as set to `FALSE`,which is not usually the case since you probably have compensated your samples before sorting. You can set to `TRUE` and the compensation matrix within the index files will be already automatically applied.
 
-```{r check_fcs_probe, message=FALSE, warning=FALSE}
+```{r check_fcs_probe_compensated, message=FALSE, warning=FALSE}
 fcs_data <- fcs_processing(folder_path = system.file("/extdata/fcs_index_sorting",package = "scifer"),
                            compensation = TRUE, plate_wells = 96,
                            probe1 = "Pre.F", probe2 = "Post.F",
