@@ -1,8 +1,8 @@
 ---
-title: "Using scifer to filter single-cell sorted VDJ/TCR/BCR sanger sequences"
+title: "Using scifer to filter single-cell sorted B cell receptor (BCR) sanger sequences"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{my-vignette}
+  %\VignetteIndexEntry{Using scifer to filter single-cell sorted B cell receptor (BCR) sanger sequences}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -10,11 +10,160 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  warning = FALSE
 )
 ```
+
+## Introduction
+
+Have you ever index sorted cells in a 96 or 384-well plate and then sequenced using Sanger sequencing? If so, you probably had some struggle to either check the chromatogram of each cell sequenced manually or to identify which cell was sorted where after sequencing the plate. Scifer was developed to solve this issue by performing basic quality control of Sanger sequences and merging flow cytometry data from probed single-cell sorted B cells with sequencing data. Scifer can export summary tables, fasta files, chromatograms for visual inspection, and generate reports.
+
+Single-cell sorting of probed B/T cells for Sanger sequencing of their receptors are widely used, either for identifying antigen-specific antibody sequences or studying antigen-specific B and T cell responses. For this reason, scifer R package was developed to facilitate the integration and QC of flow cytometry data and sanger sequencing.
+
+## Dataset example and description
+
+This vigenette aims to show one example of how to process your own samples based on a test dataset. This dataset contains raw flow cytometry index files (file extension: `.fcs`) and raw sanger sequences (file extension: `.ab1`). These samples are of antigen-specific B cells that were probed and single-cell sorted in a plate to have their B cell receptors (BCR) sequenced through sanger sequencing. This package can also be used for T cell receptors but you should have extra attention to select the QC parameters according to your intended sequence. The sorted cells had their RNA reverse transcribed into cDNA and PCR amplified using a set of primer specific for rhesus macaques (sample origin), the resulting PCR products were sequenced using a IgG specific primer and was designed to capture the entire VDJ fragment of the BCRs.
+
+## Folder organization
+
+Regardless of where is your data, you should have two folders, one for flow cytometry data and a second one for sanger sequences. The nomenclature of the `.fcs` files and the sanger sequence subfolders and should be matching, this is fundamental for merging both datasets.
+
+### Extra information
+
+If you want to have a more detailed explanation of installation steps and folder organization, check the README file in the [package github here.](https://github.com/rodrigarc/scifer).
+
+## Load required packages
 
 ```{r setup}
 library(ggplot2)
 library(scifer)
+```
+
+## Checking flow cytometry data
+
+It is important to check your flow data to check how is your data being processed, if it is already compensated, and if the cells were probed which thresholds you should use.
+
+### Example 1
+
+Here is an example of poor threshold using size and forward scatter (cell size and granulosity).
+
+```{r check_fcs, message=FALSE}
+fcs_data <- fcs_processing(folder_path = system.file("/extdata/fcs_index_sorting",package = "scifer"),
+                           compensation = FALSE, plate_wells = 96,
+                           probe1 = "FSC.A", probe2 = "SSC.A",
+                           posvalue_probe1 = 600, posvalue_probe2 = 400, flow_plot = TRUE)
+```
+
+You can play around with the threshold and the different channels available. You can check the name of each channel using this:
+
+```{r channels}
+colnames(fcs_data)
+```
+
+You can see that the well position was already extracted from the file and column named `specificity` was added. This specificity is named based on your selected channels and their thresholds.
+
+### Example 2
+
+If you did not probe your cells for a specific antigen, you can just use the following and ignore the `specificity` column. This will add all you cells regardless of the channel fluorescence detected.
+
+```{r check_fcs_noprobe, message=FALSE, warning=FALSE}
+fcs_data <- fcs_processing(folder_path = system.file("/extdata/fcs_index_sorting",package = "scifer"),
+                           compensation = FALSE, plate_wells = 96,
+                           probe1 = "FSC.A", probe2 = "SSC.A",
+                           posvalue_probe1 = 0, posvalue_probe2 = 0, flow_plot = TRUE)
+```
+
+### Example 3
+
+If you have probed your cells based on a specific marker, you can use the name of the channel or the custom name you have added during the sorting to that channel.
+
+```{r check_fcs_probe, message=FALSE}
+fcs_data <- fcs_processing(folder_path = system.file("/extdata/fcs_index_sorting",package = "scifer"),
+                           compensation = FALSE, plate_wells = 96,
+                           probe1 = "Pre.F", probe2 = "Post.F",
+                           posvalue_probe1 = 600, posvalue_probe2 = 400, flow_plot = TRUE)
+```
+
+### Example 4
+
+Finally, the above data used compensation as set to `FALSE`,which is not usually the case since you probably have compensated your samples before sorting. You can set to `TRUE` and the compensation matrix within the index files will be already automatically applied.
+
+```{r check_fcs_probe, message=FALSE, warning=FALSE}
+fcs_data <- fcs_processing(folder_path = system.file("/extdata/fcs_index_sorting",package = "scifer"),
+                           compensation = TRUE, plate_wells = 96,
+                           probe1 = "Pre.F", probe2 = "Post.F",
+                           posvalue_probe1 = 600, posvalue_probe2 = 400, flow_plot = TRUE)
+```
+
+The `specificity` column uses these threshold to name your sorted cells. In this example, you would have a `Pre.F` single-positive, `Post.F` single-positive, double-positive cells named as`DP`, and double-negative cells named as `DN`. 
+
+```{r specificity}
+unique(fcs_data$specificity)
+```
+
+## Sanger sequence dataset
+
+### Processing a single B cell receptor sanger sequence 
+
+Here is just an example of if you would like to process a single sanger sequence
+
+```{r bcr_sequence, warning=FALSE}
+## Read abif using sangerseqR package
+abi_seq <- sangerseqR::read.abif(
+  system.file("/extdata/sorted_sangerseq/E18_C1/A1_3_IgG_Inner.ab1", package="scifer"))
+## Summarise using summarise_abi_file()
+summarise_abi_file(abi_seq)
+
+```
+
+### Processing a group of B cell receptors sanger sequences
+
+Most of the times, if you have sequenced an entire plate, you want to automate this processing. 
+Here you would process recursively all the `.ab1` file withing a decided folder.
+
+*Note: To speed up, you can increase the `processors` parameter depending on your local computer number of processors or set it to `NULL` which will try to detect the max number of cores.
+
+```{r bcr_sequences, warning=FALSE, results='hide'}
+
+sf <- summarise_quality(folder_sequences=system.file("extdata/sorted_sangerseq", package="scifer"),
+                        secondary.peak.ratio=0.33,
+                        trim.cutoff=0.01,
+                        processor = 1)
+```
+Here is the example `data.frame` with the summarised results of all the files within the selected path:
+
+```{r bcr_seq_table, warning=FALSE, results='hide'}
+## Print names of all the variables 
+colnames(sf$summaries)
+
+## Print table names
+sf$summaries[4:10]
+```
+
+## Joining flow cytometry and sanger sequencing datasets
+
+Finally, probably the most useful function of `scifer` is `quality_report()`. This function aims to basically merge the two datasets, assign sorting specificity based on the selected thresholds for each channel/probe and write different files.
+
+This function generated the following files:
+* general quality report (.html)
+* individualized report per ID (.html)
+* table containing the good quality sequences filtered in and their QC summary (.csv)
+* fasta file containing all the sequences (.fasta)
+* fasta files per ID (.fasta)
+* Chromatogram of the approximate CDR3 region if secondary peaks are detected (.pdf)
+
+```{r eval=FALSE}
+quality_report(folder_sequences = system.file("extdata/sorted_sangerseq", package="scifer"),
+               outputfile = "QC_report.html",
+               output_dir = "~/full/path/to/your/desire/location",
+               folder_path_fcs = system.file("/extdata/fcs_index_sorting",package = "scifer"),
+               probe1 = "Pre.F", probe2 = "Post.F",
+               posvalue_probe1 = 600, posvalue_probe2 = 400)
+
+```
+
+
+```{r session_info}
+sessionInfo()
 ```
