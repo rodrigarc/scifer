@@ -4,5 +4,7 @@
 .Ruserdata
 .fasta
 .html
-.DS_Store
+*.DS_Store
 .csv
+*.Rproj
+inst/doc
