@@ -21,7 +21,11 @@
 #'    processor = 1
 #' )}
 #' @export
-summarise_quality <- function(folder_sequences="input_folder", trim.cutoff=0.01, secondary.peak.ratio=0.33, processors=NULL) {
+summarise_quality <-
+    function(folder_sequences="input_folder",
+             trim.cutoff=0.01,
+             secondary.peak.ratio=0.33,
+             processors=NULL) {
     get_processors <- function(processors) {
         if (Sys.info()["sysname"] == "Windows") {
             ## mclapply is not supported on windows
@@ -35,7 +39,8 @@ summarise_quality <- function(folder_sequences="input_folder", trim.cutoff=0.01,
     processors <- get_processors(processors)
 
     print("Looking for .ab1 files...")
-    abi.fnames <- list.files(folder_sequences, pattern="\\.ab1$", full.names=TRUE, recursive=TRUE)
+    abi.fnames <- list.files(folder_sequences, pattern="\\.ab1$",
+                             full.names=TRUE, recursive=TRUE)
 
     print(sprintf(("Found %d .ab1 files..."), length(abi.fnames)))
 
@@ -58,7 +63,9 @@ summarise_quality <- function(folder_sequences="input_folder", trim.cutoff=0.01,
     folder.names <- basename(dirname(abi.fnames))
     file.names <- basename(abi.fnames)
 
-    summaries <- cbind.data.frame("file.path"=as.character(abi.fnames), "folder.name"=as.character(folder.names), "file.name"=file.names, summaries, stringsAsFactors=FALSE)
+    summaries <- cbind.data.frame("file.path"=as.character(abi.fnames),
+                                  "folder.name"=as.character(folder.names),
+                                  "file.name"=file.names, summaries, stringsAsFactors=FALSE)
     qual_scores <- mclapply(summaries.dat, function(x) x[["quality_score"]], mc.cores=processors)
     names(qual_scores) <- as.character(abi.fnames)
 

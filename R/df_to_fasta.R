@@ -19,7 +19,11 @@
 #'     save_fasta = FALSE
 #' )}
 #' @export
-df_to_fasta <- function(sequence_name, sequence_strings, file_name="sequences.fasta", output_dir=NULL, save_fasta = TRUE) {
+df_to_fasta <- function(sequence_name,
+                        sequence_strings,
+                        file_name="sequences.fasta",
+                        output_dir=NULL,
+                        save_fasta = TRUE) {
     if (length(sequence_strings) != length(sequence_name)) {
         print("Sequences column does not have the same length as sequences name")
     } else {

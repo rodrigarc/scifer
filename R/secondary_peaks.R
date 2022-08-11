@@ -31,7 +31,10 @@
 #' }
 #'
 #' @export
-secondary_peaks <- function(s, ratio=0.5, output.folder=NA, file.prefix="seq", processors=NULL) {
+secondary_peaks <- function(s, ratio=0.5,
+                            output.folder=NA,
+                            file.prefix="seq",
+                            processors=NULL) {
     basecalls <- makeBaseCalls(s, ratio=ratio)
 
     primary <- primarySeq(basecalls, string=TRUE)

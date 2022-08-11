@@ -57,15 +57,18 @@
 #' )}
 #'
 #' @export
-quality_report <- function(folder_sequences = "path/to/sanger_sequences", outputfile="QC_report.html", output_dir="test/", processors=NULL,
-    folder_path_fcs="path/to/fcs_datasets", plot_chromatogram=FALSE,
-    raw_length=400, trim_start=50, trim_finish=409,
-    trimmed_mean_quality=30,
-    compensation=TRUE, plate_wells="96",
-    probe1="Pre.F", probe2="Post.F",
-    posvalue_probe1=600, posvalue_probe2=400,
-    cdr3_start=100,
-    cdr3_end=150) {
+quality_report <- function(folder_sequences="path/to/sanger_sequences",
+                           outputfile="QC_report.html",
+                           output_dir="test/", processors=NULL,
+                           folder_path_fcs="path/to/fcs_datasets",
+                           plot_chromatogram=FALSE,
+                           raw_length=400, trim_start=50, trim_finish=409,
+                           trimmed_mean_quality=30,
+                           compensation=TRUE, plate_wells="96",
+                           probe1="Pre.F", probe2="Post.F",
+                           posvalue_probe1=600, posvalue_probe2=400,
+                           cdr3_start=100,
+                           cdr3_end=150) {
 
     input <- system.file("rmd", "HC_report.Rmd", package="scifer")
 

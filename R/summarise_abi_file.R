@@ -35,11 +35,19 @@
 #' summarise_abi_file(abi_seq)
 #' }
 #' @export
-summarise_abi_file <- function(seq.abif, trim.cutoff=0.0001, secondary.peak.ratio=0.33, output.folder=NA, prefix="seq", processors=NULL) {
-    seq.sanger <- sangerseq(seq.abif)
+summarise_abi_file <- function(seq.abif,
+                               trim.cutoff=0.0001,
+                               secondary.peak.ratio=0.33,
+                               output.folder=NA,
+                               prefix="seq",
+                               processors=NULL) {
 
+    seq.sanger <- sangerseq(seq.abif)
     ## Get secondary peaks
-    secondary.peaks.data <- secondary_peaks(seq.sanger, secondary.peak.ratio, output.folder, prefix, processors=processors)
+    secondary.peaks.data <- secondary_peaks(seq.sanger,
+                                            secondary.peak.ratio,
+                                            output.folder, prefix,
+                                            processors=processors)
     secondary.peaks <- secondary.peaks.data[["secondary.peaks"]]
     seq.sanger <- secondary.peaks.data[["read"]]
 
