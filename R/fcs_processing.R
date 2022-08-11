@@ -38,12 +38,12 @@ fcs_processing <- function(folder_path="test/test_dataset/fcs_files/",
     if (compensation == TRUE) {
         comp <- fsApply(fs, function(x) spillover(x)[[1]], simplify=FALSE)
         fs_comp <- compensate(fs, comp)
-        print("Samples were compensated using the compensation saved on fsc index files.")
+        message("Samples were compensated using the compensation saved on fsc index files.")
     } else if (compensation == FALSE) {
         fs_comp <- fs
-        print("Samples were not compensated.")
+        message("Samples were not compensated.")
     } else {
-        print("Compensation argument should be TRUE or FALSE.")
+        message("Compensation argument should be TRUE or FALSE.")
     }
 
     fs_comp <- fsApply(fs_comp, simplify=FALSE, function(x) {
@@ -58,16 +58,16 @@ fcs_processing <- function(folder_path="test/test_dataset/fcs_files/",
                 column=plyr::mapvalues(.data$YLoc, from=seq(0, 11), to=sprintf("%02d", as.numeric(seq_len(12)))),
                 well_ID=paste0(.data$row, .data$column)
             )
-            print("96-well plates were used for sorting.")
+            message("96-well plates were used for sorting.")
         } else if (plate_wells == 384) {
             df_fs_comp <- getIndexSort(x) %>% mutate(
                 row=plyr::mapvalues(.data$XLoc, from=seq(0, 15), to=LETTERS[seq_len(16)]),
                 column=plyr::mapvalues(.data$YLoc, from=seq(0, 23), to=sprintf("%02d", as.numeric(seq_len(24)))),
                 well_ID=paste0(.data$row, .data$column)
             )
-            print("384-well plates were used for sorting.")
+            message("384-well plates were used for sorting.")
         } else {
-            print("Only 96 or 384-well plates are supported")
+            message("Only 96 or 384-well plates are supported")
         }
 
         return(df_fs_comp)
@@ -80,9 +80,10 @@ fcs_processing <- function(folder_path="test/test_dataset/fcs_files/",
     ## Classify sorted single-cells according to specificity
     joined_fsc_table <- joined_fsc_table %>%
         mutate(specificity=case_when(
+            get(probe1) < posvalue_probe1 & get(probe2) < posvalue_probe2 ~ "DN",
             get(probe1) > posvalue_probe1 & get(probe2) > posvalue_probe2 ~ "DP",
             get(probe1) > posvalue_probe1 & get(probe2) < posvalue_probe2 ~ probe1,
-            get(probe1) < posvalue_probe1 ~ probe2
+            get(probe1) < posvalue_probe1 & get(probe2) > posvalue_probe2 ~ probe2
         ))
     ## Plot classification according to selected thresholds
     .x <- NULL

@@ -61,5 +61,6 @@ summarise_quality <- function(folder_sequences="input_folder", trim.cutoff=0.01,
     summaries <- cbind.data.frame("file.path"=as.character(abi.fnames), "folder.name"=as.character(folder.names), "file.name"=file.names, summaries, stringsAsFactors=FALSE)
     qual_scores <- mclapply(summaries.dat, function(x) x[["quality_score"]], mc.cores=processors)
     names(qual_scores) <- as.character(abi.fnames)
+
     return(list("summaries"=summaries, "quality_scores"=qual_scores))
 }

@@ -67,7 +67,6 @@ summarise_abi_file <- function(seq.abif, trim.cutoff=0.0001, secondary.peak.rati
     seq.trimmed <- seq.sanger@primarySeq[trim.start:trim.finish]
     secondary.peaks.trimmed <- secondary.peaks %>% filter(.data$position >= trim.start, .data$position <= trim.finish)
 
-    print(qual.trimmed)
     read_summary <- c(
         "raw.length"=length(seq.sanger@primarySeq),
         "trimmed.length"=length(seq.trimmed),
