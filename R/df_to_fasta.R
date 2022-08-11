@@ -4,33 +4,37 @@
 #' @param sequence_strings Vector containing the DNA or RNA or AA sequences, usually a column from a data.frame. eg. df$sequences
 #' @param file_name Output file name to be saved as a fasta file
 #' @param output_dir Output directory for the fasta file. Default is the working directory
+#' @param save_fasta Logical argument, TRUE or FALSE, to indicate if fasta files should be saved. Default is TRUE.
 #'
 #' @return Saves a fasta file in the desired location, and also returns the stringset as BStringSet if saved as an object.
 #' @importFrom Biostrings BStringSet writeXStringSet
-#' @export
 #' @examples
-#' \dontrun{
-#' df_to_fasta(sequence_name = c("myseq1", "myseq2"),
-#' sequence_strings = c("GATCGAT","ATCGTAG"),
-#' file_name = "my_fasta.fasta",
-#' output_dir = "path/to/output")
-#'
-#' df_to_fasta(sequence_name = df$sequence_name,
-#' sequence_strings = df$sequence,
-#' file_name = "my_fasta.fasta",
-#' output_dir = "path/to/output")
-#' }
-df_to_fasta <- function(sequence_name, sequence_strings, file_name = "sequences.fasta", output_dir = NULL) {
-  if (length(sequence_strings) != length(sequence_name)) {
-    print("Sequences columng does not have the same length as sequences name")
-  } else {
-    str <- BStringSet(sequence_strings)
-    names(str) <- sequence_name
-  }
-  if (is.null(output_dir)) {
-    writeXStringSet(str, filepath = file_name, append = FALSE, format = "fasta")
-  } else {
-    writeXStringSet(str, filepath = paste0(output_dir, "/", file_name), append = FALSE, format = "fasta")
-  }
-  return(str)
+#' \donttest{
+#' ## Example with vectors, default for save_fasta ir TRUE
+#' df_to_fasta(
+#'     sequence_name=c("myseq1", "myseq2"),
+#'     sequence_strings=c("GATCGAT", "ATCGTAG"),
+#'     file_name="my_sequences.fasta",
+#'     output_dir="",
+#'     save_fasta = FALSE
+#' )}
+#' @export
+df_to_fasta <- function(sequence_name, sequence_strings, file_name="sequences.fasta", output_dir=NULL, save_fasta = TRUE) {
+    if (length(sequence_strings) != length(sequence_name)) {
+        print("Sequences column does not have the same length as sequences name")
+    } else {
+        str <- BStringSet(sequence_strings)
+        names(str) <- sequence_name
+    }
+
+    if (isTRUE(save_fasta)){
+        if (is.null(output_dir)) {
+            writeXStringSet(str, filepath=file_name, append=FALSE, format="fasta")
+        } else {
+            writeXStringSet(str, filepath=paste0(output_dir, file_name), append=FALSE, format="fasta")
+        }
+    } else {
+        print("Fasta file not saved.")
+    }
+    return(str)
 }

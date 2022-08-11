@@ -1,4 +1,4 @@
-#' scifer: Single-cell Immunoglobulin Filtering of Sanger sequences
+#' Scifer: Single-Cell Immunoglobulin Filtering of Sanger Sequences
 #'
 #' Integrating index single-cell sorted files with Sanger sequencing per plates,
 #' combining single-cell sorted data (FACS) and specificity with Sanger sequencing information.
@@ -8,7 +8,7 @@
 #'
 #' @author Rodrigo Arcoverde Cerveira \email{rodrigo.arcoverdi@gmail.com}
 #'
-#' @keywords B cell receptor, AIRR, QC, sanger sequencing
+#' @keywords BCR TCR AIRR QC sanger sequencing
 #'
 #' @name scifer
 NULL

@@ -1,27 +1,34 @@
 Package: scifer
 Type: Package
-Date: 2021-04-15
-Title: scifer: Single-cell Immunoglobulin Filtering of Sanger sequences
-Version: 0.1.0
+Date: 2022-08-11
+Title: Scifer: Single-Cell Immunoglobulin Filtering of Sanger Sequences
+Version: 0.99.0
 Authors@R: 
     c(person(given = "Rodrigo",
              family = "Arcoverde Cerveira",
              role = c("aut", "cre", "cph"),
              email = "rodrigo.arcoverdi@gmail.com",
              comment = c(ORCID = "0000-0002-1145-2534")))
-Maintainer: Rodrigo Arcoverde Cerveira <rodrigo.arcoverdi@gmail.com>
 URL: https://github.com/rodrigarc/scifer
-BugReports:	https://github.com/rodrigarc/scifer/issues
+BugReports: https://github.com/rodrigarc/scifer/issues
 Description: Have you ever index sorted cells in a 96 or 384-well plate and then sequenced using Sanger sequencing? 
-    If so, you probably had some strungle to either check the chromatograms of each cell sequenced manually, 
+    If so, you probably had some struggle to either check the chromatogram of each cell sequenced manually, 
     or when you tried to identify which cell was sorted where after sequencing the plate. 
     Scifer was developed to solve this issue by performing basic quality control of Sanger sequences 
     and merging flow cytometry data from probed single-cell sorted B cells with sequencing data. 
-    scifer can export summary tables, fasta files, chromatograms for visual inspection, and generate an interactive report.
+    scifer can export summary tables, 'fasta' files, chromatograms for visual inspection, and generate an interactive report.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Depends: 
+biocViews: 
+    Preprocessing, 
+    QualityControl, 
+    SangerSeq, 
+    Sequencing, 
+    Software, 
+    FlowCytometry,
+    SingleCell
 Imports: dplyr,
     rmarkdown,
     data.table,
@@ -41,3 +48,4 @@ Imports: dplyr,
     rlang,
     flowCore
 RoxygenNote: 7.1.2
+VignetteBuilder: knitr

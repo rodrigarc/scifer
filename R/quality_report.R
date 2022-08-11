@@ -1,8 +1,8 @@
 #' Generate general and individualized reports
 #'
-#' This function uses the other functions already described to create a HTML report based on sequency quality. Besides the HTML reports, it also creates fasta files with all the sequences and individualized sequences, in addition to a csv file with the quality scores and sequences considered as good quality.
+#' This function uses the other functions already described to create a HTML report based on sequencing quality. Besides the HTML reports, it also creates fasta files with all the sequences and individualized sequences, in addition to a csv file with the quality scores and sequences considered as good quality.
 #'
-#' @param data_folder Full file directory for searching all ab1 files in a recursive search method. It includes all files in subfolders
+#' @param folder_sequences Full file directory for searching all ab1 files in a recursive search method. It includes all files in subfolders
 #' @param outputfile Output file name for the report generation
 #' @param output_dir Output directory for all the different output files that are generated during the report
 #' @param processors Number of processors to use, you can set to NULL to detect automatically all available processors
@@ -27,15 +27,15 @@
 #' @examples
 #' \dontrun{
 #' quality_report(
-#'   data_folder = "~/test/test_dataset/sanger_sequences",
-#'   outputfile = "QC-report.html",
-#'   output_dir = "~/test/",
-#'   folder_path_fcs = "~/path/to/fcs_datasets"
-#'   processors = 4, compensation = TRUE, plate_wells = "96",
-#'   probe1 = "Pre.F", probe2 = "Post.F",
-#'   posvalue_probe1 = 600, posvalue_probe2 = 400,
-#'   cdr3_start = 100,
-#'   cdr3_end = 150
+#'     data_folder="~/test/test_dataset/sanger_sequences",
+#'     outputfile="QC-report.html",
+#'     output_dir="~/test/",
+#'     folder_path_fcs="~/path/to/fcs_datasets",
+#'     processors=4, compensation=TRUE, plate_wells="96",
+#'     probe1="Pre.F", probe2="Post.F",
+#'     posvalue_probe1=600, posvalue_probe2=400,
+#'     cdr3_start=100,
+#'     cdr3_end=150
 #' )
 #' }
 #' @importFrom rmarkdown render
@@ -46,41 +46,50 @@
 #' @importFrom tibble rownames_to_column
 #' @importFrom gridExtra grid.arrange
 #' @importFrom sangerseqR primarySeq
-#' @import ggplot2 dplyr
+#' @import ggplot2 dplyr knitr
+#'
+#' @examples
+#' \dontrun{
+#' quality_report(
+#' folder_sequences=system.file("extdata/sorted_sangerseq/", package="scifer"),
+#' output_dir="", folder_path_fcs=system.file("extdata/fcs_index_sorting/", package="scifer"),
+#'  probe1="Pre.F", probe2="Post.F", posvalue_probe1=600, posvalue_probe2=400
+#' )}
 #'
 #' @export
-quality_report <- function(data_folder, outputfile = "QC_report.html", output_dir = "test/", processors = 1,
-                           folder_path_fcs = "path/to/fcs_datasets", plot_chromatogram = FALSE,
-                           raw_length = 400, trim_start = 50, trim_finish = 409,
-                           trimmed_mean_quality = 30,
-                           compensation = TRUE, plate_wells = "96",
-                           probe1 = "Pre.F", probe2 = "Post.F",
-                           posvalue_probe1 = 600, posvalue_probe2 = 400,
-                           cdr3_start = 100,
-                           cdr3_end = 150) {
-  input <- system.file("rmd", "HC_report.Rmd", package = "scifer")
+quality_report <- function(folder_sequences = "path/to/sanger_sequences", outputfile="QC_report.html", output_dir="test/", processors=NULL,
+    folder_path_fcs="path/to/fcs_datasets", plot_chromatogram=FALSE,
+    raw_length=400, trim_start=50, trim_finish=409,
+    trimmed_mean_quality=30,
+    compensation=TRUE, plate_wells="96",
+    probe1="Pre.F", probe2="Post.F",
+    posvalue_probe1=600, posvalue_probe2=400,
+    cdr3_start=100,
+    cdr3_end=150) {
 
-  render(input,
-    output_dir = output_dir,
-    params = list(
-      data_folder = data_folder,
-      output_dir = output_dir,
-      processors = processors,
-      plot_chromatogram = plot_chromatogram,
-      folder_path_fcs = folder_path_fcs,
-      raw_length = raw_length,
-      trim_start = trim_start,
-      trim_finish = trim_finish,
-      trimmed_mean_quality = trimmed_mean_quality,
-      compensation = compensation,
-      plate_wells = plate_wells,
-      probe1 = probe1,
-      probe2 = probe2,
-      posvalue_probe1 = posvalue_probe1,
-      posvalue_probe2 = posvalue_probe2,
-      cdr3_start = cdr3_start,
-      cdr3_end = cdr3_end
-    ),
-    output_file = outputfile
-  )
+    input <- system.file("rmd", "HC_report.Rmd", package="scifer")
+
+    render(input,
+        output_dir=output_dir,
+        params=list(
+            folder_sequences=folder_sequences,
+            output_dir=output_dir,
+            processors=processors,
+            plot_chromatogram=plot_chromatogram,
+            folder_path_fcs=folder_path_fcs,
+            raw_length=raw_length,
+            trim_start=trim_start,
+            trim_finish=trim_finish,
+            trimmed_mean_quality=trimmed_mean_quality,
+            compensation=compensation,
+            plate_wells=plate_wells,
+            probe1=probe1,
+            probe2=probe2,
+            posvalue_probe1=posvalue_probe1,
+            posvalue_probe2=posvalue_probe2,
+            cdr3_start=cdr3_start,
+            cdr3_end=cdr3_end
+        ),
+        output_file=outputfile
+    )
 }

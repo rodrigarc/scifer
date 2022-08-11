@@ -3,7 +3,7 @@
 \docType{package}
 \name{scifer}
 \alias{scifer}
-\title{scifer: Single-cell Immunoglobulin Filtering of Sanger sequences}
+\title{Scifer: Single-Cell Immunoglobulin Filtering of Sanger Sequences}
 \description{
 Integrating index single-cell sorted files with Sanger sequencing per plates,
 combining single-cell sorted data (FACS) and specificity with Sanger sequencing information.
@@ -11,10 +11,9 @@ combining single-cell sorted data (FACS) and specificity with Sanger sequencing 
 \author{
 Rodrigo Arcoverde Cerveira \email{rodrigo.arcoverdi@gmail.com}
 }
-\keyword{AIRR,}
-\keyword{B}
-\keyword{QC,}
-\keyword{cell}
-\keyword{receptor,}
+\keyword{AIRR}
+\keyword{BCR}
+\keyword{QC}
+\keyword{TCR}
 \keyword{sanger}
 \keyword{sequencing}

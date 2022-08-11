@@ -11,13 +11,14 @@ fcs_processing(
   probe1 = "Pre.F",
   probe2 = "Post.F",
   posvalue_probe1 = 600,
-  posvalue_probe2 = 400
+  posvalue_probe2 = 400,
+  flow_plot = TRUE
 )
 }
 \arguments{
 \item{folder_path}{Folder containing all the flow data index filex (.fcs). Files should be named with their sample/plate ID.   eg. "E11_01.fcs"}
 
-\item{compensation}{Logical argument, TRUE or FALSE, to indicate if the index files were compensated or not. If TRUE, it will apply its compensation prior assigning specificities}
+\item{compensation}{Logical argument, TRUE or FALSE, to indicate if the index files were compensated or not. If TRUE, it will apply its compensation prior assigning specificity}
 
 \item{plate_wells}{Type of plate used for single-cell sorting. eg. "96" or "384"}
 
@@ -28,6 +29,8 @@ fcs_processing(
 \item{posvalue_probe1}{Threshold used for fluorescence intensities to be considered as positive for the first probe}
 
 \item{posvalue_probe2}{Threshold used for fluorescence intensities to be considered as positive for the second probe}
+
+\item{flow_plot}{Logical argument, TRUE or FALSE, to indicate if a flow cytometry density plot of the sorted cells should be plotted. Default is TRUE.}
 }
 \value{
 If saved as an object, it returns a table containing all the processed flow cytometry index files, with their fluorescence intensities for each channel and well position.
@@ -37,10 +40,11 @@ At the same time, it also plots a traditional flow density plot with the sorted 
 Extract index sorting information from flow cytometry data
 }
 \examples{
-\dontrun{
-index_sort_data <- fsc.processing(folder_path = "test/test_dataset/fcs_files/",
-compensation = TRUE, plate_wells = 96,
-probe1 = "Pre.F", probe2 = "Post.F",
-posvalue_probe1 = 600, posvalue_probe2 = 400)
-}
+index_sort_data <- fcs_processing(
+    folder_path=system.file("/extdata/fcs_index_sorting",package = "scifer"),
+    compensation=TRUE, plate_wells=96,
+    probe1="Pre.F", probe2="Post.F",
+    posvalue_probe1=600, posvalue_probe2=400, flow_plot=FALSE
+)
+
 }

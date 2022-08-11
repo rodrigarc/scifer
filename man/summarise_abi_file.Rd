@@ -16,7 +16,7 @@ summarise_abi_file(
 \arguments{
 \item{seq.abif}{an abif.seq s4 object from the sangerseqR package}
 
-\item{trim.cutoff}{the cutoff at which you consider a base to be bad. This works on a logarithmic scale, such that if you want to consider a score of 10 as bad, you set cutoff to 0.1; for 20 set it at 0.01; for 30 set it at 0.001; for 40 set it at 0.0001; and so on. Contiguous runs of bases below this quality will be removed from the start and end of the sequence. Given the high quality reads expected of most modern ABI sequencers, the defualt is 0.0001.}
+\item{trim.cutoff}{the cutoff at which you consider a base to be bad. This works on a logarithmic scale, such that if you want to consider a score of 10 as bad, you set cutoff to 0.1; for 20 set it at 0.01; for 30 set it at 0.001; for 40 set it at 0.0001; and so on. Contiguous runs of bases below this quality will be removed from the start and end of the sequence. Default is 0.0001.}
 
 \item{secondary.peak.ratio}{the ratio of the height of a secondary peak to a primary peak. Secondary peaks higher than this ratio are annotated. Those below the ratio are not.}
 
@@ -43,4 +43,14 @@ A numeric vector including:
 }
 \description{
 Create a summary of a single ABI sequencing file
+}
+\examples{
+\donttest{
+## Read abif using sangerseqR package
+abi_seq <- sangerseqR::read.abif(
+system.file("/extdata/sorted_sangerseq/E18_C1/A1_3_IgG_Inner.ab1", package="scifer"))
+
+## Summarise using summarise_abi_file()
+summarise_abi_file(abi_seq)
+}
 }

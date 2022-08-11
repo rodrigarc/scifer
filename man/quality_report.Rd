@@ -5,10 +5,10 @@
 \title{Generate general and individualized reports}
 \usage{
 quality_report(
-  data_folder,
+  folder_sequences = "path/to/sanger_sequences",
   outputfile = "QC_report.html",
   output_dir = "test/",
-  processors = 1,
+  processors = NULL,
   folder_path_fcs = "path/to/fcs_datasets",
   plot_chromatogram = FALSE,
   raw_length = 400,
@@ -26,7 +26,7 @@ quality_report(
 )
 }
 \arguments{
-\item{data_folder}{Full file directory for searching all ab1 files in a recursive search method. It includes all files in subfolders}
+\item{folder_sequences}{Full file directory for searching all ab1 files in a recursive search method. It includes all files in subfolders}
 
 \item{outputfile}{Output file name for the report generation}
 
@@ -66,20 +66,27 @@ quality_report(
 Saves HTML reports, fasta files, csv files
 }
 \description{
-This function uses the other functions already described to create a HTML report based on sequency quality. Besides the HTML reports, it also creates fasta files with all the sequences and individualized sequences, in addition to a csv file with the quality scores and sequences considered as good quality.
+This function uses the other functions already described to create a HTML report based on sequencing quality. Besides the HTML reports, it also creates fasta files with all the sequences and individualized sequences, in addition to a csv file with the quality scores and sequences considered as good quality.
 }
 \examples{
 \dontrun{
 quality_report(
-  data_folder = "~/test/test_dataset/sanger_sequences",
-  outputfile = "QC-report.html",
-  output_dir = "~/test/",
-  folder_path_fcs = "~/path/to/fcs_datasets"
-  processors = 4, compensation = TRUE, plate_wells = "96",
-  probe1 = "Pre.F", probe2 = "Post.F",
-  posvalue_probe1 = 600, posvalue_probe2 = 400,
-  cdr3_start = 100,
-  cdr3_end = 150
+    data_folder="~/test/test_dataset/sanger_sequences",
+    outputfile="QC-report.html",
+    output_dir="~/test/",
+    folder_path_fcs="~/path/to/fcs_datasets",
+    processors=4, compensation=TRUE, plate_wells="96",
+    probe1="Pre.F", probe2="Post.F",
+    posvalue_probe1=600, posvalue_probe2=400,
+    cdr3_start=100,
+    cdr3_end=150
 )
 }
+\dontrun{
+quality_report(
+folder_sequences=system.file("extdata/sorted_sangerseq/", package="scifer"),
+output_dir="", folder_path_fcs=system.file("extdata/fcs_index_sorting/", package="scifer"),
+ probe1="Pre.F", probe2="Post.F", posvalue_probe1=600, posvalue_probe2=400
+)}
+
 }

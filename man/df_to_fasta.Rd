@@ -8,7 +8,8 @@ df_to_fasta(
   sequence_name,
   sequence_strings,
   file_name = "sequences.fasta",
-  output_dir = NULL
+  output_dir = NULL,
+  save_fasta = TRUE
 )
 }
 \arguments{
@@ -19,6 +20,8 @@ df_to_fasta(
 \item{file_name}{Output file name to be saved as a fasta file}
 
 \item{output_dir}{Output directory for the fasta file. Default is the working directory}
+
+\item{save_fasta}{Logical argument, TRUE or FALSE, to indicate if fasta files should be saved. Default is TRUE.}
 }
 \value{
 Saves a fasta file in the desired location, and also returns the stringset as BStringSet if saved as an object.
@@ -27,15 +30,13 @@ Saves a fasta file in the desired location, and also returns the stringset as BS
 Fasta file creation from dataframe columns and/or vectors.
 }
 \examples{
-\dontrun{
-df_to_fasta(sequence_name = c("myseq1", "myseq2"),
-sequence_strings = c("GATCGAT","ATCGTAG"),
-file_name = "my_fasta.fasta",
-output_dir = "path/to/output")
-
-df_to_fasta(sequence_name = df$sequence_name,
-sequence_strings = df$sequence,
-file_name = "my_fasta.fasta",
-output_dir = "path/to/output")
-}
+\donttest{
+## Example with vectors, default for save_fasta ir TRUE
+df_to_fasta(
+    sequence_name=c("myseq1", "myseq2"),
+    sequence_strings=c("GATCGAT", "ATCGTAG"),
+    file_name="my_sequences.fasta",
+    output_dir="",
+    save_fasta = FALSE
+)}
 }

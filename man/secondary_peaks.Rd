@@ -34,6 +34,14 @@ A list with two elements:
 This function finds and reports secondary peaks in a sangerseq object.
 It returns a table of secondary peaks, and optionally saves an annotated chromatogram and a csv file of the peak locations.
 }
-\keyword{chromatogram,}
-\keyword{mismatch}
-\keyword{peak,}
+\examples{
+\donttest{
+## Read abif using sangerseqR package
+s4_sangerseq <- sangerseqR::readsangerseq(
+system.file("/extdata/sorted_sangerseq/E18_C1/A1_3_IgG_Inner.ab1", package="scifer"))
+
+## Summarise using summarise_abi_file()
+processed_seq <- secondary_peaks(s4_sangerseq)
+}
+
+}
