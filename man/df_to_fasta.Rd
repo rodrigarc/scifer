@@ -30,7 +30,6 @@ Saves a fasta file in the desired location, and also returns the stringset as BS
 Fasta file creation from dataframe columns and/or vectors.
 }
 \examples{
-\donttest{
 ## Example with vectors, default for save_fasta ir TRUE
 df_to_fasta(
     sequence_name=c("myseq1", "myseq2"),
@@ -38,5 +37,5 @@ df_to_fasta(
     file_name="my_sequences.fasta",
     output_dir="",
     save_fasta = FALSE
-)}
+)
 }

@@ -155,7 +155,7 @@ plates_used_sequences <- y %>%
 # By now you have to tables containing different information per plate, here it just merging them into one single table to plot it
 table.seq <- merge(plates_used_sequences, plate_scores, by.default = "plate")
 kable(table.seq) %>%
-  kable_styling(bootstrap_options = "striped", full_width = F)
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
 ```
 Obs.: After merging, sequences without a index sorting (specificity) were deleted. Those sequences were in general empty wells but also double negative. In total `r nrow(sf_summary_filtered)-nrow(merged_summary_csv)` sequences were subtracted from the total filtered sequences, thus the csv file contains `r nrow(merged_summary_csv)` of this animal.
 

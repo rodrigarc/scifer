@@ -13,13 +13,11 @@
 #' @importFrom DECIPHER ConsensusSequence
 #' @rawNamespace import(Biostrings, except=c(collapse, union, intersect, setdiff, setequal))
 #' @examples
-#' \donttest{
 #' sf <- summarise_quality(
 #'    folder_sequences=system.file("extdata/sorted_sangerseq", package="scifer"),
 #'    secondary.peak.ratio=0.33,
 #'    trim.cutoff=0.01,
-#'    processor = 1
-#' )}
+#'    processor = 1)
 #' @export
 summarise_quality <-
     function(folder_sequences="input_folder",

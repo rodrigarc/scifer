@@ -9,7 +9,6 @@
 #' @return Saves a fasta file in the desired location, and also returns the stringset as BStringSet if saved as an object.
 #' @importFrom Biostrings BStringSet writeXStringSet
 #' @examples
-#' \donttest{
 #' ## Example with vectors, default for save_fasta ir TRUE
 #' df_to_fasta(
 #'     sequence_name=c("myseq1", "myseq2"),
@@ -17,13 +16,12 @@
 #'     file_name="my_sequences.fasta",
 #'     output_dir="",
 #'     save_fasta = FALSE
-#' )}
+#' )
 #' @export
 df_to_fasta <- function(sequence_name,
                         sequence_strings,
                         file_name="sequences.fasta",
-                        output_dir=NULL,
-                        save_fasta = TRUE) {
+                        output_dir=NULL, save_fasta = TRUE) {
     if (length(sequence_strings) != length(sequence_name)) {
         print("Sequences column does not have the same length as sequences name")
     } else {

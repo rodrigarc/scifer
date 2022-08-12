@@ -29,11 +29,9 @@ List containing two items:
 Generate a summary table containing quality measurements from sanger sequencing abi files
 }
 \examples{
-\donttest{
 sf <- summarise_quality(
    folder_sequences=system.file("extdata/sorted_sangerseq", package="scifer"),
    secondary.peak.ratio=0.33,
    trim.cutoff=0.01,
-   processor = 1
-)}
+   processor = 1)
 }

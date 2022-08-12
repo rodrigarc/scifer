@@ -25,13 +25,13 @@
 #' @return Saves HTML reports, fasta files, csv files
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' quality_report(
-#'     data_folder="~/test/test_dataset/sanger_sequences",
+#'     folder_sequences=system.file("extdata/sorted_sangerseq", package="scifer"),
 #'     outputfile="QC-report.html",
-#'     output_dir="~/test/",
-#'     folder_path_fcs="~/path/to/fcs_datasets",
-#'     processors=4, compensation=TRUE, plate_wells="96",
+#'     output_dir="~/test",
+#'     folder_path_fcs=system.file("/extdata/fcs_index_sorting",package = "scifer"),
+#'     processors=1, compensation=TRUE, plate_wells="96",
 #'     probe1="Pre.F", probe2="Post.F",
 #'     posvalue_probe1=600, posvalue_probe2=400,
 #'     cdr3_start=100,

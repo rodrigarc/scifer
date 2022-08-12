@@ -19,16 +19,15 @@
 #' @importFrom sangerseqR primarySeq makeBaseCalls secondarySeq chromatogram
 #' @importFrom DECIPHER AlignSeqs
 #' @importFrom stringr str_locate_all
+#' @importFrom methods is
 #'
 #' @examples
-#' \donttest{
 #' ## Read abif using sangerseqR package
 #' s4_sangerseq <- sangerseqR::readsangerseq(
 #' system.file("/extdata/sorted_sangerseq/E18_C1/A1_3_IgG_Inner.ab1", package="scifer"))
 #'
 #' ## Summarise using summarise_abi_file()
 #' processed_seq <- secondary_peaks(s4_sangerseq)
-#' }
 #'
 #' @export
 secondary_peaks <- function(s, ratio=0.5,
@@ -68,26 +67,20 @@ secondary_peaks <- function(s, ratio=0.5,
 }
 
 trim.mott <- function(abif.seq, cutoff=0.0001) {
-    if (class(cutoff) != "numeric" | cutoff < 0) {
+    if (!is(cutoff,"numeric") | cutoff < 0) {
         stop("cutoff must be a number of at least 0")
     }
-
-    if (class(abif.seq) != "abif") {
-        stop("abif.seq must be an 'abif' object from the sangerseqR package")
+    if (!is(abif.seq, "abif")) {
+        stop("abif.seq must be an 'abif'
+             object from the sangerseqR package")
     }
-
-
-
     abif.seq <- abif.seq@data
     start <- FALSE ## flag for starting position of trimmed sequence
     trim_start <- 0 ## init start index
-
     seqlen <- nchar(abif.seq$PBAS.2)
     qual <- abif.seq$PCON.2
-
     ## calculate base score
     score_list <- cutoff - (10**(qual / -10.0))
-
     ## calculate cummulative score
     ## if cumulative value < 0, set it to 0
     score <- score_list[1]
@@ -97,9 +90,7 @@ trim.mott <- function(abif.seq, cutoff=0.0001) {
         trim_start <- 1
         start <- TRUE
     }
-
     cummul_score <- c(score)
-
     for (i in 2:length(score_list)) {
         score <- cummul_score[length(cummul_score)] + score_list[i]
         if (score <= 0) {
@@ -111,7 +102,6 @@ trim.mott <- function(abif.seq, cutoff=0.0001) {
                 start <- TRUE
             }
         }
-
         ## trim_finish=index of highest cummulative score,
         ## marking the end of sequence segment with highest cummulative score
         trim_finish <- which.max(cummul_score)
@@ -122,7 +112,6 @@ trim.mott <- function(abif.seq, cutoff=0.0001) {
     if (sum(cummul_score) == 0) {
         trim_finish <- 0
     }
-
     return(list("start"=trim_start, "finish"=trim_finish))
 }
 

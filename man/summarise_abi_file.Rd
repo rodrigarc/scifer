@@ -45,12 +45,11 @@ A numeric vector including:
 Create a summary of a single ABI sequencing file
 }
 \examples{
-\donttest{
 ## Read abif using sangerseqR package
 abi_seq <- sangerseqR::read.abif(
 system.file("/extdata/sorted_sangerseq/E18_C1/A1_3_IgG_Inner.ab1", package="scifer"))
 
 ## Summarise using summarise_abi_file()
 summarise_abi_file(abi_seq)
-}
+
 }
