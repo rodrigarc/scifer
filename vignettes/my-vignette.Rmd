@@ -113,8 +113,9 @@ Here is just an example of if you would like to process a single sanger sequence
 abi_seq <- sangerseqR::read.abif(
   system.file("/extdata/sorted_sangerseq/E18_C1/A1_3_IgG_Inner.ab1", package="scifer"))
 ## Summarise using summarise_abi_file()
-summarise_abi_file(abi_seq)
-
+summarised <- summarise_abi_file(abi_seq)
+head(summarised[["summary"]])
+head(summarised[["quality_score"]])
 ```
 
 ### Processing a group of B cell receptors sanger sequences
@@ -137,7 +138,7 @@ Here is the example `data.frame` with the summarised results of all the files wi
 ## Print names of all the variables 
 colnames(sf$summaries)
 
-## Print table names
+## Print table
 sf$summaries[4:10]
 ```
 
