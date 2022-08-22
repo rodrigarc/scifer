@@ -1,6 +1,9 @@
 # scifer: Single-cell Immunoglobulin Filtering of Sanger sequences
+<!-- badges: start -->
 [![R build
 status](https://github.com/rodrigarc/scifer/workflows/R-CMD-check/badge.svg)](https://github.com/rodrigarc/scifer/actions)
+[![R-CMD-check-bioc](https://github.com/rodrigarc/scifer/workflows/R-CMD-check-bioc/badge.svg)](https://github.com/rodrigarc/scifer/actions)
+<!-- badges: end -->
 
 ### Integrating index single-cell sorted with Sanger sequencing raw files
 
