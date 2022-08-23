@@ -9,7 +9,7 @@ quality_report(
   outputfile = "QC_report.html",
   output_dir = "test/",
   processors = NULL,
-  folder_path_fcs = "path/to/fcs_datasets",
+  folder_path_fcs = NULL,
   plot_chromatogram = FALSE,
   raw_length = 400,
   trim_start = 50,
