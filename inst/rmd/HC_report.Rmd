@@ -72,15 +72,15 @@ sf <- summarise_quality(
 ```
 
 ```{r error_checkings, results='hide', echo=FALSE, warning=FALSE}
-if (is.null(dim(sf[["summaries"]]))) {
+if (any(is.null(dim(sf[["summaries"]])))) {
   print("No files were processed, knitting was stopped early. 
         Please double check the folder location provided for `folder_sequences` with ab1 files.")
   knitr::knit_exit()
-} else if (is.null(sf[["summaries"]][["raw.length"]]) | is.na(sf[["summaries"]][["raw.length"]])) {
+} else if (any(is.null(sf[["summaries"]][["raw.length"]])) |  any(is.na(sf[["summaries"]][["raw.length"]]))) {
   print("Columns inside sf_summaries are empty (NA or NULL). 
         Please double check the folder location provided for `folder_sequences` with ab1 files.")
   knitr::knit_exit()
-} else if (c("raw.legnth", "trimmed.mean.quality", "trim.start") %in% colnames(sf[["summaries"]])) {
+} else if (all(c("raw.legnth", "trimmed.mean.quality", "trim.start") %in% colnames(sf[["summaries"]]))) {
   print("Columns exist in sf_summaries and are not empty, knitting can proceed.")
 }
 ```
