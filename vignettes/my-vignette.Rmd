@@ -27,11 +27,11 @@ This vigenette aims to show one example of how to process your own samples based
 
 ## Folder organization
 
-Regardless of where is your data, you should have two folders, one for flow cytometry data and a second one for sanger sequences. The nomenclature of the `.fcs` files and the sanger sequence subfolders and should be matching, this is fundamental for merging both datasets.
+Regardless of where is your data, you should have two folders, one for flow cytometry data and a second one for sanger sequences. The nomenclature of the `.fcs` files and the sanger sequence subfolders should be matching, this is fundamental for merging both datasets.
 
 ### Extra information
 
-If you want to have a more detailed explanation of installation steps and folder organization, check the README file in the [package github here.](https://github.com/rodrigarc/scifer).
+If you want to have a more detailed explanation of installation steps and folder organization, check the README file in the [package github here.](https://github.com/rodrigarc/scifer)
 
 ## Load required packages
 
@@ -78,7 +78,7 @@ fcs_data <- fcs_processing(folder_path = system.file("/extdata/fcs_index_sorting
 
 If you have probed your cells based on a specific marker, you can use the name of the channel or the custom name you have added during the sorting to that channel.
 
-```{r check_fcs_probe, message=FALSE}
+```{r check_fcs_probe, message=FALSE, warning=FALSE}
 fcs_data <- fcs_processing(folder_path = system.file("/extdata/fcs_index_sorting",package = "scifer"),
                            compensation = FALSE, plate_wells = 96,
                            probe1 = "Pre.F", probe2 = "Post.F",
@@ -98,7 +98,7 @@ fcs_data <- fcs_processing(folder_path = system.file("/extdata/fcs_index_sorting
 
 The `specificity` column uses these threshold to name your sorted cells. In this example, you would have a `Pre.F` single-positive, `Post.F` single-positive, double-positive cells named as`DP`, and double-negative cells named as `DN`. 
 
-```{r specificity}
+```{r specificity, message=FALSE, warning=FALSE}
 unique(fcs_data$specificity)
 ```
 
@@ -125,21 +125,25 @@ Here you would process recursively all the `.ab1` file withing a decided folder.
 
 *Note: To speed up, you can increase the `processors` parameter depending on your local computer number of processors or set it to `NULL` which will try to detect the max number of cores.
 
-```{r bcr_sequences, warning=FALSE, results='hide'}
+```{r bcr_sequences, warning=FALSE}
 
 sf <- summarise_quality(folder_sequences=system.file("extdata/sorted_sangerseq", package="scifer"),
                         secondary.peak.ratio=0.33,
                         trim.cutoff=0.01,
                         processor = 1)
 ```
+Here are the columns from the summarised `data.frame`:
+
+```{r bcr_seq_columns, warning=FALSE}
+## Print names of all the variables 
+colnames(sf[["summaries"]])
+```
+
 Here is the example `data.frame` with the summarised results of all the files within the selected path:
 
-```{r bcr_seq_table, warning=FALSE, results='hide'}
-## Print names of all the variables 
-colnames(sf$summaries)
-
+```{r bcr_seq_table, warning=FALSE}
 ## Print table
-sf$summaries[4:10]
+head(sf[["summaries"]][4:10])
 ```
 
 ## Joining flow cytometry and sanger sequencing datasets
@@ -147,18 +151,19 @@ sf$summaries[4:10]
 Finally, the function you will use to integrate both datasets and export data from `scifer` is `quality_report()`. This function aims to basically merge the two datasets, assign sorting specificity based on the selected thresholds for each channel/probe and write different files.
 
 This function generated the following files:
-* general quality report (.html)
-* individualized report per ID (.html)
-* table containing the good quality sequences filtered in and their QC summary (.csv)
-* fasta file containing all the sequences (.fasta)
-* fasta files per ID (.fasta)
-* Chromatogram of the approximate CDR3 region if secondary peaks are detected (.pdf)
+
+- general quality report (.html)
+- individualized report per ID (.html)
+- table containing the good quality sequences filtered in and their QC summary (.csv)
+- fasta file containing all the sequences (.fasta)
+- fasta files per ID (.fasta)
+- Chromatogram of the approximate CDR3 region if secondary peaks are detected (.pdf)
 
 ```{r eval=FALSE}
 quality_report(folder_sequences = system.file("extdata/sorted_sangerseq", package="scifer"),
                outputfile = "QC_report.html",
                output_dir = "~/full/path/to/your/desire/location",
-               folder_path_fcs = system.file("/extdata/fcs_index_sorting",package = "scifer"),
+               folder_path_fcs = system.file("extdata/fcs_index_sorting", package = "scifer"),
                probe1 = "Pre.F", probe2 = "Post.F",
                posvalue_probe1 = 600, posvalue_probe2 = 400)
 
