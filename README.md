@@ -13,7 +13,7 @@ Version: 0.99.0
 Author and Maintainer: Rodrigo Arcoverde Cerveira
 
 Description: Have you ever index sorted cells in a 96 or 384-well plate and then sequenced using Sanger sequencing? If so, you probably had some struggle to either check the chromatograms of each cell sequenced manually, or identify which cell was sorted where after sequencing the plate. `scifer` was developed to solve this issue by performing basic quality control of Sanger sequences and merging flow cytometry data from probed single-cell sorted cells with sequencing data. `scifer` can export summary tables, fasta files, chromatograms for visual inspection, and generate a html report.
-This package was developed focused in B cell receptor sequences from antigen-specific single-cell sorted B cells, however it is can be highly customizable to other type of single-cell sorted sequences.
+This package was developed focused in B cell receptor sequences from antigen-specific single-cell sorted B cells, however it is highly customizable to other type of single-cell sorted sanger sequences.
 
 ## Installation
 
