@@ -30,7 +30,7 @@
 #' processed_seq <- secondary_peaks(s4_sangerseq)
 #'
 #' @export
-secondary_peaks <- function(s, ratio=0.5,
+secondary_peaks <- function(s, ratio=0.33,
                             output.folder=NA,
                             file.prefix="seq",
                             processors=NULL) {

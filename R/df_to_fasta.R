@@ -23,7 +23,7 @@ df_to_fasta <- function(sequence_name,
                         file_name="sequences.fasta",
                         output_dir=NULL, save_fasta = TRUE) {
     if (length(sequence_strings) != length(sequence_name)) {
-        print("Sequences column does not have the same length as sequences name")
+        warning("Sequence column does not have the same length as sequences name")
     } else {
         str <- BStringSet(sequence_strings)
         names(str) <- sequence_name
@@ -36,7 +36,7 @@ df_to_fasta <- function(sequence_name,
             writeXStringSet(str, filepath=paste0(output_dir, file_name), append=FALSE, format="fasta")
         }
     } else {
-        print("Fasta file not saved.")
+        message("Fasta file not saved.")
     }
     return(str)
 }
