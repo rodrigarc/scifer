@@ -1,6 +1,15 @@
 ---
 title: "Using scifer to filter single-cell sorted B cell receptor (BCR) sanger sequences"
-output: rmarkdown::html_vignette
+author:
+- name: Rodrigo Arcoverde Cerveira
+  affiliation: 
+  - Division of Immunology & Allergy, Department of Medicine Solna, Karolinska Institutet and Karolinska University Hospital, Stockholm, Sweden
+  - Center for Molecular Medicine, Karolinska Institutet, Stockholm, Sweden
+  email: rodrigo.arcoverdi@gmail.com
+
+package: scifer
+output: 
+  BiocStyle::html_document
 vignette: >
   %\VignetteIndexEntry{Using scifer to filter single-cell sorted B cell receptor (BCR) sanger sequences}
   %\VignetteEngine{knitr::rmarkdown}
@@ -144,6 +153,7 @@ sf <- summarise_quality(folder_sequences=system.file("extdata/sorted_sangerseq",
                         trim.cutoff=0.01,
                         processor = 1)
 ```
+
 Here are the columns from the summarised `data.frame`:
 
 ```{r bcr_seq_columns, warning=FALSE}
