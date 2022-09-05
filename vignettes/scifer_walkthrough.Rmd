@@ -33,6 +33,18 @@ Regardless of where is your data, you should have two folders, one for flow cyto
 
 If you want to have a more detailed explanation of installation steps and folder organization, check the README file in the [package github here.](https://github.com/rodrigarc/scifer)
 
+## Installation
+
+To use scifer, you should first install Bioconductor package manager.
+Start R, then enter the following:
+
+```{r installation, eval=FALSE}
+if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("scifer")
+```
+
 ## Load required packages
 
 ```{r setup}
