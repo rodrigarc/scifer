@@ -30,7 +30,7 @@
 #' processed_seq <- secondary_peaks(s4_sangerseq)
 #'
 #' @export
-secondary_peaks <- function(s, ratio=0.5,
+secondary_peaks <- function(s, ratio=0.33,
                             output.folder=NA,
                             file.prefix="seq",
                             processors=NULL) {
@@ -91,7 +91,7 @@ trim.mott <- function(abif.seq, cutoff=0.0001) {
         start <- TRUE
     }
     cummul_score <- c(score)
-    for (i in 2:length(score_list)) {
+    for (i in seq_along(score_list)[-1]) {
         score <- cummul_score[length(cummul_score)] + score_list[i]
         if (score <= 0) {
             cummul_score <- c(cummul_score, 0)

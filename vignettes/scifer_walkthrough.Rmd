@@ -1,6 +1,15 @@
 ---
 title: "Using scifer to filter single-cell sorted B cell receptor (BCR) sanger sequences"
-output: rmarkdown::html_vignette
+author:
+- name: Rodrigo Arcoverde Cerveira
+  affiliation: 
+  - Division of Immunology & Allergy, Department of Medicine Solna, Karolinska Institutet and Karolinska University Hospital, Stockholm, Sweden
+  - Center for Molecular Medicine, Karolinska Institutet, Stockholm, Sweden
+  email: rodrigo.arcoverdi@gmail.com
+
+package: scifer
+output: 
+  BiocStyle::html_document
 vignette: >
   %\VignetteIndexEntry{Using scifer to filter single-cell sorted B cell receptor (BCR) sanger sequences}
   %\VignetteEngine{knitr::rmarkdown}
@@ -17,13 +26,13 @@ knitr::opts_chunk$set(
 
 ## Introduction
 
-Have you ever index sorted cells in a 96 or 384-well plate and then sequenced using Sanger sequencing? If so, you probably had some struggle to either check the chromatogram of each cell sequenced manually or to identify which cell was sorted where after sequencing the plate. Scifer was developed to solve this issue by performing basic quality control of Sanger sequences and merging flow cytometry data from probed single-cell sorted B cells with sequencing data. Scifer can export summary tables, fasta files, chromatograms for visual inspection, and generate reports.
+Have you ever index sorted cells in a 96 or 384-well plate and then sequenced using Sanger sequencing? If so, you probably had some struggles to either check the chromatogram of each cell sequenced manually or to identify which cell was sorted where after sequencing the plate. Scifer was developed to solve this issue by performing basic quality control of Sanger sequences and merging flow cytometry data from probed single-cell sorted B cells with sequencing data. Scifer can export summary tables, fasta files, chromatograms for visual inspection, and generate reports.
 
-Single-cell sorting of probed B/T cells for Sanger sequencing of their receptors are widely used, either for identifying antigen-specific antibody sequences or studying antigen-specific B and T cell responses. For this reason, scifer R package was developed to facilitate the integration and QC of flow cytometry data and sanger sequencing.
+Single-cell sorting of probed B/T cells for Sanger sequencing of their receptors is widely used, either for identifying antigen-specific antibody sequences or studying antigen-specific B and T cell responses. For this reason, scifer R package was developed to facilitate the integration and QC of flow cytometry data and sanger sequencing.
 
 ## Dataset example and description
 
-This vigenette aims to show one example of how to process your own samples based on a test dataset. This dataset contains raw flow cytometry index files (file extension: `.fcs`) and raw sanger sequences (file extension: `.ab1`). These samples are of antigen-specific B cells that were probed and single-cell sorted in a plate to have their B cell receptors (BCR) sequenced through sanger sequencing. This package can also be used for T cell receptors but you should have extra attention to select the QC parameters according to your intended sequence. The sorted cells had their RNA reverse transcribed into cDNA and PCR amplified using a set of primer specific for rhesus macaques (sample origin), the resulting PCR products were sequenced using a IgG specific primer and was designed to capture the entire VDJ fragment of the BCRs.
+This vignette aims to show one example of how to process your own samples based on a test dataset. This dataset contains raw flow cytometry index files (file extension: `.fcs`) and raw sanger sequences (file extension: `.ab1`). These samples are of antigen-specific B cells that were probed and single-cell sorted in a plate to have their B cell receptors (BCR) sequenced through sanger sequencing. This package can also be used for T cell receptors but you should have extra attention selecting the QC parameters according to your intended sequence. The sorted cells had their RNA reverse transcribed into cDNA and PCR amplified using a set of primer specific for rhesus macaques (sample origin), the resulting PCR products were sequenced using an IgG specific primer designed to capture the entire VDJ fragment of the BCRs.
 
 ## Folder organization
 
@@ -32,6 +41,18 @@ Regardless of where is your data, you should have two folders, one for flow cyto
 ### Extra information
 
 If you want to have a more detailed explanation of installation steps and folder organization, check the README file in the [package github here.](https://github.com/rodrigarc/scifer)
+
+## Installation
+
+To use scifer, you should first install Bioconductor package manager.
+Start R, then enter the following:
+
+```{r installation, eval=FALSE}
+if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("scifer")
+```
 
 ## Load required packages
 
@@ -46,7 +67,7 @@ It is important to check your flow data to check how is your data being processe
 
 ### Example 1
 
-Here is an example of poor threshold using size and forward scatter (cell size and granulosity).
+Here is an example of a poor threshold using the size and forward scatter (cell size and granulosity).
 
 ```{r check_fcs, message=FALSE}
 fcs_data <- fcs_processing(folder_path = system.file("/extdata/fcs_index_sorting",package = "scifer"),
@@ -61,11 +82,11 @@ You can play around with the threshold and the different channels available. You
 colnames(fcs_data)
 ```
 
-You can see that the well position was already extracted from the file and column named `specificity` was added. This specificity is named based on your selected channels and their thresholds.
+You can see that the well position was already extracted from the file and a column named `specificity` was added. This specificity is named based on your selected channels and their thresholds.
 
 ### Example 2
 
-If you did not probe your cells for a specific antigen, you can just use the following and ignore the `specificity` column. This will add all you cells regardless of the channel fluorescence detected.
+If you did not probe your cells for a specific antigen, you can just use the following and ignore the `specificity` column. This approach will add all of your cells, regardless of the detected fluorescence in a channel.
 
 ```{r check_fcs_noprobe, message=FALSE, warning=FALSE}
 fcs_data <- fcs_processing(folder_path = system.file("/extdata/fcs_index_sorting",package = "scifer"),
@@ -87,7 +108,7 @@ fcs_data <- fcs_processing(folder_path = system.file("/extdata/fcs_index_sorting
 
 ### Example 4
 
-Finally, the above data used compensation as set to `FALSE`,which is not usually the case since you probably have compensated your samples before sorting. You can set to `TRUE` and the compensation matrix within the index files will be already automatically applied.
+Finally, the above data used compensation as set to `FALSE`, which is not usually the case since you probably have compensated your samples before sorting. You can set it to `TRUE` and the compensation matrix within the index files will be already automatically applied.
 
 ```{r check_fcs_probe_compensated, message=FALSE, warning=FALSE}
 fcs_data <- fcs_processing(folder_path = system.file("/extdata/fcs_index_sorting",package = "scifer"),
@@ -96,7 +117,7 @@ fcs_data <- fcs_processing(folder_path = system.file("/extdata/fcs_index_sorting
                            posvalue_probe1 = 600, posvalue_probe2 = 400, flow_plot = TRUE)
 ```
 
-The `specificity` column uses these threshold to name your sorted cells. In this example, you would have a `Pre.F` single-positive, `Post.F` single-positive, double-positive cells named as`DP`, and double-negative cells named as `DN`. 
+The `specificity` column uses these thresholds to name your sorted cells. In this example, you would have a `Pre.F` single-positive, `Post.F` single-positive, double-positive cells named as`DP`, and double-negative cells named as `DN`. 
 
 ```{r specificity, message=FALSE, warning=FALSE}
 unique(fcs_data$specificity)
@@ -120,10 +141,10 @@ head(summarised[["quality_score"]])
 
 ### Processing a group of B cell receptors sanger sequences
 
-Most of the times, if you have sequenced an entire plate, you want to automate this processing. 
-Here you would process recursively all the `.ab1` file withing a decided folder.
+Most of the time, if you have sequenced an entire plate, you want to automate this processing. 
+Here you would process recursively all the `.ab1` files within the chosen folder.
 
-*Note: To speed up, you can increase the `processors` parameter depending on your local computer number of processors or set it to `NULL` which will try to detect the max number of cores.
+*Note: To speed up, you can increase the `processors` parameter depending on your local computer's number of processors or set it to `NULL` which will try to detect the max number of cores.
 
 ```{r bcr_sequences, warning=FALSE}
 
@@ -132,6 +153,7 @@ sf <- summarise_quality(folder_sequences=system.file("extdata/sorted_sangerseq",
                         trim.cutoff=0.01,
                         processor = 1)
 ```
+
 Here are the columns from the summarised `data.frame`:
 
 ```{r bcr_seq_columns, warning=FALSE}
