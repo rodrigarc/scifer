@@ -11,8 +11,7 @@ fcs_processing(
   probe1 = "Pre.F",
   probe2 = "Post.F",
   posvalue_probe1 = 600,
-  posvalue_probe2 = 400,
-  flow_plot = TRUE
+  posvalue_probe2 = 400
 )
 }
 \arguments{
@@ -29,12 +28,9 @@ fcs_processing(
 \item{posvalue_probe1}{Threshold used for fluorescence intensities to be considered as positive for the first probe}
 
 \item{posvalue_probe2}{Threshold used for fluorescence intensities to be considered as positive for the second probe}
-
-\item{flow_plot}{Logical argument, TRUE or FALSE, to indicate if a flow cytometry density plot of the sorted cells should be plotted. Default is TRUE.}
 }
 \value{
 If saved as an object, it returns a table containing all the processed flow cytometry index files, with their fluorescence intensities for each channel and well position.
-At the same time, it also plots a traditional flow density plot with the sorted cells and the selected thresholds for the two probes.
 }
 \description{
 Extract index sorting information from flow cytometry data
@@ -44,7 +40,6 @@ index_sort_data <- fcs_processing(
     folder_path=system.file("/extdata/fcs_index_sorting",package = "scifer"),
     compensation=TRUE, plate_wells=96,
     probe1="Pre.F", probe2="Post.F",
-    posvalue_probe1=600, posvalue_probe2=400, flow_plot=FALSE
-)
+    posvalue_probe1=600, posvalue_probe2=400)
 
 }
