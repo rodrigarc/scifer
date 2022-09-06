@@ -73,7 +73,8 @@ Here is an example of a poor threshold using the size and forward scatter (cell 
 fcs_data <- fcs_processing(folder_path = system.file("/extdata/fcs_index_sorting",package = "scifer"),
                            compensation = FALSE, plate_wells = 96,
                            probe1 = "FSC.A", probe2 = "SSC.A",
-                           posvalue_probe1 = 600, posvalue_probe2 = 400, flow_plot = TRUE)
+                           posvalue_probe1 = 600, posvalue_probe2 = 400)
+fcs_plot(fcs_data)
 ```
 
 You can play around with the threshold and the different channels available. You can check the name of each channel using this:
@@ -92,7 +93,8 @@ If you did not probe your cells for a specific antigen, you can just use the fol
 fcs_data <- fcs_processing(folder_path = system.file("/extdata/fcs_index_sorting",package = "scifer"),
                            compensation = FALSE, plate_wells = 96,
                            probe1 = "FSC.A", probe2 = "SSC.A",
-                           posvalue_probe1 = 0, posvalue_probe2 = 0, flow_plot = TRUE)
+                           posvalue_probe1 = 0, posvalue_probe2 = 0)
+fcs_plot(fcs_data)
 ```
 
 ### Example 3
@@ -103,7 +105,8 @@ If you have probed your cells based on a specific marker, you can use the name o
 fcs_data <- fcs_processing(folder_path = system.file("/extdata/fcs_index_sorting",package = "scifer"),
                            compensation = FALSE, plate_wells = 96,
                            probe1 = "Pre.F", probe2 = "Post.F",
-                           posvalue_probe1 = 600, posvalue_probe2 = 400, flow_plot = TRUE)
+                           posvalue_probe1 = 600, posvalue_probe2 = 400)
+fcs_plot(fcs_data)
 ```
 
 ### Example 4
@@ -114,7 +117,8 @@ Finally, the above data used compensation as set to `FALSE`, which is not usuall
 fcs_data <- fcs_processing(folder_path = system.file("/extdata/fcs_index_sorting",package = "scifer"),
                            compensation = TRUE, plate_wells = 96,
                            probe1 = "Pre.F", probe2 = "Post.F",
-                           posvalue_probe1 = 600, posvalue_probe2 = 400, flow_plot = TRUE)
+                           posvalue_probe1 = 600, posvalue_probe2 = 400)
+fcs_plot(fcs_data)
 ```
 
 The `specificity` column uses these thresholds to name your sorted cells. In this example, you would have a `Pre.F` single-positive, `Post.F` single-positive, double-positive cells named as`DP`, and double-negative cells named as `DN`. 

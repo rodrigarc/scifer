@@ -7,33 +7,29 @@
 #' @param probe2 Name of the second channel used for the probe or the custom name assigned to the channel in the index file. eg. "FSC.A", "FSC.H", "SSC.A","DsRed.A", "PE.Cy5_5.A", "PE.Cy7.A","BV650.A", "BV711.A","Alexa.Fluor.700.A" "APC.Cy7.A","PerCP.Cy5.5.A","Time"
 #' @param posvalue_probe1 Threshold used for fluorescence intensities to be considered as positive for the first probe
 #' @param posvalue_probe2 Threshold used for fluorescence intensities to be considered as positive for the second probe
-#' @param flow_plot Logical argument, TRUE or FALSE, to indicate if a flow cytometry density plot of the sorted cells should be plotted. Default is TRUE.
 #'
 #' @return If saved as an object, it returns a table containing all the processed flow cytometry index files, with their fluorescence intensities for each channel and well position.
-#' At the same time, it also plots a traditional flow density plot with the sorted cells and the selected thresholds for the two probes.
 #'
-#' @import dplyr ggplot2
+#' @import dplyr
 #' @rawNamespace import(flowCore, except=c(filter, cytolib_LdFlags))
 #' @importFrom data.table rbindlist
 #' @importFrom plyr mapvalues
 #' @importFrom stats na.omit
 #' @importFrom rlang .data
-#' @importFrom scales trans_breaks trans_format math_format
 #'
 #' @examples
 #' index_sort_data <- fcs_processing(
 #'     folder_path=system.file("/extdata/fcs_index_sorting",package = "scifer"),
 #'     compensation=TRUE, plate_wells=96,
 #'     probe1="Pre.F", probe2="Post.F",
-#'     posvalue_probe1=600, posvalue_probe2=400, flow_plot=FALSE
-#' )
+#'     posvalue_probe1=600, posvalue_probe2=400)
 #'
 #' @export
 fcs_processing <- function(
     folder_path="test/test_dataset/fcs_files/",
     compensation=TRUE, plate_wells=96,
     probe1="Pre.F", probe2="Post.F",
-    posvalue_probe1=600, posvalue_probe2=400, flow_plot=TRUE) {
+    posvalue_probe1=600, posvalue_probe2=400) {
     fs <- read.flowSet(path=folder_path, truncate_max_range=FALSE)
     if (compensation == TRUE) {
         comp <- fsApply(fs, function(x) spillover(x)[[1]], simplify=FALSE)
@@ -79,32 +75,9 @@ fcs_processing <- function(
             get(probe1) > posvalue_probe1 & get(probe2) > posvalue_probe2 ~ "DP",
             get(probe1) > posvalue_probe1 & get(probe2) < posvalue_probe2 ~ probe1,
             get(probe1) < posvalue_probe1 & get(probe2) > posvalue_probe2 ~ probe2))
-    ## Plot classification according to selected thresholds
-    .x <- NULL
-    if (isTRUE(flow_plot)) {
-        plot_thresholds <- joined_fsc_table %>%
-            ggplot(aes(x=get(probe1), y=get(probe2))) +
-            geom_point(size=.7, color="grey40") +
-            scale_x_log10(
-                breaks=scales::trans_breaks("log10", function(x) 10^x),
-                labels=scales::trans_format("log10", scales::math_format(10^.x))) +
-            scale_y_log10(
-                breaks=scales::trans_breaks("log10", function(x) 10^x),
-                labels=scales::trans_format("log10", scales::math_format(10^.x))) +
-            geom_vline(xintercept=posvalue_probe1) +
-            geom_hline(yintercept=posvalue_probe2) +
-            labs(x=probe1, y=probe2) +
-            theme_bw() +
-            theme(panel.grid.major=element_blank(),
-                  panel.grid.minor=element_blank(),
-                  panel.background=element_rect(colour="black", size=1),
-                  axis.text=element_text(size=10, color="black"),
-                  axis.title=element_text(size=12)) +
-            geom_density2d(color="black") +
-            annotation_logticks()
-        print(plot_thresholds)
-    } else {
-        print("No flow cymetometry density plot.")
-        }
-    return(joined_fsc_table)
+
+    probes_values <- data.frame(probes = c(probe1, probe2),
+                                posvalues = c(posvalue_probe1, posvalue_probe2))
+
+    return(list("processed_fcs" = joined_fsc_table, "selected_probes" = probes_values))
 }
