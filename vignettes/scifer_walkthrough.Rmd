@@ -67,7 +67,7 @@ It is important to check your flow data to check how is your data being processe
 
 ### Example 1
 
-Here is an example of a poor threshold using the size and forward scatter (cell size and granulosity).
+Here is an example of a poor threshold using the forward and side scatter (cell size and granularity).
 
 ```{r check_fcs, message=FALSE}
 fcs_data <- fcs_processing(folder_path = system.file("/extdata/fcs_index_sorting",package = "scifer"),
