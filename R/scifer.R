@@ -8,7 +8,7 @@
 #'
 #' @author Rodrigo Arcoverde Cerveira \email{rodrigo.arcoverdi@gmail.com}
 #'
-#' @keywords BCR TCR AIRR QC sanger sequencing
+#' @keywords BCR TCR AIRR QC sanger sequencing flowcytometry
 #'
 #' @name scifer
 NULL

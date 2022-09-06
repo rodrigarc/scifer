@@ -6,7 +6,7 @@
 \usage{
 secondary_peaks(
   s,
-  ratio = 0.5,
+  ratio = 0.33,
   output.folder = NA,
   file.prefix = "seq",
   processors = NULL
