@@ -24,7 +24,8 @@ fcs_plot <- function(processed_fcs_list=NULL) {
     stop("Input is not a list object")
   } else if (length(processed_fcs_list) != 2) {
     stop("Input is not a list with length 2")
-  } else if (any(!sapply(processed_fcs_list, is, "data.frame"))) {
+  } else if (any(!is(processed_fcs_list[[1]], "data.frame")|
+                 !is(processed_fcs_list[[2]], "data.frame"))) {
     stop("At least one of the objects inside the list is not a data.frame")
   } else {
     ## Extract values for plotting
