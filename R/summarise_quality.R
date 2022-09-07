@@ -35,17 +35,16 @@ summarise_quality <-
         return(processors)
     }
     processors <- get_processors(processors)
-
-    print("Looking for .ab1 files...")
+    message("Looking for .ab1 files...")
+    if (!dir.exists(folder_sequences)) {
+        stop("Folder containing sequences does not exist.")
+    } else {
     abi.fnames <- list.files(folder_sequences, pattern="\\.ab1$",
                              full.names=TRUE, recursive=TRUE)
-
-    print(sprintf(("Found %d .ab1 files..."), length(abi.fnames)))
-
-    print("Loading reads...")
+    message(sprintf(("Found %d .ab1 files..."), length(abi.fnames)))
+    message("Loading reads...")
     abi.seqs <- mclapply(abi.fnames, sangerseqR::read.abif, mc.cores=processors)
-
-    print("Calculating read summaries...")
+    message("Calculating read summaries...")
     ## Create a data.frame of summaries of all the files
     summaries.dat <- mclapply(abi.seqs,
         summarise_abi_file,
@@ -53,8 +52,7 @@ summarise_quality <-
         secondary.peak.ratio=secondary.peak.ratio,
         mc.cores=processors
     )
-
-    print("Cleaning up")
+    message("Cleaning up")
     summaries <- mclapply(summaries.dat, function(x) x[["summary"]], mc.cores=processors)
     summaries <- do.call(rbind, summaries)
 
@@ -68,4 +66,5 @@ summarise_quality <-
     names(qual_scores) <- as.character(abi.fnames)
 
     return(list("summaries"=summaries, "quality_scores"=qual_scores))
+    }
 }

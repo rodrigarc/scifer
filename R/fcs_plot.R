@@ -19,20 +19,20 @@
 #' @export
 fcs_plot <- function(processed_fcs_list=NULL) {
   if (is.null(processed_fcs_list)) {
-    warning("Input data.frame is NULL/empty")
+    stop("Input data.frame is NULL/empty")
   } else if (!is(processed_fcs_list, "list")) {
-    warning("Input is not a list object")
+    stop("Input is not a list object")
   } else if (length(processed_fcs_list) != 2) {
-    warning("Input is not a list with length 2")
+    stop("Input is not a list with length 2")
   } else if (any(!sapply(processed_fcs_list, is, "data.frame"))) {
-    warning("At least one of the objects inside the list is not a data.frame")
+    stop("At least one of the objects inside the list is not a data.frame")
   } else {
     ## Extract values for plotting
     probe1 <- processed_fcs_list[["selected_probes"]][1,1]
     probe2 <- processed_fcs_list[["selected_probes"]][2,1]
     posvalue_probe1 <- processed_fcs_list[["selected_probes"]][1,2]
     posvalue_probe2 <- processed_fcs_list[["selected_probes"]][2,2]
-    ## Variable to remove NOTE error
+    ## Create object to remove NOTE error
     .x <- NULL
     flow_plot_obj <- ggplot(processed_fcs_list[["processed_fcs"]], aes(x=get(probe1), y=get(probe2))) +
       geom_point(size=.7, color="grey40") +

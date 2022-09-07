@@ -319,7 +319,7 @@ mapply(
 All the informations about the sequence primary basecall, quality scores, folder.name, well, plate, secondary peaks etc. can be found in the csv file created inside the **"processing"** folder. If there is probing with flow cytometry data index files to be integrated, the csv files and fasta will contain that information, if not, it will be ignored or invalid, it will be ignored.
 
 ## Processing flow cytometry data and assigning specificities
-```{r fcs_processing}
+```{r fcs_processing, warning=FALSE}
 if (is.null(folder_path_fcs)) {
   process_fcs_data <- FALSE
   } else if (is.na(folder_path_fcs)) {
