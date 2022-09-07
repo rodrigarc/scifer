@@ -33,7 +33,7 @@ df_to_fasta <- function(sequence_name,
         if (is.null(output_dir)) {
             writeXStringSet(str, filepath=file_name, append=FALSE, format="fasta")
         } else {
-            writeXStringSet(str, filepath=paste0(output_dir, file_name), append=FALSE, format="fasta")
+            writeXStringSet(str, filepath=paste(output_dir, file_name, sep = "/"), append=FALSE, format="fasta")
         }
     } else {
         message("Fasta file not saved.")

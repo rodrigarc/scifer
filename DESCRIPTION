@@ -18,7 +18,6 @@ Description: Have you ever index sorted cells in a 96 or 384-well plate and then
     scifer can export summary tables, 'fasta' files, chromatograms for visual inspection, and generate reports.
 License: MIT + file LICENSE
 Encoding: UTF-8
-Depends: 
 biocViews: 
     Preprocessing, 
     QualityControl, 
@@ -46,6 +45,10 @@ Imports: dplyr,
     rlang,
     flowCore,
     methods
-Suggests: BiocStyle
 RoxygenNote: 7.1.2
 VignetteBuilder: knitr
+Suggests: 
+    fs,
+    BiocStyle,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3

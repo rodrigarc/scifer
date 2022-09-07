@@ -34,13 +34,12 @@ fcs_processing <- function(
     if (compensation == TRUE) {
         comp <- fsApply(fs, function(x) spillover(x)[[1]], simplify=FALSE)
         fs_comp <- compensate(fs, comp)
-        message("Samples were compensated using the
-                compensation saved on fsc index files.")
+        message("Samples were compensated using the compensation saved on fsc index files.")
     } else if (compensation == FALSE) {
         fs_comp <- fs
         message("Samples were not compensated.")
     } else {
-        message("Compensation argument should be TRUE or FALSE.")
+        stop("Compensation argument should be TRUE or FALSE.")
     }
     fs_comp <- fsApply(fs_comp, simplify=FALSE, function(x) {
         ## Change name of channels for marker's name
@@ -49,18 +48,22 @@ fcs_processing <- function(
         ## Extract single-cell sorted plate position
         if (plate_wells == 96) {
             df_fs_comp <- getIndexSort(x) %>% mutate(
-                row=plyr::mapvalues(.data$XLoc, from=seq(0, 7), to=LETTERS[seq_len(8)]),
-                column=plyr::mapvalues(.data$YLoc, from=seq(0, 11), to=sprintf("%02d", as.numeric(seq_len(12)))),
+                row=plyr::mapvalues(.data$XLoc, from=seq(0, 7), to=LETTERS[seq_len(8)],
+                                    warn_missing = FALSE),
+                column=plyr::mapvalues(.data$YLoc, from=seq(0, 11), to=sprintf("%02d", as.numeric(seq_len(12))),
+                                       warn_missing = FALSE),
                 well_ID=paste0(.data$row, .data$column))
             message("96-well plates were used for sorting.")
         } else if (plate_wells == 384) {
             df_fs_comp <- getIndexSort(x) %>% mutate(
-                row=plyr::mapvalues(.data$XLoc, from=seq(0, 15), to=LETTERS[seq_len(16)]),
-                column=plyr::mapvalues(.data$YLoc, from=seq(0, 23), to=sprintf("%02d", as.numeric(seq_len(24)))),
+                row=plyr::mapvalues(.data$XLoc, from=seq(0, 15), to=LETTERS[seq_len(16)],
+                                    warn_missing = FALSE),
+                column=plyr::mapvalues(.data$YLoc, from=seq(0, 23), to=sprintf("%02d", as.numeric(seq_len(24))),
+                                       warn_missing = FALSE),
                 well_ID=paste0(.data$row, .data$column))
             message("384-well plates were used for sorting.")
         } else {
-            message("Only 96 or 384-well plates are supported")
+            stop("Only 96 or 384-well plates are supported")
         }
 
         return(df_fs_comp)
