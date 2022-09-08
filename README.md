@@ -167,7 +167,8 @@ df_to_fasta(sequence_name = df$sequence_name,
 ```
 
 ## FAQ
-* I have a Mac with a M1 processor and I am getting errors while installing this package. How can I install it?
+
+* I have a Mac with a M1 processor and I am getting errors while installing this package. How can I fix it?
         
 First, install xcode:
 
@@ -177,17 +178,24 @@ First, install xcode:
     
     #if the above does not work due to lack of user permissions, you can use use a specific admin user to call the function:
     su - user - my_user -c 'xcode-select --install'  
-    
 ```
 
 Then install devtools, decipher, sangerseq, and ape.
-   
 
 ```r
     install. packages("devtools")
-
     if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
-
     BiocManager::install(c("DECIPHER","sangerseqR","ape"), force = TRUE)
 ```
+
+## Code of Conduct
+
+Please note that the `scifer` project is released with a [Contributor Code of Conduct](http://bioconductor.org/about/code-of-conduct/). By contributing to this project, you agree to abide by its terms.
+
+## Development tools
+
+* Continuous code testing is possible thanks to [GitHub actions](https://www.tidyverse.org/blog/2020/04/usethis-1-6-0/)  through `r BiocStyle::CRANpkg('usethis')`, `r BiocStyle::CRANpkg('remotes')`, and `r BiocStyle::CRANpkg('rcmdcheck')` customized to use [Bioconductor's docker containers](https://www.bioconductor.org/help/docker/) and `r BiocStyle::Biocpkg('BiocCheck')`.
+* Code coverage assessment is possible thanks to [codecov](https://codecov.io/gh) and `r BiocStyle::CRANpkg('covr')`.
+* The code is styled automatically thanks to `r BiocStyle::CRANpkg('styler')`.
+* The documentation is formatted thanks to `r BiocStyle::CRANpkg('devtools')` and `r BiocStyle::CRANpkg('roxygen2')`.

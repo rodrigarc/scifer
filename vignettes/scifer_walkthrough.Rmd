@@ -42,14 +42,14 @@ Regardless of where is your data, you should have two folders, one for flow cyto
 
 If you want to have a more detailed explanation of installation steps and folder organization, check the README file in the [package github here.](https://github.com/rodrigarc/scifer)
 
-## Installation
+## Installation instructions
 
-To use scifer, you should first install Bioconductor package manager.
-Start R, then enter the following:
+Get the latest stable `R` release from [CRAN](http://cran.r-project.org/). Then install `scifer` using from [Bioconductor](http://bioconductor.org/) the following code:
 
-```{r installation, eval=FALSE}
-if (!require("BiocManager", quietly = TRUE))
+```{r 'install', eval = FALSE}
+if (!requireNamespace("BiocManager", quietly = TRUE)) {
     install.packages("BiocManager")
+}
 
 BiocManager::install("scifer")
 ```
@@ -70,10 +70,12 @@ It is important to check your flow data to check how is your data being processe
 Here is an example of a poor threshold using the forward and side scatter (cell size and granularity).
 
 ```{r check_fcs, message=FALSE}
-fcs_data <- fcs_processing(folder_path = system.file("/extdata/fcs_index_sorting",package = "scifer"),
-                           compensation = FALSE, plate_wells = 96,
-                           probe1 = "FSC.A", probe2 = "SSC.A",
-                           posvalue_probe1 = 600, posvalue_probe2 = 400)
+fcs_data <- fcs_processing(
+  folder_path = system.file("/extdata/fcs_index_sorting",package = "scifer"),
+  compensation = FALSE, plate_wells = 96,
+  probe1 = "FSC.A", probe2 = "SSC.A",
+  posvalue_probe1 = 600, posvalue_probe2 = 400)
+
 fcs_plot(fcs_data)
 ```
 
@@ -90,10 +92,12 @@ You can see that the well position was already extracted from the file and a col
 If you did not probe your cells for a specific antigen, you can just use the following and ignore the `specificity` column. This approach will add all of your cells, regardless of the detected fluorescence in a channel.
 
 ```{r check_fcs_noprobe, message=FALSE, warning=FALSE}
-fcs_data <- fcs_processing(folder_path = system.file("/extdata/fcs_index_sorting",package = "scifer"),
-                           compensation = FALSE, plate_wells = 96,
-                           probe1 = "FSC.A", probe2 = "SSC.A",
-                           posvalue_probe1 = 0, posvalue_probe2 = 0)
+fcs_data <- fcs_processing(
+  folder_path = system.file("/extdata/fcs_index_sorting",package = "scifer"),
+  compensation = FALSE, plate_wells = 96,
+  probe1 = "FSC.A", probe2 = "SSC.A",
+  posvalue_probe1 = 0, posvalue_probe2 = 0)
+
 fcs_plot(fcs_data)
 ```
 
@@ -102,10 +106,12 @@ fcs_plot(fcs_data)
 If you have probed your cells based on a specific marker, you can use the name of the channel or the custom name you have added during the sorting to that channel.
 
 ```{r check_fcs_probe, message=FALSE, warning=FALSE}
-fcs_data <- fcs_processing(folder_path = system.file("/extdata/fcs_index_sorting",package = "scifer"),
-                           compensation = FALSE, plate_wells = 96,
-                           probe1 = "Pre.F", probe2 = "Post.F",
-                           posvalue_probe1 = 600, posvalue_probe2 = 400)
+fcs_data <- fcs_processing(
+  folder_path = system.file("/extdata/fcs_index_sorting",package = "scifer"),
+  compensation = FALSE, plate_wells = 96,
+  probe1 = "Pre.F", probe2 = "Post.F",
+  posvalue_probe1 = 600, posvalue_probe2 = 400)
+
 fcs_plot(fcs_data)
 ```
 
@@ -114,10 +120,12 @@ fcs_plot(fcs_data)
 Finally, the above data used compensation as set to `FALSE`, which is not usually the case since you probably have compensated your samples before sorting. You can set it to `TRUE` and the compensation matrix within the index files will be already automatically applied.
 
 ```{r check_fcs_probe_compensated, message=FALSE, warning=FALSE}
-fcs_data <- fcs_processing(folder_path = system.file("/extdata/fcs_index_sorting",package = "scifer"),
-                           compensation = TRUE, plate_wells = 96,
-                           probe1 = "Pre.F", probe2 = "Post.F",
-                           posvalue_probe1 = 600, posvalue_probe2 = 400)
+fcs_data <- fcs_processing(
+  folder_path = system.file("/extdata/fcs_index_sorting",package = "scifer"),
+  compensation = TRUE, plate_wells = 96,
+  probe1 = "Pre.F", probe2 = "Post.F",
+  posvalue_probe1 = 600, posvalue_probe2 = 400)
+
 fcs_plot(fcs_data)
 ```
 
@@ -136,7 +144,8 @@ Here is just an example of if you would like to process a single sanger sequence
 ```{r bcr_sequence, warning=FALSE}
 ## Read abif using sangerseqR package
 abi_seq <- sangerseqR::read.abif(
-  system.file("/extdata/sorted_sangerseq/E18_C1/A1_3_IgG_Inner.ab1", package="scifer"))
+  system.file("/extdata/sorted_sangerseq/E18_C1/A1_3_IgG_Inner.ab1", 
+              package="scifer"))
 ## Summarise using summarise_abi_file()
 summarised <- summarise_abi_file(abi_seq)
 head(summarised[["summary"]])
@@ -152,10 +161,9 @@ Here you would process recursively all the `.ab1` files within the chosen folder
 
 ```{r bcr_sequences, warning=FALSE}
 
-sf <- summarise_quality(folder_sequences=system.file("extdata/sorted_sangerseq", package="scifer"),
-                        secondary.peak.ratio=0.33,
-                        trim.cutoff=0.01,
-                        processor = 1)
+sf <- summarise_quality(
+  folder_sequences=system.file("extdata/sorted_sangerseq", package="scifer"),
+  secondary.peak.ratio=0.33, trim.cutoff=0.01, processor = 1)
 ```
 
 Here are the columns from the summarised `data.frame`:
@@ -186,13 +194,13 @@ This function generated the following files:
 - Chromatogram of the approximate CDR3 region if secondary peaks are detected (.pdf)
 
 ```{r eval=FALSE}
-quality_report(folder_sequences = system.file("extdata/sorted_sangerseq", package="scifer"),
-               outputfile = "QC_report.html",
-               output_dir = "~/full/path/to/your/desire/location",
-               folder_path_fcs = system.file("extdata/fcs_index_sorting", package = "scifer"),
-               probe1 = "Pre.F", probe2 = "Post.F",
-               posvalue_probe1 = 600, posvalue_probe2 = 400)
-
+quality_report(
+  folder_sequences = system.file("extdata/sorted_sangerseq", package="scifer"),
+  outputfile = "QC_report.html", output_dir = "~/full/path/to/your/location",
+  folder_path_fcs = system.file("extdata/fcs_index_sorting", 
+                                package = "scifer"),
+  probe1 = "Pre.F", probe2 = "Post.F", 
+  posvalue_probe1 = 600, posvalue_probe2 = 400)
 ```
 
 
