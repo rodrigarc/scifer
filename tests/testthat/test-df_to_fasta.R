@@ -14,7 +14,7 @@ test_that("different number of names and sequences", {
             sequence_name = c("myseq1"),
             sequence_strings = c("AATGTCTG", "ATGTCA"), save_fasta = FALSE
         ),
-        regexp = "Sequence column does not have the same length as sequences name"
+        regexp = "Sequence column has different length of sequences name"
         )
     )
 })

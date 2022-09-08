@@ -9,7 +9,8 @@
 #'
 #' @examples
 #' index_sort_data <- fcs_processing(
-#'     folder_path = system.file("/extdata/fcs_index_sorting", package = "scifer"),
+#'     folder_path = system.file("/extdata/fcs_index_sorting",
+#'                                 package = "scifer"),
 #'     compensation = TRUE, plate_wells = 96,
 #'     probe1 = "Pre.F", probe2 = "Post.F",
 #'     posvalue_probe1 = 600, posvalue_probe2 = 400
@@ -36,15 +37,18 @@ fcs_plot <- function(processed_fcs_list = NULL) {
         posvalue_probe2 <- processed_fcs_list[["selected_probes"]][2, 2]
         ## Create object to remove NOTE error
         .x <- NULL
-        flow_plot_obj <- ggplot(processed_fcs_list[["processed_fcs"]], aes(x = get(probe1), y = get(probe2))) +
+        flow_plot_obj <- ggplot(processed_fcs_list[["processed_fcs"]],
+                                aes(x = get(probe1), y = get(probe2))) +
             geom_point(size = .7, color = "grey40") +
             scale_x_log10(
                 breaks = scales::trans_breaks("log10", function(x) 10^x),
-                labels = scales::trans_format("log10", scales::math_format(10^.x))
+                labels = scales::trans_format("log10",
+                                              scales::math_format(10^.x))
             ) +
             scale_y_log10(
                 breaks = scales::trans_breaks("log10", function(x) 10^x),
-                labels = scales::trans_format("log10", scales::math_format(10^.x))
+                labels = scales::trans_format("log10",
+                                              scales::math_format(10^.x))
             ) +
             geom_vline(xintercept = posvalue_probe1) +
             geom_hline(yintercept = posvalue_probe2) +

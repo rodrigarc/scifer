@@ -35,7 +35,7 @@ test_that("applying compensation", {
                 probe1 = "Pre.F", probe2 = "Post.F",
                 posvalue_probe1 = 600, posvalue_probe2 = 400
             ),
-            "Samples were compensated using the compensation saved on fsc index files."
+            "Samples were compensated using the data on fsc index files."
         )
     )
 

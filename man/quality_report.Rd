@@ -71,23 +71,17 @@ This function uses the other functions already described to create a HTML report
 \examples{
 \donttest{
 quality_report(
-    folder_sequences = system.file("extdata/sorted_sangerseq", package = "scifer"),
+    folder_sequences = system.file("extdata/sorted_sangerseq",
+                                    package = "scifer"),
     outputfile = "QC-report.html",
     output_dir = "~/test",
-    folder_path_fcs = system.file("/extdata/fcs_index_sorting", package = "scifer"),
+    folder_path_fcs = system.file("/extdata/fcs_index_sorting",
+                                   package = "scifer"),
     processors = 1, compensation = TRUE, plate_wells = "96",
     probe1 = "Pre.F", probe2 = "Post.F",
     posvalue_probe1 = 600, posvalue_probe2 = 400,
     cdr3_start = 100,
     cdr3_end = 150
-)
-}
-\dontrun{
-quality_report(
-    folder_sequences = system.file("extdata/sorted_sangerseq/", package = "scifer"),
-    output_dir = "", folder_path_fcs = system.file("extdata/fcs_index_sorting/", package = "scifer"),
-    probe1 = "Pre.F", probe2 = "Post.F", posvalue_probe1 = 600, posvalue_probe2 = 400
-)
-}
+)}
 
 }

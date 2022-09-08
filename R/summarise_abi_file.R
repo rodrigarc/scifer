@@ -28,7 +28,8 @@
 #' @examples
 #' ## Read abif using sangerseqR package
 #' abi_seq <- sangerseqR::read.abif(
-#'     system.file("/extdata/sorted_sangerseq/E18_C1/A1_3_IgG_Inner.ab1", package = "scifer")
+#'     system.file("/extdata/sorted_sangerseq/E18_C1/A1_3_IgG_Inner.ab1",
+#'     package = "scifer")
 #' )
 #'
 #' ## Summarise using summarise_abi_file()
@@ -60,8 +61,9 @@ summarise_abi_file <- function(seq.abif,
         qual.trimmed <- c(NA)
     } ## Summarise
 
-    ## Fix up the trim locations to correspond to the sangerseq primary seq object
-    if (trims$start == 1 && trims$finish == nchar(as.character(seq.abif@data$PBAS.2))) {
+    ## Fix up the trim locations to correspond to sangerseq primaryseq object
+    if (trims$start == 1 &&
+        trims$finish == nchar(as.character(seq.abif@data$PBAS.2))) {
         ## Do nothing if sequence was not trimmed
         trim.start <- 1
         trim.finish <- length(primarySeq(seq.sanger))
@@ -73,7 +75,8 @@ summarise_abi_file <- function(seq.abif,
 
     ## Get trimmed and untrimmed version of raw data
     seq.trimmed <- seq.sanger@primarySeq[trim.start:trim.finish]
-    secondary.peaks.trimmed <- secondary.peaks %>% filter(.data$position >= trim.start, .data$position <= trim.finish)
+    secondary.peaks.trimmed <- secondary.peaks %>%
+        filter(.data$position >= trim.start, .data$position <= trim.finish)
 
     read_summary <- c(
         "raw.length" = length(seq.sanger@primarySeq),

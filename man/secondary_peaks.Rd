@@ -37,7 +37,8 @@ It returns a table of secondary peaks, and optionally saves an annotated chromat
 \examples{
 ## Read abif using sangerseqR package
 s4_sangerseq <- sangerseqR::readsangerseq(
-    system.file("/extdata/sorted_sangerseq/E18_C1/A1_3_IgG_Inner.ab1", package = "scifer")
+    system.file("/extdata/sorted_sangerseq/E18_C1/A1_3_IgG_Inner.ab1",
+                 package = "scifer")
 )
 
 ## Summarise using summarise_abi_file()

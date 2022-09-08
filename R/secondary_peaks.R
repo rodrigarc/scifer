@@ -24,7 +24,8 @@
 #' @examples
 #' ## Read abif using sangerseqR package
 #' s4_sangerseq <- sangerseqR::readsangerseq(
-#'     system.file("/extdata/sorted_sangerseq/E18_C1/A1_3_IgG_Inner.ab1", package = "scifer")
+#'     system.file("/extdata/sorted_sangerseq/E18_C1/A1_3_IgG_Inner.ab1",
+#'                  package = "scifer")
 #' )
 #'
 #' ## Summarise using summarise_abi_file()
@@ -49,18 +50,22 @@ secondary_peaks <- function(s, ratio = 0.33,
     primary.basecall <- primary.vector[diffs]
     secondary.basecall <- secondary.vector[diffs]
 
-    r <- data.frame("position" = diffs, "primary.basecall" = primary.basecall, "secondary.basecall" = secondary.basecall)
+    r <- data.frame("position" = diffs,
+                    "primary.basecall" = primary.basecall,
+                    "secondary.basecall" = secondary.basecall)
 
     if (!is.na(output.folder)) {
         if (dir.exists(output.folder)) {
             chromname <- paste(file.prefix, "_", "chromatogram.pdf", sep = "")
             chrom <- chromatogram(basecalls,
-                width = 50, height = 2, showcalls = "both", filename = file.path(output.folder, chromname),
+                width = 50, height = 2, showcalls = "both",
+                filename = file.path(output.folder, chromname),
                 trim5 = 100,
                 trim3 = nchar(primary) - 150,
             )
         } else {
-            warning(sprintf("Couldn't find directory '%s', no files saved", output.folder))
+            warning(sprintf("Couldn't find directory '%s', no files saved",
+                            output.folder))
         }
     }
 
@@ -129,7 +134,8 @@ fix.trims <- function(trims, seq.sanger, seq.abif, processors) {
     ## Align the original and recalled sequences
     recalled <- primarySeq(seq.sanger, string = TRUE)
     seqs <- DNAStringSet(c(original.trimmed, recalled))
-    pa <- AlignSeqs(seqs, iterations = 0, refinements = 0, verbose = FALSE, processors = processors)
+    pa <- AlignSeqs(seqs, iterations = 0, refinements = 0,
+                    verbose = FALSE, processors = processors)
 
     ## Get the sequence out, and find the first and last gaps.
     aligned.trimmed <- as.character(pa[[1]])

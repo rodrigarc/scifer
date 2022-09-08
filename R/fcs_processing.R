@@ -19,7 +19,8 @@
 #'
 #' @examples
 #' index_sort_data <- fcs_processing(
-#'     folder_path = system.file("/extdata/fcs_index_sorting", package = "scifer"),
+#'     folder_path = system.file("/extdata/fcs_index_sorting",
+#'                                 package = "scifer"),
 #'     compensation = TRUE, plate_wells = 96,
 #'     probe1 = "Pre.F", probe2 = "Post.F",
 #'     posvalue_probe1 = 600, posvalue_probe2 = 400
@@ -34,7 +35,7 @@ fcs_processing <- function(folder_path = "test/test_dataset/fcs_files/",
     if (compensation == TRUE) {
         comp <- fsApply(fs, function(x) spillover(x)[[1]], simplify = FALSE)
         fs_comp <- compensate(fs, comp)
-        message("Samples were compensated using the compensation saved on fsc index files.")
+        message("Samples were compensated using the data on fsc index files.")
     } else if (compensation == FALSE) {
         fs_comp <- fs
         message("Samples were not compensated.")
@@ -53,7 +54,8 @@ fcs_processing <- function(folder_path = "test/test_dataset/fcs_files/",
                     warn_missing = FALSE
                 ),
                 column = plyr::mapvalues(.data$YLoc,
-                    from = seq(0, 11), to = sprintf("%02d", as.numeric(seq_len(12))),
+                    from = seq(0, 11),
+                    to = sprintf("%02d", as.numeric(seq_len(12))),
                     warn_missing = FALSE
                 ),
                 well_ID = paste0(.data$row, .data$column)
@@ -66,7 +68,8 @@ fcs_processing <- function(folder_path = "test/test_dataset/fcs_files/",
                     warn_missing = FALSE
                 ),
                 column = plyr::mapvalues(.data$YLoc,
-                    from = seq(0, 23), to = sprintf("%02d", as.numeric(seq_len(24))),
+                    from = seq(0, 23),
+                    to = sprintf("%02d", as.numeric(seq_len(24))),
                     warn_missing = FALSE
                 ),
                 well_ID = paste0(.data$row, .data$column)
@@ -84,10 +87,14 @@ fcs_processing <- function(folder_path = "test/test_dataset/fcs_files/",
     ## Classify sorted single-cells according to specificity
     joined_fsc_table <- joined_fsc_table %>%
         mutate(specificity = case_when(
-            get(probe1) < posvalue_probe1 & get(probe2) < posvalue_probe2 ~ "DN",
-            get(probe1) > posvalue_probe1 & get(probe2) > posvalue_probe2 ~ "DP",
-            get(probe1) > posvalue_probe1 & get(probe2) < posvalue_probe2 ~ probe1,
-            get(probe1) < posvalue_probe1 & get(probe2) > posvalue_probe2 ~ probe2
+            get(probe1) < posvalue_probe1 &
+                get(probe2) < posvalue_probe2 ~ "DN",
+            get(probe1) > posvalue_probe1 &
+                get(probe2) > posvalue_probe2 ~ "DP",
+            get(probe1) > posvalue_probe1 &
+                get(probe2) < posvalue_probe2 ~ probe1,
+            get(probe1) < posvalue_probe1 &
+                get(probe2) > posvalue_probe2 ~ probe2
         ))
 
     probes_values <- data.frame(
@@ -95,5 +102,6 @@ fcs_processing <- function(folder_path = "test/test_dataset/fcs_files/",
         posvalues = c(posvalue_probe1, posvalue_probe2)
     )
 
-    return(list("processed_fcs" = joined_fsc_table, "selected_probes" = probes_values))
+    return(list("processed_fcs" = joined_fsc_table,
+                "selected_probes" = probes_values))
 }

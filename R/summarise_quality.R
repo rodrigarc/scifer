@@ -14,7 +14,8 @@
 #' @rawNamespace import(Biostrings, except=c(collapse, union, intersect, setdiff, setequal))
 #' @examples
 #' sf <- summarise_quality(
-#'     folder_sequences = system.file("extdata/sorted_sangerseq", package = "scifer"),
+#'     folder_sequences = system.file("extdata/sorted_sangerseq",
+#'                                     package = "scifer"),
 #'     secondary.peak.ratio = 0.33,
 #'     trim.cutoff = 0.01,
 #'     processor = 1
@@ -46,7 +47,9 @@ summarise_quality <-
             )
             message(sprintf(("Found %d .ab1 files..."), length(abi.fnames)))
             message("Loading reads...")
-            abi.seqs <- mclapply(abi.fnames, sangerseqR::read.abif, mc.cores = processors)
+            abi.seqs <- mclapply(abi.fnames,
+                                 sangerseqR::read.abif,
+                                 mc.cores = processors)
             message("Calculating read summaries...")
             ## Create a data.frame of summaries of all the files
             summaries.dat <- mclapply(abi.seqs,
@@ -56,7 +59,9 @@ summarise_quality <-
                 mc.cores = processors
             )
             message("Cleaning up")
-            summaries <- mclapply(summaries.dat, function(x) x[["summary"]], mc.cores = processors)
+            summaries <- mclapply(summaries.dat,
+                                  function(x) x[["summary"]],
+                                  mc.cores = processors)
             summaries <- do.call(rbind, summaries)
 
             folder.names <- basename(dirname(abi.fnames))
@@ -67,9 +72,12 @@ summarise_quality <-
                 "folder.name" = as.character(folder.names),
                 "file.name" = file.names, summaries, stringsAsFactors = FALSE
             )
-            qual_scores <- mclapply(summaries.dat, function(x) x[["quality_score"]], mc.cores = processors)
+            qual_scores <- mclapply(summaries.dat,
+                                    function(x) x[["quality_score"]],
+                                    mc.cores = processors)
             names(qual_scores) <- as.character(abi.fnames)
 
-            return(list("summaries" = summaries, "quality_scores" = qual_scores))
+            return(list("summaries" = summaries,
+                        "quality_scores" = qual_scores))
         }
     }
