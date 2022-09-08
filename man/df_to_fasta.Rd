@@ -32,10 +32,10 @@ Fasta file creation from dataframe columns and/or vectors.
 \examples{
 ## Example with vectors, default for save_fasta ir TRUE
 df_to_fasta(
-    sequence_name=c("myseq1", "myseq2"),
-    sequence_strings=c("GATCGAT", "ATCGTAG"),
-    file_name="my_sequences.fasta",
-    output_dir="",
+    sequence_name = c("myseq1", "myseq2"),
+    sequence_strings = c("GATCGAT", "ATCGTAG"),
+    file_name = "my_sequences.fasta",
+    output_dir = "",
     save_fasta = FALSE
 )
 }

@@ -19,48 +19,61 @@
 #'
 #' @examples
 #' index_sort_data <- fcs_processing(
-#'     folder_path=system.file("/extdata/fcs_index_sorting",package = "scifer"),
-#'     compensation=TRUE, plate_wells=96,
-#'     probe1="Pre.F", probe2="Post.F",
-#'     posvalue_probe1=600, posvalue_probe2=400)
+#'     folder_path = system.file("/extdata/fcs_index_sorting",
+#'                                 package = "scifer"),
+#'     compensation = TRUE, plate_wells = 96,
+#'     probe1 = "Pre.F", probe2 = "Post.F",
+#'     posvalue_probe1 = 600, posvalue_probe2 = 400
+#' )
 #'
 #' @export
-fcs_processing <- function(
-    folder_path="test/test_dataset/fcs_files/",
-    compensation=TRUE, plate_wells=96,
-    probe1="Pre.F", probe2="Post.F",
-    posvalue_probe1=600, posvalue_probe2=400) {
-    fs <- read.flowSet(path=folder_path, truncate_max_range=FALSE)
+fcs_processing <- function(folder_path = "test/test_dataset/fcs_files/",
+    compensation = TRUE, plate_wells = 96,
+    probe1 = "Pre.F", probe2 = "Post.F",
+    posvalue_probe1 = 600, posvalue_probe2 = 400) {
+    fs <- read.flowSet(path = folder_path, truncate_max_range = FALSE)
     if (compensation == TRUE) {
-        comp <- fsApply(fs, function(x) spillover(x)[[1]], simplify=FALSE)
+        comp <- fsApply(fs, function(x) spillover(x)[[1]], simplify = FALSE)
         fs_comp <- compensate(fs, comp)
-        message("Samples were compensated using the compensation saved on fsc index files.")
+        message("Samples were compensated using the data on fsc index files.")
     } else if (compensation == FALSE) {
         fs_comp <- fs
         message("Samples were not compensated.")
     } else {
         stop("Compensation argument should be TRUE or FALSE.")
     }
-    fs_comp <- fsApply(fs_comp, simplify=FALSE, function(x) {
+    fs_comp <- fsApply(fs_comp, simplify = FALSE, function(x) {
         ## Change name of channels for marker's name
         params <- parameters(x)[["desc"]]
         colnames(x)[!is.na(params)] <- na.omit(params)
         ## Extract single-cell sorted plate position
         if (plate_wells == 96) {
             df_fs_comp <- getIndexSort(x) %>% mutate(
-                row=plyr::mapvalues(.data$XLoc, from=seq(0, 7), to=LETTERS[seq_len(8)],
-                                    warn_missing = FALSE),
-                column=plyr::mapvalues(.data$YLoc, from=seq(0, 11), to=sprintf("%02d", as.numeric(seq_len(12))),
-                                       warn_missing = FALSE),
-                well_ID=paste0(.data$row, .data$column))
+                row = plyr::mapvalues(.data$XLoc,
+                    from = seq(0, 7), to = LETTERS[seq_len(8)],
+                    warn_missing = FALSE
+                ),
+                column = plyr::mapvalues(.data$YLoc,
+                    from = seq(0, 11),
+                    to = sprintf("%02d", as.numeric(seq_len(12))),
+                    warn_missing = FALSE
+                ),
+                well_ID = paste0(.data$row, .data$column)
+            )
             message("96-well plates were used for sorting.")
         } else if (plate_wells == 384) {
             df_fs_comp <- getIndexSort(x) %>% mutate(
-                row=plyr::mapvalues(.data$XLoc, from=seq(0, 15), to=LETTERS[seq_len(16)],
-                                    warn_missing = FALSE),
-                column=plyr::mapvalues(.data$YLoc, from=seq(0, 23), to=sprintf("%02d", as.numeric(seq_len(24))),
-                                       warn_missing = FALSE),
-                well_ID=paste0(.data$row, .data$column))
+                row = plyr::mapvalues(.data$XLoc,
+                    from = seq(0, 15), to = LETTERS[seq_len(16)],
+                    warn_missing = FALSE
+                ),
+                column = plyr::mapvalues(.data$YLoc,
+                    from = seq(0, 23),
+                    to = sprintf("%02d", as.numeric(seq_len(24))),
+                    warn_missing = FALSE
+                ),
+                well_ID = paste0(.data$row, .data$column)
+            )
             message("384-well plates were used for sorting.")
         } else {
             stop("Only 96 or 384-well plates are supported")
@@ -68,19 +81,27 @@ fcs_processing <- function(
 
         return(df_fs_comp)
     })
-    joined_fsc_table <- data.table::rbindlist(fs_comp, idcol=TRUE) %>%
-        rename(sample_ID=.data$.id) %>%
-        mutate(sample_ID=gsub(".fcs", "", .data$sample_ID))
+    joined_fsc_table <- data.table::rbindlist(fs_comp, idcol = TRUE) %>%
+        rename(sample_ID = .data$.id) %>%
+        mutate(sample_ID = gsub(".fcs", "", .data$sample_ID))
     ## Classify sorted single-cells according to specificity
     joined_fsc_table <- joined_fsc_table %>%
-        mutate(specificity=case_when(
-            get(probe1) < posvalue_probe1 & get(probe2) < posvalue_probe2 ~ "DN",
-            get(probe1) > posvalue_probe1 & get(probe2) > posvalue_probe2 ~ "DP",
-            get(probe1) > posvalue_probe1 & get(probe2) < posvalue_probe2 ~ probe1,
-            get(probe1) < posvalue_probe1 & get(probe2) > posvalue_probe2 ~ probe2))
+        mutate(specificity = case_when(
+            get(probe1) < posvalue_probe1 &
+                get(probe2) < posvalue_probe2 ~ "DN",
+            get(probe1) > posvalue_probe1 &
+                get(probe2) > posvalue_probe2 ~ "DP",
+            get(probe1) > posvalue_probe1 &
+                get(probe2) < posvalue_probe2 ~ probe1,
+            get(probe1) < posvalue_probe1 &
+                get(probe2) > posvalue_probe2 ~ probe2
+        ))
 
-    probes_values <- data.frame(probes = c(probe1, probe2),
-                                posvalues = c(posvalue_probe1, posvalue_probe2))
+    probes_values <- data.frame(
+        probes = c(probe1, probe2),
+        posvalues = c(posvalue_probe1, posvalue_probe2)
+    )
 
-    return(list("processed_fcs" = joined_fsc_table, "selected_probes" = probes_values))
+    return(list("processed_fcs" = joined_fsc_table,
+                "selected_probes" = probes_values))
 }

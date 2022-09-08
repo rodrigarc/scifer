@@ -24,50 +24,56 @@
 #' @examples
 #' ## Read abif using sangerseqR package
 #' s4_sangerseq <- sangerseqR::readsangerseq(
-#' system.file("/extdata/sorted_sangerseq/E18_C1/A1_3_IgG_Inner.ab1", package="scifer"))
+#'     system.file("/extdata/sorted_sangerseq/E18_C1/A1_3_IgG_Inner.ab1",
+#'                  package = "scifer")
+#' )
 #'
 #' ## Summarise using summarise_abi_file()
 #' processed_seq <- secondary_peaks(s4_sangerseq)
 #'
 #' @export
-secondary_peaks <- function(s, ratio=0.33,
-                            output.folder=NA,
-                            file.prefix="seq",
-                            processors=NULL) {
-    basecalls <- makeBaseCalls(s, ratio=ratio)
+secondary_peaks <- function(s, ratio = 0.33,
+    output.folder = NA,
+    file.prefix = "seq",
+    processors = NULL) {
+    basecalls <- makeBaseCalls(s, ratio = ratio)
 
-    primary <- primarySeq(basecalls, string=TRUE)
-    secondary <- secondarySeq(basecalls, string=TRUE)
+    primary <- primarySeq(basecalls, string = TRUE)
+    secondary <- secondarySeq(basecalls, string = TRUE)
 
 
     comp <- compareStrings(primary, secondary)
-    diffs <- str_locate_all(pattern="\\?", comp)[[1]][, 1]
-    primary.vector <- strsplit(primary, split="")[[1]]
-    secondary.vector <- strsplit(secondary, split="")[[1]]
+    diffs <- str_locate_all(pattern = "\\?", comp)[[1]][, 1]
+    primary.vector <- strsplit(primary, split = "")[[1]]
+    secondary.vector <- strsplit(secondary, split = "")[[1]]
 
     primary.basecall <- primary.vector[diffs]
     secondary.basecall <- secondary.vector[diffs]
 
-    r <- data.frame("position"=diffs, "primary.basecall"=primary.basecall, "secondary.basecall"=secondary.basecall)
+    r <- data.frame("position" = diffs,
+                    "primary.basecall" = primary.basecall,
+                    "secondary.basecall" = secondary.basecall)
 
     if (!is.na(output.folder)) {
         if (dir.exists(output.folder)) {
-            chromname <- paste(file.prefix, "_", "chromatogram.pdf", sep="")
+            chromname <- paste(file.prefix, "_", "chromatogram.pdf", sep = "")
             chrom <- chromatogram(basecalls,
-                width=50, height=2, showcalls="both", filename=file.path(output.folder, chromname),
-                trim5=100,
-                trim3=nchar(primary) - 150,
+                width = 50, height = 2, showcalls = "both",
+                filename = file.path(output.folder, chromname),
+                trim5 = 100,
+                trim3 = nchar(primary) - 150,
             )
         } else {
-            warning(sprintf("Couldn't find directory '%s', no files saved", output.folder))
+            warning(sprintf("Couldn't find directory '%s', no files saved",
+                            output.folder))
         }
     }
 
-    return(list("secondary.peaks"=r, "read"=basecalls))
+    return(list("secondary.peaks" = r, "read" = basecalls))
 }
 
-trim.mott <- function(abif.seq, cutoff=0.0001) {
-    if (!is(cutoff,"numeric") | cutoff < 0) {
+trim.mott <- function(abif.seq, cutoff = 0.0001) {
+    if (!is(cutoff, "numeric") | cutoff < 0) {
         stop("cutoff must be a number of at least 0")
     }
     if (!is(abif.seq, "abif")) {
@@ -112,7 +118,7 @@ trim.mott <- function(abif.seq, cutoff=0.0001) {
     if (sum(cummul_score) == 0) {
         trim_finish <- 0
     }
-    return(list("start"=trim_start, "finish"=trim_finish))
+    return(list("start" = trim_start, "finish" = trim_finish))
 }
 
 fix.trims <- function(trims, seq.sanger, seq.abif, processors) {
@@ -126,13 +132,14 @@ fix.trims <- function(trims, seq.sanger, seq.abif, processors) {
     original.trimmed <- substring(original.seq, trims$start, trims$finish)
 
     ## Align the original and recalled sequences
-    recalled <- primarySeq(seq.sanger, string=TRUE)
+    recalled <- primarySeq(seq.sanger, string = TRUE)
     seqs <- DNAStringSet(c(original.trimmed, recalled))
-    pa <- AlignSeqs(seqs, iterations=0, refinements=0, verbose=FALSE, processors=processors)
+    pa <- AlignSeqs(seqs, iterations = 0, refinements = 0,
+                    verbose = FALSE, processors = processors)
 
     ## Get the sequence out, and find the first and last gaps.
     aligned.trimmed <- as.character(pa[[1]])
-    not.gaps <- str_locate_all(aligned.trimmed, pattern="[^-]")[[1]][, 1]
+    not.gaps <- str_locate_all(aligned.trimmed, pattern = "[^-]")[[1]][, 1]
 
     start <- min(not.gaps)
     finish <- max(not.gaps)
@@ -144,5 +151,5 @@ fix.trims <- function(trims, seq.sanger, seq.abif, processors) {
         finish <- nchar(recalled)
     }
 
-    return(list("start"=start, "finish"=finish))
+    return(list("start" = start, "finish" = finish))
 }
