@@ -17,10 +17,11 @@ Plot flow data from index sorted cells
 }
 \examples{
 index_sort_data <- fcs_processing(
-    folder_path=system.file("/extdata/fcs_index_sorting",package = "scifer"),
-    compensation=TRUE, plate_wells=96,
-    probe1="Pre.F", probe2="Post.F",
-    posvalue_probe1=600, posvalue_probe2=400)
+    folder_path = system.file("/extdata/fcs_index_sorting", package = "scifer"),
+    compensation = TRUE, plate_wells = 96,
+    probe1 = "Pre.F", probe2 = "Post.F",
+    posvalue_probe1 = 600, posvalue_probe2 = 400
+)
 
 fcs_plot_obj <- fcs_plot(index_sort_data)
 

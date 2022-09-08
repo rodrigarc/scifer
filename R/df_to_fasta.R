@@ -11,17 +11,17 @@
 #' @examples
 #' ## Example with vectors, default for save_fasta ir TRUE
 #' df_to_fasta(
-#'     sequence_name=c("myseq1", "myseq2"),
-#'     sequence_strings=c("GATCGAT", "ATCGTAG"),
-#'     file_name="my_sequences.fasta",
-#'     output_dir="",
+#'     sequence_name = c("myseq1", "myseq2"),
+#'     sequence_strings = c("GATCGAT", "ATCGTAG"),
+#'     file_name = "my_sequences.fasta",
+#'     output_dir = "",
 #'     save_fasta = FALSE
 #' )
 #' @export
 df_to_fasta <- function(sequence_name,
-                        sequence_strings,
-                        file_name="sequences.fasta",
-                        output_dir=NULL, save_fasta = TRUE) {
+    sequence_strings,
+    file_name = "sequences.fasta",
+    output_dir = NULL, save_fasta = TRUE) {
     if (length(sequence_strings) != length(sequence_name)) {
         warning("Sequence column does not have the same length as sequences name")
     } else {
@@ -29,11 +29,11 @@ df_to_fasta <- function(sequence_name,
         names(str) <- sequence_name
     }
 
-    if (isTRUE(save_fasta)){
+    if (isTRUE(save_fasta)) {
         if (is.null(output_dir)) {
-            writeXStringSet(str, filepath=file_name, append=FALSE, format="fasta")
+            writeXStringSet(str, filepath = file_name, append = FALSE, format = "fasta")
         } else {
-            writeXStringSet(str, filepath=paste(output_dir, file_name, sep = "/"), append=FALSE, format="fasta")
+            writeXStringSet(str, filepath = paste(output_dir, file_name, sep = "/"), append = FALSE, format = "fasta")
         }
     } else {
         message("Fasta file not saved.")

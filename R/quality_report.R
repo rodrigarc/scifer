@@ -27,15 +27,15 @@
 #' @examples
 #' \donttest{
 #' quality_report(
-#'     folder_sequences=system.file("extdata/sorted_sangerseq", package="scifer"),
-#'     outputfile="QC-report.html",
-#'     output_dir="~/test",
-#'     folder_path_fcs=system.file("/extdata/fcs_index_sorting",package = "scifer"),
-#'     processors=1, compensation=TRUE, plate_wells="96",
-#'     probe1="Pre.F", probe2="Post.F",
-#'     posvalue_probe1=600, posvalue_probe2=400,
-#'     cdr3_start=100,
-#'     cdr3_end=150
+#'     folder_sequences = system.file("extdata/sorted_sangerseq", package = "scifer"),
+#'     outputfile = "QC-report.html",
+#'     output_dir = "~/test",
+#'     folder_path_fcs = system.file("/extdata/fcs_index_sorting", package = "scifer"),
+#'     processors = 1, compensation = TRUE, plate_wells = "96",
+#'     probe1 = "Pre.F", probe2 = "Post.F",
+#'     posvalue_probe1 = 600, posvalue_probe2 = 400,
+#'     cdr3_start = 100,
+#'     cdr3_end = 150
 #' )
 #' }
 #' @importFrom rmarkdown render
@@ -51,48 +51,48 @@
 #' @examples
 #' \dontrun{
 #' quality_report(
-#' folder_sequences=system.file("extdata/sorted_sangerseq/", package="scifer"),
-#' output_dir="", folder_path_fcs=system.file("extdata/fcs_index_sorting/", package="scifer"),
-#'  probe1="Pre.F", probe2="Post.F", posvalue_probe1=600, posvalue_probe2=400
-#' )}
+#'     folder_sequences = system.file("extdata/sorted_sangerseq/", package = "scifer"),
+#'     output_dir = "", folder_path_fcs = system.file("extdata/fcs_index_sorting/", package = "scifer"),
+#'     probe1 = "Pre.F", probe2 = "Post.F", posvalue_probe1 = 600, posvalue_probe2 = 400
+#' )
+#' }
 #'
 #' @export
-quality_report <- function(folder_sequences="path/to/sanger_sequences",
-                           outputfile="QC_report.html",
-                           output_dir="test/", processors=NULL,
-                           folder_path_fcs=NULL,
-                           plot_chromatogram=FALSE,
-                           raw_length=400, trim_start=50, trim_finish=409,
-                           trimmed_mean_quality=30,
-                           compensation=TRUE, plate_wells="96",
-                           probe1="Pre.F", probe2="Post.F",
-                           posvalue_probe1=600, posvalue_probe2=400,
-                           cdr3_start=100,
-                           cdr3_end=150) {
-
-    input <- system.file("rmd", "HC_report.Rmd", package="scifer")
+quality_report <- function(folder_sequences = "path/to/sanger_sequences",
+    outputfile = "QC_report.html",
+    output_dir = "test/", processors = NULL,
+    folder_path_fcs = NULL,
+    plot_chromatogram = FALSE,
+    raw_length = 400, trim_start = 50, trim_finish = 409,
+    trimmed_mean_quality = 30,
+    compensation = TRUE, plate_wells = "96",
+    probe1 = "Pre.F", probe2 = "Post.F",
+    posvalue_probe1 = 600, posvalue_probe2 = 400,
+    cdr3_start = 100,
+    cdr3_end = 150) {
+    input <- system.file("rmd", "HC_report.Rmd", package = "scifer")
 
     render(input,
-        output_dir=output_dir,
-        params=list(
-            folder_sequences=folder_sequences,
-            output_dir=output_dir,
-            processors=processors,
-            plot_chromatogram=plot_chromatogram,
-            folder_path_fcs=folder_path_fcs,
-            raw_length=raw_length,
-            trim_start=trim_start,
-            trim_finish=trim_finish,
-            trimmed_mean_quality=trimmed_mean_quality,
-            compensation=compensation,
-            plate_wells=plate_wells,
-            probe1=probe1,
-            probe2=probe2,
-            posvalue_probe1=posvalue_probe1,
-            posvalue_probe2=posvalue_probe2,
-            cdr3_start=cdr3_start,
-            cdr3_end=cdr3_end
+        output_dir = output_dir,
+        params = list(
+            folder_sequences = folder_sequences,
+            output_dir = output_dir,
+            processors = processors,
+            plot_chromatogram = plot_chromatogram,
+            folder_path_fcs = folder_path_fcs,
+            raw_length = raw_length,
+            trim_start = trim_start,
+            trim_finish = trim_finish,
+            trimmed_mean_quality = trimmed_mean_quality,
+            compensation = compensation,
+            plate_wells = plate_wells,
+            probe1 = probe1,
+            probe2 = probe2,
+            posvalue_probe1 = posvalue_probe1,
+            posvalue_probe2 = posvalue_probe2,
+            cdr3_start = cdr3_start,
+            cdr3_end = cdr3_end
         ),
-        output_file=outputfile
+        output_file = outputfile
     )
 }

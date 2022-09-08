@@ -14,57 +14,62 @@
 #' @rawNamespace import(Biostrings, except=c(collapse, union, intersect, setdiff, setequal))
 #' @examples
 #' sf <- summarise_quality(
-#'    folder_sequences=system.file("extdata/sorted_sangerseq", package="scifer"),
-#'    secondary.peak.ratio=0.33,
-#'    trim.cutoff=0.01,
-#'    processor = 1)
+#'     folder_sequences = system.file("extdata/sorted_sangerseq", package = "scifer"),
+#'     secondary.peak.ratio = 0.33,
+#'     trim.cutoff = 0.01,
+#'     processor = 1
+#' )
 #' @export
 summarise_quality <-
-    function(folder_sequences="input_folder",
-             trim.cutoff=0.01,
-             secondary.peak.ratio=0.33,
-             processors=NULL) {
-    get_processors <- function(processors) {
-        if (Sys.info()["sysname"] == "Windows") {
-            ## mclapply is not supported on windows
-            return(1)
+    function(folder_sequences = "input_folder",
+    trim.cutoff = 0.01,
+    secondary.peak.ratio = 0.33,
+    processors = NULL) {
+        get_processors <- function(processors) {
+            if (Sys.info()["sysname"] == "Windows") {
+                ## mclapply is not supported on windows
+                return(1)
+            }
+            if (is.null(processors)) {
+                processors <- detectCores(all.tests = FALSE, logical = FALSE)
+            }
+            return(processors)
         }
-        if (is.null(processors)) {
-            processors <- detectCores(all.tests=FALSE, logical=FALSE)
+        processors <- get_processors(processors)
+        message("Looking for .ab1 files...")
+        if (!dir.exists(folder_sequences)) {
+            stop("Folder containing sequences does not exist.")
+        } else {
+            abi.fnames <- list.files(folder_sequences,
+                pattern = "\\.ab1$",
+                full.names = TRUE, recursive = TRUE
+            )
+            message(sprintf(("Found %d .ab1 files..."), length(abi.fnames)))
+            message("Loading reads...")
+            abi.seqs <- mclapply(abi.fnames, sangerseqR::read.abif, mc.cores = processors)
+            message("Calculating read summaries...")
+            ## Create a data.frame of summaries of all the files
+            summaries.dat <- mclapply(abi.seqs,
+                summarise_abi_file,
+                trim.cutoff = trim.cutoff,
+                secondary.peak.ratio = secondary.peak.ratio,
+                mc.cores = processors
+            )
+            message("Cleaning up")
+            summaries <- mclapply(summaries.dat, function(x) x[["summary"]], mc.cores = processors)
+            summaries <- do.call(rbind, summaries)
+
+            folder.names <- basename(dirname(abi.fnames))
+            file.names <- basename(abi.fnames)
+
+            summaries <- cbind.data.frame(
+                "file.path" = as.character(abi.fnames),
+                "folder.name" = as.character(folder.names),
+                "file.name" = file.names, summaries, stringsAsFactors = FALSE
+            )
+            qual_scores <- mclapply(summaries.dat, function(x) x[["quality_score"]], mc.cores = processors)
+            names(qual_scores) <- as.character(abi.fnames)
+
+            return(list("summaries" = summaries, "quality_scores" = qual_scores))
         }
-        return(processors)
     }
-    processors <- get_processors(processors)
-    message("Looking for .ab1 files...")
-    if (!dir.exists(folder_sequences)) {
-        stop("Folder containing sequences does not exist.")
-    } else {
-    abi.fnames <- list.files(folder_sequences, pattern="\\.ab1$",
-                             full.names=TRUE, recursive=TRUE)
-    message(sprintf(("Found %d .ab1 files..."), length(abi.fnames)))
-    message("Loading reads...")
-    abi.seqs <- mclapply(abi.fnames, sangerseqR::read.abif, mc.cores=processors)
-    message("Calculating read summaries...")
-    ## Create a data.frame of summaries of all the files
-    summaries.dat <- mclapply(abi.seqs,
-        summarise_abi_file,
-        trim.cutoff=trim.cutoff,
-        secondary.peak.ratio=secondary.peak.ratio,
-        mc.cores=processors
-    )
-    message("Cleaning up")
-    summaries <- mclapply(summaries.dat, function(x) x[["summary"]], mc.cores=processors)
-    summaries <- do.call(rbind, summaries)
-
-    folder.names <- basename(dirname(abi.fnames))
-    file.names <- basename(abi.fnames)
-
-    summaries <- cbind.data.frame("file.path"=as.character(abi.fnames),
-                                  "folder.name"=as.character(folder.names),
-                                  "file.name"=file.names, summaries, stringsAsFactors=FALSE)
-    qual_scores <- mclapply(summaries.dat, function(x) x[["quality_score"]], mc.cores=processors)
-    names(qual_scores) <- as.character(abi.fnames)
-
-    return(list("summaries"=summaries, "quality_scores"=qual_scores))
-    }
-}

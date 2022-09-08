@@ -28,30 +28,31 @@
 #' @examples
 #' ## Read abif using sangerseqR package
 #' abi_seq <- sangerseqR::read.abif(
-#' system.file("/extdata/sorted_sangerseq/E18_C1/A1_3_IgG_Inner.ab1", package="scifer"))
+#'     system.file("/extdata/sorted_sangerseq/E18_C1/A1_3_IgG_Inner.ab1", package = "scifer")
+#' )
 #'
 #' ## Summarise using summarise_abi_file()
 #' summarise_abi_file(abi_seq)
 #'
 #' @export
 summarise_abi_file <- function(seq.abif,
-                               trim.cutoff=0.0001,
-                               secondary.peak.ratio=0.33,
-                               output.folder=NA,
-                               prefix="seq",
-                               processors=NULL) {
-
+    trim.cutoff = 0.0001,
+    secondary.peak.ratio = 0.33,
+    output.folder = NA,
+    prefix = "seq",
+    processors = NULL) {
     seq.sanger <- sangerseq(seq.abif)
     ## Get secondary peaks
     secondary.peaks.data <- secondary_peaks(seq.sanger,
-                                            secondary.peak.ratio,
-                                            output.folder, prefix,
-                                            processors=processors)
+        secondary.peak.ratio,
+        output.folder, prefix,
+        processors = processors
+    )
     secondary.peaks <- secondary.peaks.data[["secondary.peaks"]]
     seq.sanger <- secondary.peaks.data[["read"]]
 
     ## Trim sequence
-    trims <- trim.mott(seq.abif, cutoff=trim.cutoff)
+    trims <- trim.mott(seq.abif, cutoff = trim.cutoff)
     qual <- seq.abif@data$PCON.2
     qual.trimmed <- qual[trims$start:trims$finish]
 
@@ -75,20 +76,20 @@ summarise_abi_file <- function(seq.abif,
     secondary.peaks.trimmed <- secondary.peaks %>% filter(.data$position >= trim.start, .data$position <= trim.finish)
 
     read_summary <- c(
-        "raw.length"=length(seq.sanger@primarySeq),
-        "trimmed.length"=length(seq.trimmed),
-        "trim.start"=trim.start,
-        "trim.finish"=trim.finish,
-        "raw.secondary.peaks"=nrow(secondary.peaks),
-        "trimmed.secondary.peaks"=nrow(secondary.peaks.trimmed),
-        "raw.mean.quality"=mean(qual),
-        "trimmed.mean.quality"=mean(qual.trimmed),
-        "raw.min.quality"=min(qual),
-        "trimmed.min.quality"=min(qual.trimmed)
+        "raw.length" = length(seq.sanger@primarySeq),
+        "trimmed.length" = length(seq.trimmed),
+        "trim.start" = trim.start,
+        "trim.finish" = trim.finish,
+        "raw.secondary.peaks" = nrow(secondary.peaks),
+        "trimmed.secondary.peaks" = nrow(secondary.peaks.trimmed),
+        "raw.mean.quality" = mean(qual),
+        "trimmed.mean.quality" = mean(qual.trimmed),
+        "raw.min.quality" = min(qual),
+        "trimmed.min.quality" = min(qual.trimmed)
     )
     qual_position <- cbind.data.frame(
-        "score"=as.numeric(seq.abif@data$PCON.2),
-        "position"=c(seq_len(length(seq.abif@data$PCON.2)))
+        "score" = as.numeric(seq.abif@data$PCON.2),
+        "position" = c(seq_len(length(seq.abif@data$PCON.2)))
     )
-    return(list("summary"=read_summary, "quality_score"=qual_position))
+    return(list("summary" = read_summary, "quality_score" = qual_position))
 }
