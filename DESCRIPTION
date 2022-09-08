@@ -10,12 +10,15 @@ Authors@R:
              comment = c(ORCID = "0000-0002-1145-2534")))
 URL: https://github.com/rodrigarc/scifer
 BugReports: https://github.com/rodrigarc/scifer/issues
-Description: Have you ever index sorted cells in a 96 or 384-well plate and then sequenced using Sanger sequencing? 
-    If so, you probably had some struggles to either check the chromatogram of each cell sequenced manually, 
-    or when you tried to identify which cell was sorted where after sequencing the plate. 
-    Scifer was developed to solve this issue by performing basic quality control of Sanger sequences 
-    and merging flow cytometry data from probed single-cell sorted B cells with sequencing data. 
-    scifer can export summary tables, 'fasta' files, chromatograms for visual inspection, and generate reports.
+Description: Have you ever index sorted cells in a 96 or 384-well plate and 
+    then sequenced using Sanger sequencing? If so, you probably had some 
+    struggles to either check the chromatogram of each cell sequenced manually, 
+    or when you tried to identify which cell was sorted where after sequencing 
+    the plate. Scifer was developed to solve this issue by performing basic 
+    quality control of Sanger sequences and merging flow cytometry data from 
+    probed single-cell sorted B cells with sequencing data. scifer can export 
+    summary tables, 'fasta' files, chromatograms for visual inspection, 
+    and generate reports.
 License: MIT + file LICENSE
 Encoding: UTF-8
 biocViews: 
