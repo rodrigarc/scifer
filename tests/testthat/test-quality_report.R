@@ -1,5 +1,6 @@
 test_that("Output files", {
     t <- tempdir()
+    t <- paste0(t, "/")
     fs::dir_ls(t) %>% fs::file_delete()
     suppressWarnings(
         quality_report(
