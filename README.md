@@ -1,4 +1,4 @@
-# scifer: Single-cell Immunoglobulin Filtering of Sanger sequences
+# scifer: Single-cell Immunoglobulin Filtering of Sanger sequences <img src="man/figures/logo.png" align="right" width="180" />
 <!-- badges: start -->
 [![R build
 status](https://github.com/rodrigarc/scifer/workflows/R-CMD-check/badge.svg)](https://github.com/rodrigarc/scifer/actions)
