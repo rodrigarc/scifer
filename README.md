@@ -26,7 +26,7 @@ Before the installation you should first install the following packages from Bio
 if (!requireNamespace("BiocManager", quietly = TRUE))
   install.packages("BiocManager")
 
-BiocManager::install(c("DECIPHER","sangerseqR","ape"))
+BiocManager::install(c("DECIPHER","sangerseqR","ape", "BiocStyle"))
 ```
 
 To install scifer directly from GitHub, run this:
@@ -188,6 +188,11 @@ Then install devtools, decipher, sangerseq, and ape.
     install.packages("BiocManager")
     BiocManager::install(c("DECIPHER","sangerseqR","ape"), force = TRUE)
 ```
+
+* I have a Windows computer and I am having problems to build `scifer`. What can I do?
+
+You make sure that you have installed the most recent Rtools, which can be found [here](https://cran.r-project.org/bin/windows/Rtools/). After installing it, restart your R session and then try to build it again. 
+
 
 ## Code of Conduct
 
