@@ -1,4 +1,11 @@
-# scifer 0.99.2 (2022-09-08)
+# scifer 0.99.3 (2022-09-20)
+
+BUG FIXES
+
+* Fix NOTE when building on windows computer
+
+
+## scifer 0.99.2 (2022-09-08)
 
 NEW FEATURES
 
