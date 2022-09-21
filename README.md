@@ -80,7 +80,11 @@ After adjusting your data following this folder structure, you can first run `fc
 ```r
 library(scifer)
 
-fcs_data <- fcs_processing(folder_path = "~/Desktop/project_folder/fcs_files",
+# Select the folder location of the fcs files (flow cytometry index data), this example uses the data provided with `scifer`
+directory_flowdata <- system.file("extdata/fcs_index_sorting",
+                                   package = "scifer")
+                                   
+fcs_data <- fcs_processing(folder_path = directory_flowdata,
                            compensation = TRUE, plate_wells = 96,
                            probe1 = "Pre.F", probe2 = "Post.F",
                            posvalue_probe1 = 600, posvalue_probe2 = 400))
@@ -94,12 +98,16 @@ After identifying which probes and threshold you wish to use for selecting what 
 You can retrieve a `table` for inspection of all the sequences, and checking the names using the following function:
 
 ```r
-summary_sanger_data <- summarise_quality(folder_sequences = "~/Desktop/project_folder/sanger_sequences",
+# Select the folder location of the fcs files (flow cytometry index data), this example uses the data provided with `scifer`
+directory_sequences <- system.file("extdata/sorted_sangerseq",
+                                    package = "scifer")
+                                    
+summary_sanger_data <- summarise_quality(folder_sequences = directory_sequences,
                                          secondary.peak.ratio = 0.33,
                                          trim.cutoff = 0.01,
-                                         processors = NULL # You can change the number of processors manually, 
-                                         # or let the function decides how many are detected in your machine. More processors used, faster the results.
+                                         processor = NULL # This will try to use all your processors, but you can also change it to a desired number
                                          )
+
 ```
 You can check all the file names and quality measurements of each sequence, it can help you decide which quality thresholds you want to customize if needed.
 
@@ -118,10 +126,17 @@ This function will generate:
 The function should be run as the following:
 
 ```r
-quality_report(folder_sequences = "~/Desktop/project_folder/sanger_sequences",
+# Select the folder location of the ab1 files (sanger sequences), this example uses the data provided with `scifer`
+directory_sequences <- system.file("extdata/sorted_sangerseq",
+                                    package = "scifer") 
+# Select the folder location of the fcs files (flow cytometry index data), this example uses the data provided with `scifer`
+directory_flowdata <- system.file("extdata/fcs_index_sorting",
+                                   package = "scifer")
+                                   
+quality_report(folder_sequences = directory_sequences,
                outputfile = "QC_report.html",
                output_dir = "~/Desktop/project_folder/results_output",
-               folder_path_fcs = "~/Desktop/project_folder/fcs_files",
+               folder_path_fcs = directory_flowdata,
                probe1 = "PE.Cy7.A", probe2 = "Alexa.Fluor.700.A",
                posvalue_probe1 = 600, posvalue_probe2 = 400)
                
