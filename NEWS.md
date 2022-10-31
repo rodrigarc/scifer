@@ -1,9 +1,13 @@
-# scifer 0.99.3 (2022-09-20)
+# scifer 0.99.4 (2022-10-31)
+
+* Version bump to bioconductor, updated description
+
+
+## scifer 0.99.3 (2022-09-20)
 
 BUG FIXES
 
 * Fix NOTE when building on windows computer
-
 
 ## scifer 0.99.2 (2022-09-08)
 
