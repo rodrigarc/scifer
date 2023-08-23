@@ -96,7 +96,7 @@ sf$summaries <- sf$summaries %>%
     well_letter = gsub("[[:digit:]]", "", well),
     well = paste0(well_letter, sprintf("%02s", well_number)),
     ID = gsub("\\-.*|\\_.*", "", folder.name),
-    file_ID = sub("_R", "", paste(plate, well, sep = "_"))
+    sequence_id = sub("_R", "", paste(plate, well, sep = "_"))
   ) %>%
   select(-c(well_number, well_letter))
 
@@ -111,7 +111,7 @@ sf_filtered <- sf[["summaries"]] %>%
     trimmed.mean.quality >= trimmed_mean_quality
   ) %>%
   # group by file names (important if you have repetead sequences with the same name and you want to use the best one among them)
-  group_by(file_ID) %>%
+  group_by(sequence_id) %>%
   # among the repeated sequences filter the one with the highest mean quality
   filter(raw.mean.quality == max(raw.mean.quality)) %>%
   ungroup()
@@ -302,14 +302,14 @@ chromatogram <- sf_filtered %>%
   select(file.path)
 
 name <- merge(sf_filtered, chromatogram, by.default=file.path)
-name$file_ID <- sub("HC_", "", name$file_ID)
+name$sequence_id <- sub("HC_", "", name$sequence_id)
 chromatogramlisted <- sapply(name$file.path, sangerseqR::readsangerseq)
 
 dir.create(paste0(output_dir, "/chromatograms"), showWarnings=FALSE, recursive=TRUE)
 mapply(
   FUN=secondary_peaks,
   s=chromatogramlisted,
-  file.prefix=name$file_ID,
+  file.prefix=name$sequence_id,
   MoreArgs=list(output.folder = paste0(output_dir, "/chromatograms"))
 )
 ```
@@ -319,7 +319,7 @@ mapply(
 All the informations about the sequence primary basecall, quality scores, folder.name, well, plate, secondary peaks etc. can be found in the csv file created inside the **"processing"** folder. If there is probing with flow cytometry data index files to be integrated, the csv files and fasta will contain that information, if not, it will be ignored or invalid, it will be ignored.
 
 ## Processing flow cytometry data and assigning specificities
-```{r fcs_processing, warning=FALSE}
+```{r fcs_processing, warning=FALSE, include=FALSE}
 if (is.null(folder_path_fcs)) {
   process_fcs_data <- FALSE
   } else if (is.na(folder_path_fcs)) {
@@ -338,27 +338,26 @@ processed_index <- fcs_processing(folder_path = folder_path_fcs, compensation = 
 fcs_plot(processed_index)
 
 processed_index <- processed_index[["processed_fcs"]] %>%
-  mutate(file_ID = paste(sample_ID, well_ID, sep = "_"),
+  mutate(sequence_id = paste(sample_ID, well_ID, sep = "_"),
          specificity = gsub("\\.", "", specificity)) %>%
-  relocate(file_ID) %>%
-  select(file_ID, specificity)
+  relocate(sequence_id) 
 ```
 
 
 ```{r specificity, echo=FALSE, warning=FALSE, include=FALSE}
 
 if (process_fcs_data == TRUE) {
-  sf_filtered_csv <- sf_filtered %>% select(file.path, file_ID, ID, plate, well, raw.mean.quality, trimmed.mean.quality, sec.peak.CDR3, sequence) %>% left_join(processed_index) %>%
-    mutate(file_ID = paste(file_ID, specificity, sep = "_"))
+  sf_filtered_csv <- sf_filtered %>% select(file.path, sequence_id, ID, plate, well, raw.mean.quality, trimmed.mean.quality, sec.peak.CDR3, sequence) %>% left_join(processed_index, by = "sequence_id") %>%
+    mutate(sequence_id = paste(sequence_id, specificity, sep = "_"))
   
   sf_filtered_csv %>%
-  select(file_ID, ID, plate, well, specificity, raw.mean.quality, trimmed.mean.quality, sec.peak.CDR3, sequence) %>%
+  relocate(sequence_id, ID, plate, well, specificity, raw.mean.quality, trimmed.mean.quality, sec.peak.CDR3, sequence) %>%
   write.csv(paste0(output_dir, "sanger_filtered.csv"), row.names = FALSE)
 } else {
-  sf_filtered_csv <- sf_filtered %>% select(file.path, file_ID, ID, plate, well, raw.mean.quality, trimmed.mean.quality, sec.peak.CDR3, sequence) 
+  sf_filtered_csv <- sf_filtered %>% relocate(file.path, sequence_id, ID, plate, well, raw.mean.quality, trimmed.mean.quality, sec.peak.CDR3, sequence) 
   
   sf_filtered_csv %>%
-  select(file_ID, ID, plate, well, raw.mean.quality, trimmed.mean.quality, sec.peak.CDR3, sequence) %>%
+  relocate(sequence_id, ID, plate, well, raw.mean.quality, trimmed.mean.quality, sec.peak.CDR3, sequence) %>%
   write.csv(paste0(output_dir, "sanger_filtered.csv"), row.names = FALSE)
 }
 ```
@@ -370,7 +369,7 @@ A fasta file containing all the filtered sequences was created on the folder cal
 ```{r fasta, echo=FALSE, include = FALSE}
 # Fasta file creation
 df_to_fasta(
-  sequence_name=sf_filtered_csv$file_ID,
+  sequence_name=sf_filtered_csv$sequence_id,
   sequence_strings=sf_filtered_csv$sequence,
   file_name="combined_sequences.fasta",
   output_dir=output_dir

@@ -1,6 +1,5 @@
 ---
 title: "`r i` Quality Control Report"
-author: "Rodrigo Arcoverde" 
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
   html_document: default
@@ -186,7 +185,7 @@ A fasta file containing the filtered of this animal was created on the folder ca
 ```{r fasta_indiv, echo=FALSE}
 # fasta file creation
 df_to_fasta(
-  sequence_name = merged_summary_csv$file_ID,
+  sequence_name = merged_summary_csv$sequence_id,
   sequence_strings = merged_summary_csv$sequence,
   file_name = paste0(i, ".fasta"),
   output_dir = output_dir
