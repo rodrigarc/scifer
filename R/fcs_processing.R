@@ -33,9 +33,18 @@ fcs_processing <- function(folder_path = "test/test_dataset/fcs_files/",
     posvalue_probe1 = 600, posvalue_probe2 = 400) {
     fs <- read.flowSet(path = folder_path, truncate_max_range = FALSE)
     if (compensation == TRUE) {
-        comp <- fsApply(fs, function(x) spillover(x)[[1]], simplify = FALSE)
+      if(all(unlist(lapply(spillover(fs[[1]]), is.null)))) {
+        stop("Compensation matrices are all empty")
+      } else {
+        not_null_comp <- which(!unlist(lapply(spillover(fs[[1]]), is.null)))
+        if (length(not_null_comp) > 1) {
+          not_null_comp <- not_null_comp[1]
+        }
+        comp <- fsApply(fs, function(x) spillover(x)[[not_null_comp]],
+                        simplify = FALSE)
         fs_comp <- compensate(fs, comp)
         message("Samples were compensated using the data on fsc index files.")
+      }
     } else if (compensation == FALSE) {
         fs_comp <- fs
         message("Samples were not compensated.")
