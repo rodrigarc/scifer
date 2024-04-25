@@ -56,7 +56,7 @@ Imports: dplyr,
     rlang,
     flowCore,
     methods
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.3
 VignetteBuilder: knitr
 Suggests: 
     fs,

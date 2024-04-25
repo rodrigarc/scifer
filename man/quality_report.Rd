@@ -11,9 +11,9 @@ quality_report(
   processors = NULL,
   folder_path_fcs = NULL,
   plot_chromatogram = FALSE,
-  raw_length = 400,
-  trim_start = 50,
-  trim_finish = 409,
+  raw_length = 343,
+  trim_start = 65,
+  trim_finish = 400,
   trimmed_mean_quality = 30,
   compensation = TRUE,
   plate_wells = "96",
@@ -38,11 +38,11 @@ quality_report(
 
 \item{plot_chromatogram}{Logical argument, TRUE or FALSE, to indicate if chromatograms should be plotted or not. Default is FALSE}
 
-\item{raw_length}{Minimum sequence length for filtering. Default is 400 for B cell receptors}
+\item{raw_length}{Minimum sequence length for filtering. Default is 343 for B cell receptors}
 
-\item{trim_start}{Starting position where the sequence should start to have a good base call accuracy. Default is 50 for B cell receptors}
+\item{trim_start}{Starting position where the sequence should start to have a good base call accuracy. Default is 65 for B cell receptors}
 
-\item{trim_finish}{Last position where the sequence should have a good base call accuracy. Default is 409 for B cell receptors}
+\item{trim_finish}{Last position where the sequence should have a good base call accuracy. Default is 400 for B cell receptors}
 
 \item{trimmed_mean_quality}{Minimum Phred quality score expected for an average sequence. Default is 30, which means average of 99.9\% base call accuracy}
 
