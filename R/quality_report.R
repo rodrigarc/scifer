@@ -8,9 +8,9 @@
 #' @param processors Number of processors to use, you can set to NULL to detect automatically all available processors
 #' @param plot_chromatogram Logical argument, TRUE or FALSE, to indicate if chromatograms should be plotted or not. Default is FALSE
 #' @param folder_path_fcs  Full file directory for searching all flow cytometry index files, files with .fcs extensions, in a recursive search method
-#' @param raw_length Minimum sequence length for filtering. Default is 400 for B cell receptors
-#' @param trim_start Starting position where the sequence should start to have a good base call accuracy. Default is 50 for B cell receptors
-#' @param trim_finish Last position where the sequence should have a good base call accuracy. Default is 409 for B cell receptors
+#' @param raw_length Minimum sequence length for filtering. Default is 343 for B cell receptors
+#' @param trim_start Starting position where the sequence should start to have a good base call accuracy. Default is 65 for B cell receptors
+#' @param trim_finish Last position where the sequence should have a good base call accuracy. Default is 400 for B cell receptors
 #' @param trimmed_mean_quality Minimum Phred quality score expected for an average sequence. Default is 30, which means average of 99.9\% base call accuracy
 #' @param compensation Logical argument, TRUE or FALSE, to indicate if the index files were compensated or not. If TRUE, it will apply its compensation prior assigning specificities
 #' @param plate_wells Type of plate used for single-cell sorting. eg. "96" or "384"

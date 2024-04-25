@@ -1,4 +1,14 @@
-# scifer 0.99.4 (2022-10-31)
+# scifer 1.1.1 (2024-04-24)
+
+BUG FIXES
+* Fix compensation bug due to different compensation matrix positions in different `.fcs` file versions
+* update minor nomenclature to AIRR-standards, column `file_ID` to `sequence_id`
+* Fix error of `HC_individualized_report.Rmd` file not being found
+
+NEW FEATURES
+* Update quality thresholds based on a large B cell receptor test dataset
+
+## scifer 0.99.4 (2022-10-31)
 
 * Version bump to bioconductor, updated description
 
