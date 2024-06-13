@@ -1,4 +1,4 @@
-# scifer 1.1.1 (2024-04-24)
+# scifer 1.7.1 (2024-04-24)
 
 BUG FIXES
 * Fix compensation bug due to different compensation matrix positions in different `.fcs` file versions
