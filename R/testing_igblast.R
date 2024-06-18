@@ -9,6 +9,7 @@ conda_list()
 # load conda environment within R
 use_condaenv("igblast-wrap")
 # run igblast
+source_python("R/igblastwrap.py")
 output <- system("python R/igblastwrap.py 'inst/extdata/test_fasta/KIMDB_rm' 'inst/extdata/test_fasta/test_igblast.txt'",
                  intern = TRUE)
 # get airr formated table results
