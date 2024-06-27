@@ -1,10 +1,10 @@
 #' Run IgDiscover for IgBlast using reticulate and conda environment
 #'
-#' @param database Vector containing the names for each sequence, usually a column from a data.frame. eg. df$sequence_name
-#' @param fasta Vector containing the DNA or RNA or AA sequences, usually a column from a data.frame. eg. df$sequences
+#' @param database Vector containing the database for VDJ sequences
+#' @param fasta Vector containing the sequences, usually a column from a data.frame. eg. df$sequences
 #' 
 #' @return Creates a data frame with the Igblast analysis where each row is the tested sequence with columns containing the results for each sequence
-#' @importFrom Reticulate Dnaio Igblast Here "Other python dependencies"
+#' @import reticulate here basilisk
 #' @examples
 #' ## Example with test sequences
 #' igblast(
@@ -15,9 +15,9 @@
 #' @export
 
 
-#library(reticulate)
-#library(here)
-#library(basilisk)
+# library(reticulate)
+# library(here)
+# library(basilisk)
 
 #check which environments are installed
 #conda_list()
@@ -61,18 +61,18 @@ igblast <- function(database = "path/to/folder", fasta = "path/to/file", threads
       on.exit(basiliskStop(proc))
       
       some_useful_thing <- basiliskRun(proc, fun=function(arg1, arg2, arg3) {
-        csv <- reticulate::import("csv") 
-        errno <- reticulate::import("errno")
-        logging <- reticulate::import( "logging")
-        multiprocessing <- reticulate::import("multiprocessing")
-        os <- reticulate::import("os")
-        re <- reticulate::import("re")
-        shlex <- reticulate::import("shlex")
-        subprocess <- reticulate::import("subprocess")
-        sys <- reticulate::import("sys")
-        tempfile <- reticulate::import("tempfile")
-        time <- reticulate::import("time")
-        dnaio <- reticulate::import("dnaio")
+        # csv <- reticulate::import("csv") 
+        # errno <- reticulate::import("errno")
+        # logging <- reticulate::import( "logging")
+        # multiprocessing <- reticulate::import("multiprocessing")
+        # os <- reticulate::import("os")
+        # re <- reticulate::import("re")
+        # shlex <- reticulate::import("shlex")
+        # subprocess <- reticulate::import("subprocess")
+        # sys <- reticulate::import("sys")
+        # tempfile <- reticulate::import("tempfile")
+        # time <- reticulate::import("time")
+        # dnaio <- reticulate::import("dnaio")
         
         try(source_python("inst/script/igblastwrap.py"), silent = TRUE)
         #source_python("inst/script/igblastwrap.py")
@@ -147,10 +147,12 @@ igblast <- function(database = "path/to/folder", fasta = "path/to/file", threads
 #   
 # }
 
-#db1 <- 'inst/extdata/test_fasta/KIMDB_rm'
-#fasta1 <- 'inst/extdata/test_fasta/test_igblast.txt'
+# db1 <- 'inst/extdata/test_fasta/KIMDB_rm'
+# fasta1 <- 'inst/extdata/test_fasta/test_igblast.txt'
+# 
+# igblast(db1, fasta1,)
 
-#igblast(db1, fasta1,)
+
 
 
 
