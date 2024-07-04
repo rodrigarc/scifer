@@ -2,7 +2,7 @@
 % Please edit documentation in R/igblast.R
 \name{igblast}
 \alias{igblast}
-\title{Run IgDiscover for IgBlast using reticulate and conda environment}
+\title{Run IgDiscover for IgBlast using basilisk, which enables the python environment for Igblast}
 \usage{
 igblast(database = "path/to/folder", fasta = "path/to/file", threads = 1)
 }
@@ -10,18 +10,22 @@ igblast(database = "path/to/folder", fasta = "path/to/file", threads = 1)
 \item{database}{Vector containing the database for VDJ sequences}
 
 \item{fasta}{Vector containing the sequences, usually a column from a data.frame. eg. df$sequences}
+
+\item{threads}{Variable containing the number of cores when computing in parallel, default threads = 1}
 }
 \value{
 Creates a data frame with the Igblast analysis where each row is the tested sequence with columns containing the results for each sequence
 }
 \description{
-Run IgDiscover for IgBlast using reticulate and conda environment
+Run IgDiscover for IgBlast using basilisk, which enables the python environment for Igblast
 }
 \examples{
 ## Example with test sequences
 igblast(
-    database = system.file("inst/extdata/test_fasta/KIMDB_rm"),
-                                ,
-    fasta = system.file("inst/extdata/test_fasta/test_igblast.txt")
+    database = system.file("/inst/extdata/test_fasta/KIMDB_rm", package = "scifer"),
+                                
+    fasta = system.file("/inst/extdata/test_fasta/test_igblast.txt", package = "scifer"),
+    
+    threads = 1
 )
 }
