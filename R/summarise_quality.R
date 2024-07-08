@@ -15,17 +15,19 @@
 #' @examples
 #' sf <- summarise_quality(
 #'     folder_sequences = system.file("extdata/sorted_sangerseq",
-#'                                     package = "scifer"),
+#'         package = "scifer"
+#'     ),
 #'     secondary.peak.ratio = 0.33,
 #'     trim.cutoff = 0.01,
 #'     processor = 1
 #' )
 #' @export
 summarise_quality <-
-    function(folder_sequences = "input_folder",
-    trim.cutoff = 0.01,
-    secondary.peak.ratio = 0.33,
-    processors = NULL) {
+    function(
+        folder_sequences = "input_folder",
+        trim.cutoff = 0.01,
+        secondary.peak.ratio = 0.33,
+        processors = NULL) {
         get_processors <- function(processors) {
             if (Sys.info()["sysname"] == "Windows") {
                 ## mclapply is not supported on windows
@@ -48,8 +50,9 @@ summarise_quality <-
             message(sprintf(("Found %d .ab1 files..."), length(abi.fnames)))
             message("Loading reads...")
             abi.seqs <- mclapply(abi.fnames,
-                                 sangerseqR::read.abif,
-                                 mc.cores = processors)
+                sangerseqR::read.abif,
+                mc.cores = processors
+            )
             message("Calculating read summaries...")
             ## Create a data.frame of summaries of all the files
             summaries.dat <- mclapply(abi.seqs,
@@ -60,8 +63,9 @@ summarise_quality <-
             )
             message("Cleaning up")
             summaries <- mclapply(summaries.dat,
-                                  function(x) x[["summary"]],
-                                  mc.cores = processors)
+                function(x) x[["summary"]],
+                mc.cores = processors
+            )
             summaries <- do.call(rbind, summaries)
 
             folder.names <- basename(dirname(abi.fnames))
@@ -73,11 +77,14 @@ summarise_quality <-
                 "file.name" = file.names, summaries, stringsAsFactors = FALSE
             )
             qual_scores <- mclapply(summaries.dat,
-                                    function(x) x[["quality_score"]],
-                                    mc.cores = processors)
+                function(x) x[["quality_score"]],
+                mc.cores = processors
+            )
             names(qual_scores) <- as.character(abi.fnames)
 
-            return(list("summaries" = summaries,
-                        "quality_scores" = qual_scores))
+            return(list(
+                "summaries" = summaries,
+                "quality_scores" = qual_scores
+            ))
         }
     }

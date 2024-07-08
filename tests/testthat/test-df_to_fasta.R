@@ -10,21 +10,23 @@ test_that("output BStringSet", {
 
 test_that("different number of names and sequences", {
     suppressMessages(
-        expect_warning(df_to_fasta(
-            sequence_name = c("myseq1"),
-            sequence_strings = c("AATGTCTG", "ATGTCA"), save_fasta = FALSE
-        ),
-        regexp = "Sequence column has different length of sequences name"
+        expect_warning(
+            df_to_fasta(
+                sequence_name = c("myseq1"),
+                sequence_strings = c("AATGTCTG", "ATGTCA"), save_fasta = FALSE
+            ),
+            regexp = "Sequence column has different length of sequences name"
         )
     )
 })
 
 test_that("not save fasta files", {
-    expect_message(df_to_fasta(
-        sequence_name = c("myseq1"),
-        sequence_strings = c("AATGTCTG"), save_fasta = FALSE
-    ),
-    regexp = "Fasta file not saved."
+    expect_message(
+        df_to_fasta(
+            sequence_name = c("myseq1"),
+            sequence_strings = c("AATGTCTG"), save_fasta = FALSE
+        ),
+        regexp = "Fasta file not saved."
     )
 })
 

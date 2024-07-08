@@ -18,9 +18,9 @@ vignette: >
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  warning = FALSE
+    collapse = TRUE,
+    comment = "#>",
+    warning = FALSE
 )
 ```
 
@@ -71,10 +71,11 @@ Here is an example of a poor threshold using the forward and side scatter (cell 
 
 ```{r check_fcs, message=FALSE}
 fcs_data <- fcs_processing(
-  folder_path = system.file("/extdata/fcs_index_sorting",package = "scifer"),
-  compensation = FALSE, plate_wells = 96,
-  probe1 = "FSC.A", probe2 = "SSC.A",
-  posvalue_probe1 = 600, posvalue_probe2 = 400)
+    folder_path = system.file("/extdata/fcs_index_sorting", package = "scifer"),
+    compensation = FALSE, plate_wells = 96,
+    probe1 = "FSC.A", probe2 = "SSC.A",
+    posvalue_probe1 = 600, posvalue_probe2 = 400
+)
 
 fcs_plot(fcs_data)
 ```
@@ -93,10 +94,11 @@ If you did not probe your cells for a specific antigen, you can just use the fol
 
 ```{r check_fcs_noprobe, message=FALSE, warning=FALSE}
 fcs_data <- fcs_processing(
-  folder_path = system.file("/extdata/fcs_index_sorting",package = "scifer"),
-  compensation = FALSE, plate_wells = 96,
-  probe1 = "FSC.A", probe2 = "SSC.A",
-  posvalue_probe1 = 0, posvalue_probe2 = 0)
+    folder_path = system.file("/extdata/fcs_index_sorting", package = "scifer"),
+    compensation = FALSE, plate_wells = 96,
+    probe1 = "FSC.A", probe2 = "SSC.A",
+    posvalue_probe1 = 0, posvalue_probe2 = 0
+)
 
 fcs_plot(fcs_data)
 ```
@@ -107,10 +109,11 @@ If you have probed your cells based on a specific marker, you can use the name o
 
 ```{r check_fcs_probe, message=FALSE, warning=FALSE}
 fcs_data <- fcs_processing(
-  folder_path = system.file("/extdata/fcs_index_sorting",package = "scifer"),
-  compensation = FALSE, plate_wells = 96,
-  probe1 = "Pre.F", probe2 = "Post.F",
-  posvalue_probe1 = 600, posvalue_probe2 = 400)
+    folder_path = system.file("/extdata/fcs_index_sorting", package = "scifer"),
+    compensation = FALSE, plate_wells = 96,
+    probe1 = "Pre.F", probe2 = "Post.F",
+    posvalue_probe1 = 600, posvalue_probe2 = 400
+)
 
 fcs_plot(fcs_data)
 ```
@@ -121,10 +124,11 @@ Finally, the above data used compensation as set to `FALSE`, which is not usuall
 
 ```{r check_fcs_probe_compensated, message=FALSE, warning=FALSE}
 fcs_data <- fcs_processing(
-  folder_path = system.file("/extdata/fcs_index_sorting",package = "scifer"),
-  compensation = TRUE, plate_wells = 96,
-  probe1 = "Pre.F", probe2 = "Post.F",
-  posvalue_probe1 = 600, posvalue_probe2 = 400)
+    folder_path = system.file("/extdata/fcs_index_sorting", package = "scifer"),
+    compensation = TRUE, plate_wells = 96,
+    probe1 = "Pre.F", probe2 = "Post.F",
+    posvalue_probe1 = 600, posvalue_probe2 = 400
+)
 
 fcs_plot(fcs_data)
 ```
@@ -144,8 +148,10 @@ Here is just an example of if you would like to process a single sanger sequence
 ```{r bcr_sequence, warning=FALSE}
 ## Read abif using sangerseqR package
 abi_seq <- sangerseqR::read.abif(
-  system.file("/extdata/sorted_sangerseq/E18_C1/A1_3_IgG_Inner.ab1", 
-              package="scifer"))
+    system.file("/extdata/sorted_sangerseq/E18_C1/A1_3_IgG_Inner.ab1",
+        package = "scifer"
+    )
+)
 ## Summarise using summarise_abi_file()
 summarised <- summarise_abi_file(abi_seq)
 head(summarised[["summary"]])
@@ -160,16 +166,16 @@ Here you would process recursively all the `.ab1` files within the chosen folder
 *Note: To speed up, you can increase the `processors` parameter depending on your local computer's number of processors or set it to `NULL` which will try to detect the max number of cores.
 
 ```{r bcr_sequences, warning=FALSE}
-
 sf <- summarise_quality(
-  folder_sequences=system.file("extdata/sorted_sangerseq", package="scifer"),
-  secondary.peak.ratio=0.33, trim.cutoff=0.01, processor = 1)
+    folder_sequences = system.file("extdata/sorted_sangerseq", package = "scifer"),
+    secondary.peak.ratio = 0.33, trim.cutoff = 0.01, processor = 1
+)
 ```
 
 Here are the columns from the summarised `data.frame`:
 
 ```{r bcr_seq_columns, warning=FALSE}
-## Print names of all the variables 
+## Print names of all the variables
 colnames(sf[["summaries"]])
 ```
 
@@ -195,12 +201,14 @@ This function generated the following files:
 
 ```{r eval=FALSE}
 quality_report(
-  folder_sequences = system.file("extdata/sorted_sangerseq", package="scifer"),
-  outputfile = "QC_report.html", output_dir = "~/full/path/to/your/location",
-  folder_path_fcs = system.file("extdata/fcs_index_sorting", 
-                                package = "scifer"),
-  probe1 = "Pre.F", probe2 = "Post.F", 
-  posvalue_probe1 = 600, posvalue_probe2 = 400)
+    folder_sequences = system.file("extdata/sorted_sangerseq", package = "scifer"),
+    outputfile = "QC_report.html", output_dir = "~/full/path/to/your/location",
+    folder_path_fcs = system.file("extdata/fcs_index_sorting",
+        package = "scifer"
+    ),
+    probe1 = "Pre.F", probe2 = "Post.F",
+    posvalue_probe1 = 600, posvalue_probe2 = 400
+)
 ```
 
 
