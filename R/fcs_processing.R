@@ -93,8 +93,8 @@ fcs_processing <- function(
 
         return(df_fs_comp)
     })
-    joined_fsc_table <- data.table::rbindlist(fs_comp, idcol = TRUE) %>%
-        rename(sample_ID = .data$.id) %>%
+    joined_fsc_table <- data.table::rbindlist(fs_comp, idcol = "sample_ID") %>%
+       # rename(sample_ID = .id) %>%
         mutate(sample_ID = gsub(".fcs", "", .data$sample_ID))
     ## Classify sorted single-cells according to specificity
     joined_fsc_table <- joined_fsc_table %>%
