@@ -18,11 +18,11 @@
 igblast <- function(database = "path/to/folder", fasta = "path/to/file", threads = 1) {
     db_dir <- here(database)
     fasta_dir <- here(fasta)
-    if (!dir.exists(db_dir) | is.null(db_dir) | is.na(db_dir) | db_dir == "" | length(db_dir) > 1) {
-        stop(paste("The database directory does not exist."))
+    if (!dir.exists(db_dir) | is.null(db_dir) | is.na(db_dir) | length(db_dir) > 1 ) {
+        stop("The database directory does not exist.")
     }
-    if (!file.exists(fasta_dir) | is.null(fasta_dir) | is.na(fasta_dir) | fasta_dir == "" | length(fasta_dir) > 1) {
-        stop(paste("The fasta file directory", fasta_dir, "does not exist."))
+    if (!file.exists(fasta_dir) | is.null(fasta_dir) | is.na(fasta_dir) | length(fasta_dir) > 1) {
+        stop("The fasta file directory does not exist.")
     }
 
     proc <- basiliskStart(env)
@@ -41,7 +41,7 @@ igblast <- function(database = "path/to/folder", fasta = "path/to/file", threads
             intern = TRUE
         )
         if (length(df) == 0 || is.null(df) || all(is.na(df)) || all(df == "")) {
-            warning("Data frame is empty. Sequences not aligned.")
+            message("Data frame is empty. Sequences not aligned.")
             results_airr <- NULL
         } else {
             results_airr <- utils::read.table(text = df, header = TRUE, sep = "\t")
