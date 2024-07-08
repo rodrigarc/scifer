@@ -20,31 +20,34 @@
 #' @examples
 #' index_sort_data <- fcs_processing(
 #'     folder_path = system.file("/extdata/fcs_index_sorting",
-#'                                 package = "scifer"),
+#'         package = "scifer"
+#'     ),
 #'     compensation = TRUE, plate_wells = 96,
 #'     probe1 = "Pre.F", probe2 = "Post.F",
 #'     posvalue_probe1 = 600, posvalue_probe2 = 400
 #' )
 #'
 #' @export
-fcs_processing <- function(folder_path = "test/test_dataset/fcs_files/",
+fcs_processing <- function(
+    folder_path = "test/test_dataset/fcs_files/",
     compensation = TRUE, plate_wells = 96,
     probe1 = "Pre.F", probe2 = "Post.F",
     posvalue_probe1 = 600, posvalue_probe2 = 400) {
     fs <- read.flowSet(path = folder_path, truncate_max_range = FALSE)
     if (compensation == TRUE) {
-      if(all(unlist(lapply(spillover(fs[[1]]), is.null)))) {
-        stop("Compensation matrices are all empty")
-      } else {
-        not_null_comp <- which(!unlist(lapply(spillover(fs[[1]]), is.null)))
-        if (length(not_null_comp) > 1) {
-          not_null_comp <- not_null_comp[1]
+        if (all(unlist(lapply(spillover(fs[[1]]), is.null)))) {
+            stop("Compensation matrices are all empty")
+        } else {
+            not_null_comp <- which(!unlist(lapply(spillover(fs[[1]]), is.null)))
+            if (length(not_null_comp) > 1) {
+                not_null_comp <- not_null_comp[1]
+            }
+            comp <- fsApply(fs, function(x) spillover(x)[[not_null_comp]],
+                simplify = FALSE
+            )
+            fs_comp <- compensate(fs, comp)
+            message("Samples were compensated using the data on fsc index files.")
         }
-        comp <- fsApply(fs, function(x) spillover(x)[[not_null_comp]],
-                        simplify = FALSE)
-        fs_comp <- compensate(fs, comp)
-        message("Samples were compensated using the data on fsc index files.")
-      }
     } else if (compensation == FALSE) {
         fs_comp <- fs
         message("Samples were not compensated.")
@@ -111,6 +114,8 @@ fcs_processing <- function(folder_path = "test/test_dataset/fcs_files/",
         posvalues = c(posvalue_probe1, posvalue_probe2)
     )
 
-    return(list("processed_fcs" = joined_fsc_table,
-                "selected_probes" = probes_values))
+    return(list(
+        "processed_fcs" = joined_fsc_table,
+        "selected_probes" = probes_values
+    ))
 }

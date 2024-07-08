@@ -18,7 +18,8 @@
 #'     save_fasta = FALSE
 #' )
 #' @export
-df_to_fasta <- function(sequence_name,
+df_to_fasta <- function(
+    sequence_name,
     sequence_strings,
     file_name = "sequences.fasta",
     output_dir = NULL, save_fasta = TRUE) {
@@ -31,12 +32,15 @@ df_to_fasta <- function(sequence_name,
 
     if (isTRUE(save_fasta)) {
         if (is.null(output_dir)) {
-            writeXStringSet(str, filepath = file_name,
-                            append = FALSE, format = "fasta")
+            writeXStringSet(str,
+                filepath = file_name,
+                append = FALSE, format = "fasta"
+            )
         } else {
             writeXStringSet(str,
-                            filepath = paste(output_dir, file_name, sep = "/"),
-                            append = FALSE, format = "fasta")
+                filepath = paste(output_dir, file_name, sep = "/"),
+                append = FALSE, format = "fasta"
+            )
         }
     } else {
         message("Fasta file not saved.")
