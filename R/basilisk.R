@@ -6,7 +6,7 @@ env <- BasiliskEnvironment(
         "python==3.9.19",
         "dnaio==1.2.1",
         "igblast==1.22.0",
-        "cffi==1.16.0",
+        "cffi==1.16.0"
     ),
     channels = c("bioconda", "conda-forge")
 )
