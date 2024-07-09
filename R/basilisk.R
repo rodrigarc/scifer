@@ -13,7 +13,8 @@ env <- BasiliskEnvironment(
         "setuptools==70.1.1",
         "wheel==0.43.0",
         "xopen==2.0.1",
-        "python-zlib-ng==0.4.3"
+        "python-zlib-ng==0.4.3",
+        "zstandard==0.22.0"
     ),
     channels = c("bioconda", "conda-forge")
 )
