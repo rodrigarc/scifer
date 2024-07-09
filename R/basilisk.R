@@ -9,7 +9,8 @@ env <- BasiliskEnvironment(
         "cffi==1.16.0",
         "python-isal==1.6.1",
         "pip==24.0",
-        "pycparser==2.22"
+        "pycparser==2.22",
+        "setuptools==70.1.1"
     ),
     channels = c("bioconda", "conda-forge")
 )
