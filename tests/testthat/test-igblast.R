@@ -1,48 +1,54 @@
-test_that("the database directory does not exists NA", {
+test_that("Database directory inputs", {
     expect_error(
-        igblast(database = NA, fasta = system.file("extdata/test_fasta/test_igblast.txt", package = "scifer"), threads = 1),
+        igblast(database = NA, fasta = system.file("extdata/test_fasta/test_igblast.txt", package = "scifer"), ), 
         "The database directory does not exist.")
-})
-
-test_that("the database directory does not exists INVALID", {
     expect_error(
-        igblast(database = "/invalidpath", fasta = system.file("extdata/test_fasta/test_igblast.txt", package = "scifer"), threads = 1),
+        igblast(database = "/invalidpath", fasta = system.file("extdata/test_fasta/test_igblast.txt", package = "scifer"), ),
         "The database directory does not exist.")
-})
-
-test_that("the database directory does not exists SPACE", {
-    expect_message(igblast(database = "", fasta = system.file("extdata/test_fasta/test_igblast.txt", package = "scifer"), threads = 1),
-        "Data frame is empty. Sequences not aligned.") 
-})
-
-test_that("the database directory does not exists NULL", {
+    expect_error(
+        igblast(database = "", fasta = system.file("extdata/test_fasta/test_igblast.txt", package = "scifer"), threads = 1),
+        "The database directory does not exist.")
     expect_error(
         igblast(database = NULL, fasta = system.file("extdata/test_fasta/test_igblast.txt", package = "scifer"), threads = 1),
-        "argument is of length zero")
-})
-
-test_that("the file directory does not exists NA", {
+        "The database directory does not exist.")
     expect_error(
+        igblast(database = character(0), fasta = system.file("extdata/test_fasta/test_igblast.txt", package = "scifer"), threads = 1),
+        "The database directory does not exist.")
+    
+})
+  
+test_that("Fasta file directory inputs", {    
+      expect_error(
         igblast(database = system.file("extdata/test_fasta/KIMDB_rm", package = "scifer"), fasta = NA, threads = 1),
         "The fasta file directory does not exist.")
-})
-
-test_that("the file directory does not exists INVALID", {
     expect_error(
         igblast(database = system.file("extdata/test_fasta/KIMDB_rm", package = "scifer"), fasta = "/invalidpath", threads = 1),
+        "The fasta file directory does not exist.")  
+    expect_error(
+        igblast(database = system.file("extdata/test_fasta/KIMDB_rm", package = "scifer"), fasta = "", threads = 1),
+        "The fasta file directory does not exist.")
+    expect_error(
+        igblast(database = system.file("extdata/test_fasta/KIMDB_rm", package = "scifer"), fasta = NULL, threads = 1),
         "The fasta file directory does not exist.")
 })
 
-test_that("the file directory does not exists SPACE", {
-    expect_message(
-        igblast(database = system.file("extdata/test_fasta/KIMDB_rm", package = "scifer"), fasta = "", threads = 1),
-        "Data frame is empty. Sequences not aligned.")
-})
-
-test_that("the file directory does not exists NULL", {
-    expect_error(
-        igblast(database = system.file("extdata/test_fasta/KIMDB_rm", package = "scifer"), fasta = NULL, threads = 1),
-        "argument is of length zero")
+test_that("Threads argument inputs", {    
+  expect_error(
+      igblast(database = system.file("extdata/test_fasta/KIMDB_rm", package = "scifer"), 
+          fasta = system.file("extdata/test_fasta/test_igblast.txt", package = "scifer"), 
+          threads = "H"), "The threads argument should be a numeric value.")
+  expect_error(
+      igblast(database = system.file("extdata/test_fasta/KIMDB_rm", package = "scifer"), 
+          fasta = system.file("extdata/test_fasta/test_igblast.txt", package = "scifer"), 
+          threads = NULL), "The threads argument should be a numeric value.")
+  expect_error(
+      igblast(database = system.file("extdata/test_fasta/KIMDB_rm", package = "scifer"), 
+          fasta = system.file("extdata/test_fasta/test_igblast.txt", package = "scifer"), 
+          threads = NA), "The threads argument should be a numeric value.")
+  expect_error(
+      igblast(database = system.file("extdata/test_fasta/KIMDB_rm", package = "scifer"), 
+          fasta = system.file("extdata/test_fasta/test_igblast.txt", package = "scifer"), 
+          threads = character(0)), "The threads argument should be a numeric value.")
 })
 
 test_that("returns a data.frame object", {

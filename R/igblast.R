@@ -18,11 +18,12 @@
 igblast <- function(database = "path/to/folder", fasta = "path/to/file", threads = 1) {
     db_dir <- here(database)
     fasta_dir <- here(fasta)
-    if (!dir.exists(db_dir) | is.null(db_dir) | is.na(db_dir) | length(db_dir) > 1 ) {
+    if (!dir.exists(db_dir) || is.null(db_dir) || is.na(db_dir) || length(db_dir) > 1 || length(db_dir) == 0  || database == "" ) {
         stop("The database directory does not exist.")
-    }
-    if (!file.exists(fasta_dir) | is.null(fasta_dir) | is.na(fasta_dir) | length(fasta_dir) > 1) {
+    } else if (!file.exists(fasta_dir) || is.null(fasta_dir) || is.na(fasta_dir) || length(fasta_dir) > 1 || length(fasta_dir) == 0 || fasta == "" ) {
         stop("The fasta file directory does not exist.")
+    } else if (!is.numeric(threads) || is.null(threads) || is.na(threads) || length(threads) == 0) {
+        stop("The threads argument should be a numeric value.")
     }
 
     proc <- basiliskStart(env)
