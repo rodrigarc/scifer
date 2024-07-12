@@ -234,10 +234,10 @@ scifer/
 The database argument is the path to the preferred database for species and receptor type. The database folder should contain separate `.fasta` files corresponding to the genes associated with each receptor type, e.g., `V`-, `D`-, and `J.fasta` files for BCR. The quality report creates a `sequences.fasta` file found in the `output_dir`. The path to this file should be used as the path input for the `fasta` argument in the `igblast()` function.
 
 ```{r eval=TRUE}
-igblast(
-    database = "~/full/path/to/the/database/location/",
-    fasta = "~/full/path/to/your/output_dir/sequences.fasta",
-    threads = 1 #For parallel processing. Default = 1
+igb_res <- igblast(
+        database = system.file("/extdata/test_fasta/KIMDB_rm", package = "scifer"),
+        fasta = system.file("/extdata/test_fasta/test_igblast.txt", package = "scifer"),
+        threads = 1 #For parallel processing. Default = 1
 )
 
 ```
