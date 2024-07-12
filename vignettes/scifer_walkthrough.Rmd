@@ -215,9 +215,25 @@ quality_report(
 
 The `igblast()` function will generate a data frame with the IgBlast results for each sequence. 
 
-The database argument is a path to the preferred database for species and receptor type. The database folder should contain separate `.fasta` files corresponding to the genes associated with each receptor type, e.g., `V`-, `D`-, and `J.fasta` files for BCR. The quality report creates a `sequences.fasta` file found in the `output_dir`. The path to this file should be used as the path input for the `fasta` argument in the `igblast()` function.
+Before running IgBlast, select the database to be downloaded and included in the directory tree (e.g., http://kimdb.gkhlab.se/ ) as shown below:
 
-```{r eval=FALSE}
+scifer/
+├── DESCRIPTION
+├── NAMESPACE
+├── R
+├── inst/
+│   ├── extdata/
+│       ├── macaque_kimdb/
+│           ├── Rh/
+│               ├── BCR/
+│                   ├── V.fasta
+│                   ├── D.fasta
+│                   ├── J.fasta
+│               ├── TCR
+
+The database argument is the path to the preferred database for species and receptor type. The database folder should contain separate `.fasta` files corresponding to the genes associated with each receptor type, e.g., `V`-, `D`-, and `J.fasta` files for BCR. The quality report creates a `sequences.fasta` file found in the `output_dir`. The path to this file should be used as the path input for the `fasta` argument in the `igblast()` function.
+
+```{r eval=TRUE}
 igblast(
     database = "~/full/path/to/the/database/location/",
     fasta = "~/full/path/to/your/output_dir/sequences.fasta",
