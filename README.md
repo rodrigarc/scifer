@@ -29,6 +29,8 @@ if (!requireNamespace("BiocManager", quietly = TRUE))
 BiocManager::install(c("DECIPHER","sangerseqR","ape", "BiocStyle"))
 ```
 
+When installing `scifer` you should choose between installation from GitHub or from Bioconductor. The GitHub version is the most recent one with updated developmental features, changes, and bug fixes. The GitHub version is used for testing new features and bug fixes before they are submitted to Bioconductor. The Bioconductor version is the most stable one and compliant with Bioconductor's submission process. This version is updated every 6 months.
+
 To install scifer directly from GitHub, run this:
 
 ```r
@@ -37,6 +39,18 @@ To install scifer directly from GitHub, run this:
 if (!require("devtools"))
 install.packages("devtools")
 devtools::install_github("rodrigarc/scifer")
+```
+
+OR,
+
+To install scifer directly from Bioconductor, run this:
+
+```r
+# just copy and run the following to install scifer
+
+if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("scifer")
 ```
 
 ## Processing flow cytometry index data
