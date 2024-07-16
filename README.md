@@ -170,6 +170,41 @@ quality_report(folder_sequences = directory_sequences,
 # `cdr3_end` Expected CDR3 end position, that depends on your primer set. Default is position 150
 
 ```
+## Default parameters:
+
+The default parameters were derived from data sets analyzing B cell receptor sequences from rhesus macaques, macaca mulatta. These defaults can be used in other experiments or can be changed dependent on the users' needs. Below are potential defaults for B cell receptors for macaques and T cell receptors for mice. For other species not listed or if you are uncertain, a `trimmed_mean_quality` or minimum phred quality score = 30 should be used as this returns an average of 99.9% base call accuracy for the analyzed samples.    
+
+Default parameters for B cell receptors in macaques: 
+
+```r
+# `raw_length` = 400 
+# `trim_start` = 50 
+# `trim_finish` = 409
+# `trimmed_mean_quality` = 30
+# `posvalue_probe1` = 600 
+# `posvalue_probe2` = 400 
+# `cdr3_start` = 100
+# `cdr3_end` = 150
+
+```
+
+Default parameters for T cell receptors in mice, mus musculus: 
+
+```r
+# `trim_start` = 200 
+# `trim_finish` = 250
+# `trimmed_mean_quality` = 30
+
+```
+
+
+Default parameters for Y cell receptors in zebrafish / other species / when uncertain:
+
+```r
+# `trimmed_mean_quality` = 30
+
+```
+
 
 
 ## Special cases:
