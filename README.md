@@ -159,7 +159,7 @@ quality_report(folder_sequences = directory_sequences,
 # `trim_start` Starting position where the sequence should start to have a good base call accuracy. Default is 50 for B cell receptors
 # `trim_finish` Last position where the sequence should have a good base call accuracy. Default is 409 for B cell receptors
 # `trimmed_mean_quality` Minimum Phred quality score expected for an average sequence. Default is 30, which means average of 99.9\% base call accuracy
-# `compensation` Logical argument, TRUE or FALSE, to indicate if the index files were compensated or not. If TRUE, it will apply its compensation prior assigning specificities
+# `compensation` Logical argument, TRUE or FALSE, to indicate if the index files were compensated or not. If TRUE, it will apply its compensation prior to assigning specificities
 # `plate_wells` Type of plate used for single-cell sorting. eg. "96" or "384", default is "96"
 # `probe1` Name of the first channel used for the probe or the custom name assigned to the channel in the index file. eg. "FSC.A", "FSC.H", "SSC.A","DsRed.A", "PE.Cy5_5.A", "PE.Cy7.A","BV650.A", "BV711.A","Alexa.Fluor.700.A" "APC.Cy7.A","PerCP.Cy5.5.A","Time"
 # probe2 Name of the second channel used for the probe or the custom name assigned to the channel in the index file. eg. "FSC.A", "FSC.H", "SSC.A","DsRed.A", "PE.Cy5_5.A", "PE.Cy7.A","BV650.A", "BV711.A","Alexa.Fluor.700.A" "APC.Cy7.A","PerCP.Cy5.5.A","Time"
