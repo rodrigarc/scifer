@@ -101,7 +101,7 @@ directory_flowdata <- system.file("extdata/fcs_index_sorting",
 fcs_data <- fcs_processing(folder_path = directory_flowdata,
                            compensation = TRUE, plate_wells = 96,
                            probe1 = "Pre.F", probe2 = "Post.F",
-                           posvalue_probe1 = 600, posvalue_probe2 = 400))
+                           posvalue_probe1 = 600, posvalue_probe2 = 400)
 
 ```
 
