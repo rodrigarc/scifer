@@ -22,9 +22,9 @@
 
 on:
   push:
-    branches: [r-cmd-check]
+    branches: [main, master, r-cmd-check_master]
   pull_request:
-    branches: [main, master, r-cmd-check]
+    branches: [main, master, r-cmd-check_master]
 
 name: R-CMD-check-bioc
 
