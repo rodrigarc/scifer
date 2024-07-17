@@ -26,7 +26,7 @@ on:
   pull_request:
     branches: [main, master, r-cmd-check_master]
 
-name: R-CMD-check-bioc
+name: master_check-bioc
 
 ## These environment variables control whether to run GHA code later on that is
 ## specific to testthat, covr, and pkgdown.

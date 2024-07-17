@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [main, master, r-cmd-check_master]
 
-name: R-CMD-check
+name: master_r-cmd-check
 
 permissions: read-all
 
