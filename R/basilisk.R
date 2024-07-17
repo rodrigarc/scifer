@@ -4,7 +4,6 @@ env <- BasiliskEnvironment(
     pkgname = "scifer",
     packages = c(
         "python==3.9.19",
-        "dnaio==1.2.1",
         "igblast==1.22.0",
         "cffi==1.16.0",
         "python-isal==1.6.1",
@@ -16,5 +15,6 @@ env <- BasiliskEnvironment(
         "python-zlib-ng==0.4.3",
         "zstandard==0.22.0"
     ),
-    channels = c("bioconda", "conda-forge")
+    channels = c("bioconda", "conda-forge"),
+    pip = c("dnaio==1.2.1")
 )
