@@ -1,8 +1,8 @@
 # scifer: Single-cell Immunoglobulin Filtering of Sanger sequences <img src="man/figures/logo.png" align="right" width="180" />
 <!-- badges: start -->
 [![R build
-status](https://github.com/rodrigarc/scifer/workflows/R-CMD-check/badge.svg)](https://github.com/rodrigarc/scifer/actions)
-[![R-CMD-check-bioc](https://github.com/rodrigarc/scifer/workflows/R-CMD-check-bioc/badge.svg)](https://github.com/rodrigarc/scifer/actions)
+status](https://github.com/rodrigarc/scifer/workflows/master_r-cmd-check/badge.svg)](https://github.com/rodrigarc/scifer/actions)
+[![R-CMD-check-bioc](https://github.com/rodrigarc/scifer/workflows/master_check-bioc/badge.svg)](https://github.com/rodrigarc/scifer/actions)
 [![codecov](https://codecov.io/gh/rodrigarc/scifer/branch/r-cmd-check/graph/badge.svg)](https://codecov.io/gh/rodrigarc/scifer)
 <!-- badges: end -->
 
@@ -18,7 +18,7 @@ This package was developed focused in B cell receptor sequences from antigen-spe
 
 ## Installation
 
-Before the installation you should first install the following packages from Bioconductor:
+Before the installation, you should first install the following packages from Bioconductor:
 
 ```r
 # just copy and run the following to check for the needed packages and install them if needed
