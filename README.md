@@ -2,7 +2,6 @@
 <!-- badges: start -->
 [![R build
 status](https://github.com/rodrigarc/scifer/workflows/master_r-cmd-check/badge.svg)](https://github.com/rodrigarc/scifer/actions)
-[![R-CMD-check-bioc](https://github.com/rodrigarc/scifer/workflows/master_check-bioc/badge.svg)](https://github.com/rodrigarc/scifer/actions)
 [![codecov](https://codecov.io/gh/rodrigarc/scifer/branch/r-cmd-check/graph/badge.svg)](https://codecov.io/gh/rodrigarc/scifer)
 <!-- badges: end -->
 
