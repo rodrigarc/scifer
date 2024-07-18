@@ -9,7 +9,7 @@ status](https://github.com/rodrigarc/scifer/workflows/R-CMD-check/badge.svg)](ht
 ### Integrating index single-cell sorted with Sanger sequencing raw files
 
 
-Version: 0.99.4  
+Version: 1.7.3  
 
 Author and Maintainer: Rodrigo Arcoverde Cerveira
 
