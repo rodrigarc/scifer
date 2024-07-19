@@ -29,6 +29,15 @@ if (!requireNamespace("BiocManager", quietly = TRUE))
 BiocManager::install(c("DECIPHER","sangerseqR","ape", "BiocStyle"))
 ```
 
+If versions of `DECIPHER`, `sangerseqR`, `ape`, and `BiocStyle` are already installed, you may need to set `force` = `TRUE` to update them.
+
+```r
+# just copy and run the following to install the needed packages
+
+BiocManager::install(c("DECIPHER","sangerseqR","ape", "BiocStyle"), force = TRUE)
+
+```
+
 When installing `scifer` you should choose between installation from GitHub or from Bioconductor. The GitHub version is the most recent one with updated developmental features, changes, and bug fixes. The GitHub version is used for testing new features and bug fixes before they are submitted to Bioconductor. The Bioconductor version is the most stable one and compliant with Bioconductor's submission process. This version is updated every 6 months.
 
 To install scifer directly from GitHub, run this:
