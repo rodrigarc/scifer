@@ -177,19 +177,19 @@ Default parameters for B cell receptors in macaques and humans as meantioned abo
 
 ```r
 # `raw_length` = 343 # based on your expected amplicon length
-# `trim_start` = 50 
-# `trim_finish` = 409
-# `trimmed_mean_quality` = 30
-# `cdr3_start` = 100
-# `cdr3_end` = 150
+# `trim_start` = 50 # used for filtering sequences, based on your primer set
+# `trim_finish` = 409 # used for filtering sequences, based on your primer set
+# `trimmed_mean_quality` = 30 # 99.9% base call accuracy
+# `cdr3_start` = 100 # based on your primer set
+# `cdr3_end` = 150 # based on your primer set
 
 ```
 
 Default parameters for gamma delta T cell receptors in mice (_Mus musculus_): 
 
 ```r
-# `raw_length` = 200 
-# `trim_finish` = 250
+# `raw_length` = 200 # based on your expected amplicon length
+# `trim_finish` = 250 # used for filtering sequences, based on your primer set
 
 ```
 
