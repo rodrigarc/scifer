@@ -206,10 +206,7 @@ For other species not listed or if you are uncertain, a `trimmed_mean_quality` o
 If you are uncertain of your amplicon length, first check the quality metrics of your sequences using `summarise_quality`. Save the results in an object to evaluate the quality metrics columns, especially `raw.length` and `trim.finish` columns, such as the mean, min, and max values. This will help you to identify which parameters you should change.
 
 ```r
-quality_control_summary <- summarise_quality(folder_sequences = directory_sequences,
-                                         secondary.peak.ratio = 0.33,
-                                         trim.cutoff = 0.01,
-                                         )
+quality_control_summary <- summarise_quality(folder_sequences = directory_sequences, )
 
 ```
 
