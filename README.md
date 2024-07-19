@@ -197,13 +197,6 @@ Default parameters for gamma delta T cell receptors in mice (_Mus musculus_):
 
 Default parameters for when uncertain:
 
-For other species not listed or if you are uncertain, a `trimmed_mean_quality` or minimum phred quality score = 30 should be used as this returns an average of 99.9% base call accuracy for the analyzed samples.
-
-```r
-# `trimmed_mean_quality` = 30
-
-```
-
 If you are uncertain of your amplicon length, first check the quality metrics of your sequences using `summarise_quality`. Save the results in an object to evaluate the quality metrics columns, especially `raw.length` and `trim.finish` columns, such as the mean, min, and max values. This will help you to identify which parameters you should change.
 
 ```r
