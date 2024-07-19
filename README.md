@@ -326,3 +326,4 @@ Please note that the `scifer` project is released with a [Contributor Code of Co
 * Code coverage assessment is possible thanks to [codecov](https://codecov.io/gh) and `r BiocStyle::CRANpkg('covr')`.
 * The code is styled automatically thanks to `r BiocStyle::CRANpkg('styler')`.
 * The documentation is formatted thanks to `r BiocStyle::CRANpkg('devtools')` and `r BiocStyle::CRANpkg('roxygen2')`.
+* `scifer` was tested mainly in R >= 4.2 versions, so the newest R releases are recommended.
