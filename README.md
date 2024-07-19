@@ -207,14 +207,52 @@ If you are still uncertain you can use a broad default parameters that will filt
 
 ```r
 quality_report(folder_sequences = directory_sequences,
-               outputfile = "QC_report.html",
-               output_dir = "~/Desktop/project_folder/results_output",
-               folder_path_fcs = directory_flowdata,
-               probe1 = "my_probe_channel_1", probe2 = "Alexa.Fluor.700.A",
-               posvalue_probe1 = 600, posvalue_probe2 = 400,
-               raw_length = 0, trim_finish = 50, 
-               cdr3_start = 0, cdr3_end = 0)
+              outputfile = "QC_report.html",
+              output_dir = "~/Desktop/project_folder/results_output",
+              raw_length = 0, trim_finish = 50,
+              cdr3_start = 0, cdr3_end = 0)
 ```
+
+Default for flow cytometry data:
+
+Flow cytometry data should be examined to determine the optimal parameters based on your dataset and experiment. It is important to check your flow data to see how the data is being processed, if it is already compensated, and if the cells were probed. These conditions affect which thresholds you should use.
+
+In order to see the available channels and thresholds use the function `fcs_processing()` to create an object `fcs_data`, after which you can see the available channels using: 
+
+```{r channels}
+#   colnames(fcs_data)
+
+```
+
+The `specificity` column is based on your selected channels and their thresholds and uses these thresholds to name your sorted cells. Probed samples  would have a `Pre.F` single-positive, `Post.F` single-positive, double-positive cells named as`DP`, and double-negative cells named as `DN`. Which can be seen using: 
+
+```{r specificity, message=FALSE, warning=FALSE}
+#   unique(fcs_data$specificity)
+
+```
+
+If cells were not probed for a specific antigen, you can just use the following thresholds and ignore the `specificity` column. This approach will add all of your cells, regardless of the detected fluorescence in a channel.
+
+```r
+# fcs_data <- fcs_processing( 
+#                 posvalue_probe1 = 0, 
+#                 posvalue_probe2 = 0
+#             )
+```
+
+The default for `compensation` is `FALSE` though often the samples will have been compensated before sorting. Setting `compensation` to `TRUE` makes it so that compensation matrix within the index files will be already automatically applied.
+
+```{r check_fcs_probe_compensated, message=FALSE, warning=FALSE}
+fcs_data <- fcs_processing(
+  folder_path = system.file("/extdata/fcs_index_sorting",package = "scifer"),
+  compensation = TRUE, plate_wells = 96,
+  probe1 = "Pre.F", probe2 = "Post.F",
+  posvalue_probe1 = 600, posvalue_probe2 = 400)
+
+fcs_plot(fcs_data)
+```
+
+For more information please consult the vignette [here](https://bioconductor.org/packages/release/bioc/vignettes/scifer/inst/doc/flow_cytometry_data.html)
 
 ## Special cases:
 
