@@ -211,7 +211,7 @@ quality_report(folder_sequences = directory_sequences,
                outputfile = "QC_report.html",
                output_dir = "~/Desktop/project_folder/results_output",
                folder_path_fcs = directory_flowdata,
-               probe1 = "PE.Cy7.A", probe2 = "Alexa.Fluor.700.A",
+               probe1 = "my_probe_channel_1", probe2 = "Alexa.Fluor.700.A",
                posvalue_probe1 = 600, posvalue_probe2 = 400,
                raw_length = 0, trim_finish = 50, 
                cdr3_start = 0, cdr3_end = 0)
