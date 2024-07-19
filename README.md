@@ -262,7 +262,9 @@ fcs_data <- fcs_processing(
 fcs_plot(fcs_data)
 ```
 
-For more information please consult the vignette [here](https://bioconductor.org/packages/release/bioc/vignettes/scifer/inst/doc/flow_cytometry_data.html)
+At the moment scifer only accepts merging and integrating data with two channels (eg. 2 probes, one per channel). Furthermore, scifer does not do batch correction for flow cytometry data, thus different experiments should have their Median Fluorescence Intensity (MFI) normalized before running fcs_processing.
+
+For more information please consult the vignette: [here](https://bioconductor.org/packages/release/bioc/vignettes/scifer/inst/doc/flow_cytometry_data.html)
 
 ## Special cases:
 
