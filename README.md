@@ -13,7 +13,9 @@ Version: 1.7.3
 Author and Maintainer: Rodrigo Arcoverde Cerveira
 
 Description: Have you ever index sorted cells in a 96 or 384-well plate and then sequenced using Sanger sequencing? If so, you probably had some struggle to either check the electropherograms of each cell sequenced manually, or identify which cell was sorted where after sequencing the plate. `scifer` was developed to solve this issue by performing basic quality control of Sanger sequences and merging flow cytometry data from probed single-cell sorted cells with sequencing data. `scifer` can export summary tables, fasta files, electropherograms for visual inspection, and generate a html report.
-This package was developed focused in B cell receptor sequences from antigen-specific single-cell sorted B cells, however it is highly customizable to other type of single-cell sorted sanger sequences.
+This package was developed focused in B cell receptor sequences from antigen-specific single-cell sorted B cells, however it is highly customizable to other type of single-cell sorted sanger sequences. 
+
+* `scifer` has been primarily tested with R versions >= 4.2.3 and Bioconductor versions >= 3.16. It is recommended to use these or newer versions of R and Bioconductor for best results. 
 
 ## Installation
 
@@ -326,4 +328,3 @@ Please note that the `scifer` project is released with a [Contributor Code of Co
 * Code coverage assessment is possible thanks to [codecov](https://codecov.io/gh) and `r BiocStyle::CRANpkg('covr')`.
 * The code is styled automatically thanks to `r BiocStyle::CRANpkg('styler')`.
 * The documentation is formatted thanks to `r BiocStyle::CRANpkg('devtools')` and `r BiocStyle::CRANpkg('roxygen2')`.
-* `scifer` was tested mainly in R >= 4.2 versions, so the newest R releases are recommended.
