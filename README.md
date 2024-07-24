@@ -188,11 +188,11 @@ Default parameters for B cell receptors in macaques and humans as mentioned abov
 
 ```r
 # `raw_length` = 343 # based on your expected amplicon length
-# `trim_start` = 50 # used for filtering sequences, based on your primer set
-# `trim_finish` = 409 # used for filtering sequences, based on your primer set
+# `trim_start` = 50 # start of expected good quality base call position used for filtering sequences, based on your primer set
+# `trim_finish` = 409 #  end of expected good quality base call position used for filtering sequences, based on your primer set
 # `trimmed_mean_quality` = 30 # 99.9% base call accuracy
-# `cdr3_start` = 100 # based on your primer set
-# `cdr3_end` = 150 # based on your primer set
+# `cdr3_start` = 100 # expected start of CDR3 position, based on your primer set
+# `cdr3_end` = 150 # expected end of CDR3 position, based on your primer set
 
 ```
 
@@ -210,11 +210,11 @@ Default parameters for when uncertain:
 If you are uncertain of your amplicon length, first check the quality metrics of your sequences using `summarise_quality`. Save the results in an object to evaluate the quality metrics columns, especially `raw.length` and `trim.finish` columns, such as the mean, min, and max values. This will help you to identify which parameters you should change.
 
 ```r
-quality_control_summary <- summarise_quality(folder_sequences = directory_sequences, )
+quality_control_summary <- summarise_quality(folder_sequences = directory_sequences)
 
 ```
 
-If you are still uncertain you can use a broad default parameters that will filter mostly on mean base call accuracy. To do that, change the `raw_length` to 0 and and `trim_finish` to 50. This will null the filter based on length but the base mean accuracy  of 99.9% will be maintained. You can also put `cdr3_start` and `cdr3_end` to 0 if there is not position that you are particular interested in having with higher accuracy.
+If you are still uncertain you can use a broad default parameters that will filter mostly on mean base call accuracy. To do that, change the `raw_length` to 0 and the `trim_finish` to 50. This will null the filter based on length but the base mean accuracy  of 99.9% will be maintained. You can also put `cdr3_start` and `cdr3_end` to 0 if there is no position that you are particularly interested in having with higher accuracy.
 
 ```r
 quality_report(folder_sequences = directory_sequences,
@@ -265,7 +265,7 @@ fcs_plot(fcs_data)
 
 At the moment scifer only accepts merging and integrating data with two channels (eg. 2 probes, one per channel). Furthermore, scifer does not do batch correction for flow cytometry data, thus different experiments should have their Median Fluorescence Intensity (MFI) normalized before running fcs_processing.
 
-For more information please consult the vignette: [here](https://bioconductor.org/packages/release/bioc/vignettes/scifer/inst/doc/flow_cytometry_data.html)
+For more information please consult the vignette: [scifer walkthrough vignette](https://bioconductor.org/packages/release/bioc/vignettes/scifer/inst/doc/flow_cytometry_data.html)
 
 ## Special cases:
 
