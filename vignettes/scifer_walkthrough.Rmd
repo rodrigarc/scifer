@@ -211,6 +211,15 @@ quality_report(
 )
 ```
 
+## Checking for windows operating system
+```{r windows_condition, warning=FALSE, include=FALSE}
+
+ifelse( basilisk.utils::isWindows() == TRUE, 
+ windows_chunk <- FALSE, windows_chunk <- TRUE)
+
+
+```
+
 ## IgBlast analysis for sequencing results
 
 The `igblast()` function will generate a data frame with the IgBlast results for each sequence.
@@ -228,7 +237,7 @@ Scifer has included the KIMDB database for rhesus macaques, which is used for te
 
 As shown here:
 
-```{r eval=TRUE}
+```{r eval=windows_chunk }
 ighv_res <- igblast(
         database = system.file("/extdata/test_fasta/KIMDB_rm", package = "scifer"),
         fasta = system.file("/extdata/test_fasta/test_igblast.txt", package = "scifer"),
