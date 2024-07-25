@@ -133,7 +133,7 @@ fcs_data <- fcs_processing(
 fcs_plot(fcs_data)
 ```
 
-The `specificity` column uses these thresholds to name your sorted cells. In this example, you would have a `Pre.F` single-positive, `Post.F` single-positive, double-positive cells named as`DP`, and double-negative cells named as `DN`. 
+The `specificity` column uses these thresholds to name your sorted cells. In this example, you would have a `Pre.F` single-positive, `Post.F` single-positive, double-positive cells named as`DP`, and double-negative cells named as `DN`.
 
 ```{r specificity, message=FALSE, warning=FALSE}
 unique(fcs_data$specificity)
