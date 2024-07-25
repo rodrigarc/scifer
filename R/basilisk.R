@@ -1,5 +1,5 @@
-#' @import basilisk.utils
 #' @importFrom basilisk BasiliskEnvironment
+#' @importFrom basilisk.utils isMacOSX isMacOSXArm
 env_unix <- list(
     packages = c(
         "python==3.9.19",
