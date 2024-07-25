@@ -1,7 +1,7 @@
 ---
 title: "Using scifer to filter single-cell sorted B cell receptor (BCR) sanger sequences"
 author:
-- name: Rodrigo Arcoverde Cerveira
+- name: Rodrigo Arcoverde Cerveira, Matthew James Hinchcliff
   affiliation: 
   - Division of Immunology & Allergy, Department of Medicine Solna, Karolinska Institutet and Karolinska University Hospital, Stockholm, Sweden
   - Center for Molecular Medicine, Karolinska Institutet, Stockholm, Sweden
@@ -20,7 +20,8 @@ vignette: >
 knitr::opts_chunk$set(
     collapse = TRUE,
     comment = "#>",
-    warning = FALSE
+    warning = FALSE,
+    crop = NULL
 )
 ```
 
@@ -141,7 +142,7 @@ unique(fcs_data$specificity)
 
 ## Sanger sequence dataset
 
-### Processing a single B cell receptor sanger sequence 
+### Processing a single B cell receptor sanger sequence
 
 Here is just an example of if you would like to process a single sanger sequence
 
@@ -160,10 +161,9 @@ head(summarised[["quality_score"]])
 
 ### Processing a group of B cell receptors sanger sequences
 
-Most of the time, if you have sequenced an entire plate, you want to automate this processing. 
-Here you would process recursively all the `.ab1` files within the chosen folder.
+Most of the time, if you have sequenced an entire plate, you want to automate this processing. Here you would process recursively all the `.ab1` files within the chosen folder.
 
-*Note: To speed up, you can increase the `processors` parameter depending on your local computer's number of processors or set it to `NULL` which will try to detect the max number of cores.
+\*Note: To speed up, you can increase the `processors` parameter depending on your local computer's number of processors or set it to `NULL` which will try to detect the max number of cores.
 
 ```{r bcr_sequences, warning=FALSE}
 sf <- summarise_quality(
@@ -192,12 +192,12 @@ Finally, the function you will use to integrate both datasets and export data fr
 
 This function generated the following files:
 
-- general quality report (.html)
-- individualized report per ID (.html)
-- table containing the good quality sequences filtered in and their QC summary (.csv)
-- fasta file containing all the sequences (.fasta)
-- fasta files per ID (.fasta)
-- Chromatogram of the approximate CDR3 region if secondary peaks are detected (.pdf)
+-   general quality report (.html)
+-   individualized report per ID (.html)
+-   table containing the good quality sequences filtered in and their QC summary (.csv)
+-   fasta file containing all the sequences (.fasta)
+-   fasta files per ID (.fasta)
+-   Chromatogram of the approximate CDR3 region if secondary peaks are detected (.pdf)
 
 ```{r eval=FALSE}
 quality_report(
@@ -213,35 +213,30 @@ quality_report(
 
 ## IgBlast analysis for sequencing results
 
-The `igblast()` function will generate a data frame with the IgBlast results for each sequence. 
+The `igblast()` function will generate a data frame with the IgBlast results for each sequence.
 
-Before running IgBlast, select the database to be downloaded and included in the directory tree (e.g., http://kimdb.gkhlab.se/ ) as shown below:
+Before running IgBlast, select the database to be downloaded (e.g., [ORGDB](https://ogrdb.airr-community.org/), [IMGT](https://www.imgt.org/genedb/) , [KIMDB](http://kimdb.gkhlab.se/) and adjust it accordingly. As shown in the example below:
 
-scifer/
-├── DESCRIPTION
-├── NAMESPACE
-├── R
-├── inst/
-│   ├── extdata/
-│       ├── macaque_kimdb/
-│           ├── Rh/
-│               ├── BCR/
-│                   ├── V.fasta
-│                   ├── D.fasta
-│                   ├── J.fasta
-│               ├── TCR
+KIMDB_rm/ 
+├── V.fasta 
+├── D.fasta 
+├── J.fasta
 
-The database argument is the path to the preferred database for species and receptor type. The database folder should contain separate `.fasta` files corresponding to the genes associated with each receptor type, e.g., `V`-, `D`-, and `J.fasta` files for BCR. The quality report creates a `sequences.fasta` file found in the `output_dir`. The path to this file should be used as the path input for the `fasta` argument in the `igblast()` function.
+The database argument is the path to the preferred database for species and receptor type. The database folder should contain separate `.fasta` files corresponding to the genes associated with each receptor type, e.g., `V`-, `D`-, and `J.fasta` files for BCR/TCR. The quality report creates a `sequences.fasta` file found in the `output_dir`. The path to this file should be used as the path input for the `fasta` argument in the `igblast()` function and the path to the database folder.
+
+Scifer has included the KIMDB database for rhesus macaques, which is used for testing the functions.
+
+As shown here:
 
 ```{r eval=TRUE}
-igb_res <- igblast(
+ighv_res <- igblast(
         database = system.file("/extdata/test_fasta/KIMDB_rm", package = "scifer"),
         fasta = system.file("/extdata/test_fasta/test_igblast.txt", package = "scifer"),
         threads = 1 #For parallel processing. Default = 1
 )
 
+head(ighv_res, 2)
 ```
-
 
 ```{r session_info}
 sessionInfo()
