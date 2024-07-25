@@ -1,3 +1,4 @@
+#' @import basilisk.utils
 #' @importFrom basilisk BasiliskEnvironment
 env_unix <- list(
     packages = c(
