@@ -36,7 +36,10 @@ env_windows <- list(
 
 if (basilisk.utils::isWindows()) {
   env <- env_windows
-} else if (basilisk.utils::isLinux()|basilisk.utils::isMacOSX()|basilisk.utils::isMacOSXArm()) {
+} else if (Sys.info()[["sysname"]] == "Linux"|
+           isLinux() && Sys.info()[["machine"]] == "aarch64"|
+           basilisk.utils::isMacOSX()|
+           basilisk.utils::isMacOSXArm()) {
   env <- env_unix
 } else {
   stop("Unsupported operating system or architecture.\n")
