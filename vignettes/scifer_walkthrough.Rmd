@@ -211,11 +211,11 @@ quality_report(
 )
 ```
 
-## Checking for windows operating system
-```{r windows_condition, warning=FALSE, include=FALSE}
+## Checking for windows & osx-arm64 operating systems
+```{r os_condition, warning=FALSE, include=FALSE}
 
-ifelse(basilisk.utils::isWindows() == TRUE, 
- windows_chunk <- FALSE, windows_chunk <- TRUE)
+ifelse(basilisk.utils::isWindows() == TRUE | basilisk.utils::isMacOSXArm() == TRUE, 
+ os_chunk <- FALSE, os_chunk <- TRUE)
 
 
 ```
@@ -237,7 +237,7 @@ Scifer has included the KIMDB database for rhesus macaques, which is used for te
 
 As shown here:
 
-```{r eval=windows_chunk }
+```{r eval=os_chunk }
 ighv_res <- igblast(
         database = system.file("/extdata/test_fasta/KIMDB_rm", package = "scifer"),
         fasta = system.file("/extdata/test_fasta/test_igblast.txt", package = "scifer"),
