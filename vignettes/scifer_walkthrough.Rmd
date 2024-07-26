@@ -214,7 +214,7 @@ quality_report(
 ## Checking for windows operating system
 ```{r windows_condition, warning=FALSE, include=FALSE}
 
-ifelse( basilisk.utils::isWindows() == TRUE, 
+ifelse(basilisk.utils::isWindows() == TRUE, 
  windows_chunk <- FALSE, windows_chunk <- TRUE)
 
 

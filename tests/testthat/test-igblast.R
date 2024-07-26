@@ -55,6 +55,7 @@ test_that("Threads argument inputs", {
 })
 
 test_that("returns a data.frame object", {
+    skip_if(basilisk.utils::isWindows() == TRUE, message = "This test is not supported on Windows")
     result <- igblast(
                     database = system.file("extdata/test_fasta/KIMDB_rm", package = "scifer"), 
                     system.file("extdata/test_fasta/test_igblast.txt", package = "scifer"), 
