@@ -9,7 +9,7 @@
 #' @importFrom utils read.table
 #' @examples
 #' ## Example with test sequences
-#' \donttest{
+#' \dontrun{
 #' igblast(
 #'     database = system.file("/extdata/test_fasta/KIMDB_rm", package = "scifer"),
 #'     fasta = system.file("/extdata/test_fasta/test_igblast.txt", package = "scifer"),
