@@ -5,7 +5,7 @@
 #' @param threads Variable containing the number of cores when computing in parallel, default threads = 1
 #'
 #' @return Creates a data frame with the Igblast analysis where each row is the tested sequence with columns containing the results for each sequence
-#' @import reticulate here basilisk
+#' @import reticulate here basilisk basilisk.utils
 #' @importFrom utils read.table
 #' @examples
 #' ## Example with test sequences
@@ -26,7 +26,16 @@ igblast <- function(database = "path/to/folder", fasta = "path/to/file", threads
     } else if (!is.numeric(threads) || is.null(threads) || is.na(threads) || length(threads) == 0) {
         stop("The threads argument should be a numeric value.")
     }
-
+    
+    if (basilisk.utils::isMacOSXArm() == TRUE) {
+        conda_create("temp", packages = c("python=3.9"))
+        system2("conda", args = c("congfig", "--env", "--set", "subdir", "osx-64"))
+        use_condaenv("temp")
+    }
+    # conda_create("temp", packages = c("python=3.9"))
+    # system2("conda", args = c("congfig", "--env", "--set", "subdir", "osx-64"))
+    # use_condaenv("temp")
+    
     proc <- basiliskStart(env)
     on.exit(basiliskStop(proc))
     py_script <- system.file("script/igblastwrap.py", package = "scifer")
