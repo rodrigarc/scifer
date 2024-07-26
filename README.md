@@ -1,24 +1,25 @@
 # scifer: Single-cell Immunoglobulin Filtering of Sanger sequences <img src="man/figures/logo.png" align="right" width="180" />
 <!-- badges: start -->
 [![R build
-status](https://github.com/rodrigarc/scifer/workflows/R-CMD-check/badge.svg)](https://github.com/rodrigarc/scifer/actions)
-[![R-CMD-check-bioc](https://github.com/rodrigarc/scifer/workflows/R-CMD-check-bioc/badge.svg)](https://github.com/rodrigarc/scifer/actions)
+status](https://github.com/rodrigarc/scifer/workflows/master_r-cmd-check/badge.svg)](https://github.com/rodrigarc/scifer/actions)
 [![codecov](https://codecov.io/gh/rodrigarc/scifer/branch/r-cmd-check/graph/badge.svg)](https://codecov.io/gh/rodrigarc/scifer)
 <!-- badges: end -->
 
 ### Integrating index single-cell sorted with Sanger sequencing raw files
 
 
-Version: 0.99.4  
+Version: 1.7.3  
 
 Author and Maintainer: Rodrigo Arcoverde Cerveira
 
 Description: Have you ever index sorted cells in a 96 or 384-well plate and then sequenced using Sanger sequencing? If so, you probably had some struggle to either check the electropherograms of each cell sequenced manually, or identify which cell was sorted where after sequencing the plate. `scifer` was developed to solve this issue by performing basic quality control of Sanger sequences and merging flow cytometry data from probed single-cell sorted cells with sequencing data. `scifer` can export summary tables, fasta files, electropherograms for visual inspection, and generate a html report.
-This package was developed focused in B cell receptor sequences from antigen-specific single-cell sorted B cells, however it is highly customizable to other type of single-cell sorted sanger sequences.
+This package was developed focused in B cell receptor sequences from antigen-specific single-cell sorted B cells, however it is highly customizable to other type of single-cell sorted sanger sequences. 
+
+* `scifer` has been primarily tested with R versions >= 4.2.3 and Bioconductor versions >= 3.16. It is recommended to use these or newer versions of R and Bioconductor for best results. 
 
 ## Installation
 
-Before the installation you should first install the following packages from Bioconductor:
+Before the installation, you should first install the following packages from Bioconductor:
 
 ```r
 # just copy and run the following to check for the needed packages and install them if needed
@@ -29,6 +30,17 @@ if (!requireNamespace("BiocManager", quietly = TRUE))
 BiocManager::install(c("DECIPHER","sangerseqR","ape", "BiocStyle"))
 ```
 
+If versions of `DECIPHER`, `sangerseqR`, `ape`, and `BiocStyle` are already installed, you may need to set `force` = `TRUE` to update them.
+
+```r
+# just copy and run the following to install the needed packages
+
+BiocManager::install(c("DECIPHER","sangerseqR","ape", "BiocStyle"), force = TRUE)
+
+```
+
+When installing `scifer` you should choose between installation from GitHub or from Bioconductor. The GitHub version is the most recent one with updated developmental features, changes, and bug fixes. The GitHub version is used for testing new features and bug fixes before they are submitted to Bioconductor. The Bioconductor version is the most stable one and compliant with Bioconductor's submission process. This version is updated every 6 months.
+
 To install scifer directly from GitHub, run this:
 
 ```r
@@ -37,6 +49,18 @@ To install scifer directly from GitHub, run this:
 if (!require("devtools"))
 install.packages("devtools")
 devtools::install_github("rodrigarc/scifer")
+```
+
+OR,
+
+To install scifer directly from Bioconductor, run this:
+
+```r
+# just copy and run the following to install scifer
+
+if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("scifer")
 ```
 
 ## Processing flow cytometry index data
@@ -87,7 +111,7 @@ directory_flowdata <- system.file("extdata/fcs_index_sorting",
 fcs_data <- fcs_processing(folder_path = directory_flowdata,
                            compensation = TRUE, plate_wells = 96,
                            probe1 = "Pre.F", probe2 = "Post.F",
-                           posvalue_probe1 = 600, posvalue_probe2 = 400))
+                           posvalue_probe1 = 600, posvalue_probe2 = 400)
 
 ```
 
@@ -146,7 +170,7 @@ quality_report(folder_sequences = directory_sequences,
 # `trim_start` Starting position where the sequence should start to have a good base call accuracy. Default is 50 for B cell receptors
 # `trim_finish` Last position where the sequence should have a good base call accuracy. Default is 409 for B cell receptors
 # `trimmed_mean_quality` Minimum Phred quality score expected for an average sequence. Default is 30, which means average of 99.9\% base call accuracy
-# `compensation` Logical argument, TRUE or FALSE, to indicate if the index files were compensated or not. If TRUE, it will apply its compensation prior assigning specificities
+# `compensation` Logical argument, TRUE or FALSE, to indicate if the index files were compensated or not. If TRUE, it will apply its compensation prior to assigning specificities
 # `plate_wells` Type of plate used for single-cell sorting. eg. "96" or "384", default is "96"
 # `probe1` Name of the first channel used for the probe or the custom name assigned to the channel in the index file. eg. "FSC.A", "FSC.H", "SSC.A","DsRed.A", "PE.Cy5_5.A", "PE.Cy7.A","BV650.A", "BV711.A","Alexa.Fluor.700.A" "APC.Cy7.A","PerCP.Cy5.5.A","Time"
 # probe2 Name of the second channel used for the probe or the custom name assigned to the channel in the index file. eg. "FSC.A", "FSC.H", "SSC.A","DsRed.A", "PE.Cy5_5.A", "PE.Cy7.A","BV650.A", "BV711.A","Alexa.Fluor.700.A" "APC.Cy7.A","PerCP.Cy5.5.A","Time"
@@ -156,7 +180,92 @@ quality_report(folder_sequences = directory_sequences,
 # `cdr3_end` Expected CDR3 end position, that depends on your primer set. Default is position 150
 
 ```
+## Default parameters:
 
+The default parameters for the quality control of sequences derived from a data set analyzing B cell receptor sequences from rhesus macaques (_Macaca_ _mulatta_) generated by [Ols et al., _Immunity_ 2023](https://doi.org/10.1016/j.immuni.2023.08.011). To generate this data set, primers from [Sundling et al., _Sci._ _Transl._ _Med_ 2013](https://doi.org/10.1126/scitranslmed.3003752) and [_J._ _Immunol._ _Methods_ 2013](https://doi.org/10.1016/j.jim.2012.09.003) were used. Those primers were developed to capture the entire V region from heavy and light chain from macaque B cell receptors, the mean length of those sequences was 460 basepairs (bp). The default parameters were also tested for a human B cell receptor dataset generated using primers from [Doria-Rose et al., _J._ _Virol._ 2016](https://doi.org/10.1128/jvi.01791-15). Additionally, we have tested scifer for gamma delta T cell receptor sequences from human and mice (_Mus_ _musculus_), for those it was required to change the default parameters due to its shorter amplicon length of 250 bp based on the primers used. The most important information is the length of your expected amplicon, with a different amplicon length you should change the default parameters, most importantly the `raw_length` and `trim_finish` parameters since they rely on your amplicon length. The default minimum mean Phred quality score equal to 30 is standard to achieve mean of 99.9% base call accuracy. Below you can find the defaults that are used by scifer and what you should change for other species or amplicons. These defaults can be used in other experiments or can be changed dependent on the users' needs. Below are potential defaults for B cell receptors for macaques and T cell receptors for mice. Please see the vignette for more information on using `scifer`: [scifer walkthrough vignette](https://bioconductor.org/packages/release/bioc/vignettes/scifer/inst/doc/flow_cytometry_data.html)     
+
+Default parameters for B cell receptors in macaques and humans as mentioned above: 
+
+```r
+# `raw_length` = 343 # based on your expected amplicon length
+# `trim_start` = 50 # start of expected good quality base call position used for filtering sequences, based on your primer set
+# `trim_finish` = 409 #  end of expected good quality base call position used for filtering sequences, based on your primer set
+# `trimmed_mean_quality` = 30 # 99.9% base call accuracy
+# `cdr3_start` = 100 # expected start of CDR3 position, based on your primer set
+# `cdr3_end` = 150 # expected end of CDR3 position, based on your primer set
+
+```
+
+Default parameters for gamma delta T cell receptors in mice (_Mus musculus_): 
+
+```r
+# `raw_length` = 200 # based on your expected amplicon length
+# `trim_finish` = 250 # used for filtering sequences, based on your primer set
+
+```
+
+
+Default parameters for when uncertain:
+
+If you are uncertain of your amplicon length, first check the quality metrics of your sequences using `summarise_quality`. Save the results in an object to evaluate the quality metrics columns, especially `raw.length` and `trim.finish` columns, such as the mean, min, and max values. This will help you to identify which parameters you should change.
+
+```r
+quality_control_summary <- summarise_quality(folder_sequences = directory_sequences)
+
+```
+
+If you are still uncertain you can use a broad default parameters that will filter mostly on mean base call accuracy. To do that, change the `raw_length` to 0 and the `trim_finish` to 50. This will null the filter based on length but the base mean accuracy  of 99.9% will be maintained. You can also put `cdr3_start` and `cdr3_end` to 0 if there is no position that you are particularly interested in having with higher accuracy.
+
+```r
+quality_report(folder_sequences = directory_sequences,
+              outputfile = "QC_report.html",
+              output_dir = "~/Desktop/project_folder/results_output",
+              raw_length = 0, trim_finish = 50,
+              cdr3_start = 0, cdr3_end = 0)
+```
+
+Default for flow cytometry data:
+
+Flow cytometry data should be examined to determine the optimal parameters based on your dataset and experiment. It is important to check your flow data to see how the data is being processed, if it is already compensated, and if the cells were probed. These conditions affect which thresholds you should use.
+
+In order to see the available channels and thresholds use the function `fcs_processing()` to create an object `fcs_data`, after which you can see the available channels using: 
+
+```{r channels}
+#   colnames(fcs_data)
+
+```
+
+The `specificity` column is based on your selected channels and their thresholds and uses these thresholds to name your sorted cells. The value used as input to `posvalue_probe1` and `posvalue_probe2` is the Mean Fluorescence Intensity (MFI) for a given channel. Probed samples would have a `Pre.F` single-positive, `Post.F` single-positive, double-positive cells named as`DP`, and double-negative cells named as `DN`. Which can be seen using: 
+
+```{r specificity, message=FALSE, warning=FALSE}
+#   unique(fcs_data$specificity)
+
+```
+
+If cells were not probed for a specific antigen, you can just use the following thresholds and ignore the `specificity` column. This approach will add all of your cells, regardless of the detected fluorescence in a channel.
+
+```r
+# fcs_data <- fcs_processing( 
+#                 posvalue_probe1 = 0, 
+#                 posvalue_probe2 = 0
+#             )
+```
+
+The default for `compensation` is `FALSE` though often the samples were already compensated before sorting. Setting `compensation` to `TRUE` makes it so that compensation matrix within the index files will be already automatically applied.
+
+```{r check_fcs_probe_compensated, message=FALSE, warning=FALSE}
+fcs_data <- fcs_processing(
+  folder_path = system.file("/extdata/fcs_index_sorting",package = "scifer"),
+  compensation = TRUE, plate_wells = 96,
+  probe1 = "Pre.F", probe2 = "Post.F",
+  posvalue_probe1 = 600, posvalue_probe2 = 400)
+
+fcs_plot(fcs_data)
+```
+
+At the moment scifer only accepts merging and integrating data with two channels (eg. 2 probes, one per channel). Furthermore, scifer does not do batch correction for flow cytometry data, thus different experiments should have their Median Fluorescence Intensity (MFI) normalized before running fcs_processing.
+
+For more information please consult the vignette: [scifer walkthrough vignette](https://bioconductor.org/packages/release/bioc/vignettes/scifer/inst/doc/flow_cytometry_data.html)
 
 ## Special cases:
 

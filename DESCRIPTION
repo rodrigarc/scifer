@@ -59,7 +59,8 @@ Imports: dplyr,
     basilisk,
     reticulate,
     here,
-    utils
+    utils,
+    basilisk.utils    
 RoxygenNote: 7.2.3
 VignetteBuilder: knitr
 Suggests: 
