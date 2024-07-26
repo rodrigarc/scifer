@@ -14,7 +14,7 @@ test_that("Database directory inputs", {
     expect_error(
         igblast(database = character(0), fasta = system.file("extdata/test_fasta/test_igblast.txt", package = "scifer"), threads = 1),
         "The database directory does not exist.")
-    #skip_if(basilisk.utils::is_windows(), "This test is not supported on Windows")
+    skip_if(basilisk.utils::isMacOSXArm() == TRUE, message = "This test is not supported on MacOSXArm")
     skip_on_os(os = "windows")
 })
   
@@ -32,6 +32,7 @@ test_that("Fasta file directory inputs", {
         igblast(database = system.file("extdata/test_fasta/KIMDB_rm", package = "scifer"), fasta = NULL, threads = 1),
         "The fasta file directory does not exist.")
     skip_on_os(os = "windows")
+    skip_if(basilisk.utils::isMacOSXArm() == TRUE, message = "This test is not supported on MacOSXArm")
 })
 
 test_that("Threads argument inputs", {    
@@ -52,10 +53,12 @@ test_that("Threads argument inputs", {
             fasta = system.file("extdata/test_fasta/test_igblast.txt", package = "scifer"), 
             threads = character(0)), "The threads argument should be a numeric value.")
     skip_on_os(os = "windows")
+    skip_if(basilisk.utils::isMacOSXArm() == TRUE, message = "This test is not supported on MacOSXArm")
 })
 
 test_that("returns a data.frame object", {
     skip_if(basilisk.utils::isWindows() == TRUE, message = "This test is not supported on Windows")
+    skip_if(basilisk.utils::isMacOSXArm() == TRUE, message = "This test is not supported on MacOSXArm")
     result <- igblast(
                     database = system.file("extdata/test_fasta/KIMDB_rm", package = "scifer"), 
                     system.file("extdata/test_fasta/test_igblast.txt", package = "scifer"), 
