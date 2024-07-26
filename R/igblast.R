@@ -9,11 +9,13 @@
 #' @importFrom utils read.table
 #' @examples
 #' ## Example with test sequences
+#' \donttest{
 #' igblast(
 #'     database = system.file("/extdata/test_fasta/KIMDB_rm", package = "scifer"),
 #'     fasta = system.file("/extdata/test_fasta/test_igblast.txt", package = "scifer"),
 #'     threads = 1
 #' )
+#' }
 #' @export
 igblast <- function(database = "path/to/folder", fasta = "path/to/file", threads = 1) {
     db_dir <- here(database)
