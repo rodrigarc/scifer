@@ -41,7 +41,6 @@ Imports: dplyr,
     rmarkdown,
     data.table,
     Biostrings,
-    parallel,
     stats,
     plyr,
     knitr,
@@ -60,12 +59,15 @@ Imports: dplyr,
     reticulate,
     here,
     utils,
-    basilisk.utils    
-RoxygenNote: 7.2.3
+    basilisk.utils
+RoxygenNote: 7.3.1
 VignetteBuilder: knitr
-Suggests: 
+Suggests:
+    BiocBaseUtils,
     fs,
     BiocStyle,
     testthat (>= 3.0.0)
+Enhances:
+    parallel
 Config/testthat/edition: 3
 StagedInstall: no
