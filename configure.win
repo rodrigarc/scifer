@@ -1,21 +1,4 @@
 #!/bin/sh
 
-# Define the URL and the destination directory
-URL="https://ftp.ncbi.nih.gov/blast/executables/igblast/release/LATEST/ncbi-igblast-1.22.0-win64.exe"
-DEST_DIR="${R_HOME}/library/igblast"
 
-# Create the destination directory if it doesn't exist
-mkdir -p "$DEST_DIR"
-
-# Download the latest igblast executable
-wget -O "$DEST_DIR/ncbi-igblast-1.22.0-win64.exe" "$URL"
-
-# Create aliases for igblastn and makeblastdb
-echo 'alias igblastn="'"$DEST_DIR"'/ncbi-igblast-1.22.0-win64.exe igblastn"' >> ~/.bashrc
-echo 'alias makeblastdb="'"$DEST_DIR"'/ncbi-igblast-1.22.0-win64.exe makeblastdb"' >> ~/.bashrc
-
-# Ensure the aliases are available in the current shell session
-source ~/.bashrc
-
-# Run the R script to configure Basilisk environment
 ${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe -e "basilisk::configureBasiliskEnv()"
