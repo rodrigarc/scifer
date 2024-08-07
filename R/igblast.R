@@ -47,7 +47,11 @@ igblast <- function(database = "path/to/folder", fasta = "path/to/file", threads
             message("Data frame is empty. Sequences not aligned.")
             results_airr <- NULL
         } else {
-            results_airr <- utils::read.table(text = df, header = TRUE, sep = "\t")
+            if(basilisk.utils::isWindows()){
+              results_airr <- utils::read.table(text = df[-1], header = TRUE, sep = "\t")
+            } else {
+              results_airr <- utils::read.table(text = df, header = TRUE, sep = "\t")
+            }
         }
         return(final_output = results_airr)
     }, arg1 = database, arg2 = fasta, arg3 = threads)
