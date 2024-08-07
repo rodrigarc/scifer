@@ -1,6 +1,7 @@
 """
 Run IgBLAST and output the AIRR-formatted result table
 """
+
 # The code in here was copied from IgDiscover 0.15, https://github.com/NBISweden/IgDiscover-legacy
 # and streamlined a bit to work stand-alone. Relevant files:
 # - src/igdiscover/cli/igblastwrap.py
@@ -9,6 +10,11 @@ Run IgBLAST and output the AIRR-formatted result table
 # - src/igdiscover/utils.py
 # - src/igdiscover/dna.py
 
+# Inline dependencies. Makes this script runnable with, e.g., 'pipx run'
+# /// script
+# dependencies = ["dnaio"]
+# ///
+
 import csv
 import errno
 import logging
@@ -16,6 +22,7 @@ import multiprocessing
 import os
 import re
 import shlex
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -164,8 +171,16 @@ def run_igblast(sequences, blastdb_dir, species, sequence_type, penalty=None) ->
         ]
 
     with tempfile.TemporaryDirectory() as tmpdir:
+        tmp_path = Path(tmpdir)
+
+        env = None
+        # Work around internal_data/ not allowed to contain spaces on Windows
+        if sys.platform == "win32" and "IGDATA" not in os.environ:
+            if copy_internal_data(tmp_path):
+                env = {**os.environ, "IGDATA": tmpdir}
+
         # An empty .aux suppresses a warning from IgBLAST. /dev/null does not work.
-        empty_aux_path = Path(tmpdir) / "empty.aux"
+        empty_aux_path = tmp_path / "empty.aux"
         empty_aux_path.write_text("\n")
         arguments = []
         if penalty is not None:
@@ -203,11 +218,35 @@ def run_igblast(sequences, blastdb_dir, species, sequence_type, penalty=None) ->
         command = ["igblastn"] + variable_arguments + arguments + ["-out", path]
         logger.debug("Running %s", escape_shell_command(command))
         output = subprocess.check_output(
-            command, input=fasta_str, universal_newlines=True
+            command, input=fasta_str, universal_newlines=True, env=env
         )
         assert output == ""
         with open(path) as f:
             return f.read()
+
+
+def copy_internal_data(tmp_path) -> bool:
+    """
+    Guess where igblastn’s internal_data/ directory is located and copy it
+    recursively to the target directory.
+
+    igblastn on Windows does not recognize internal_data/ directories whose
+    absolute path contains spaces (even though the standard installation
+    location is a subdirectory of C:\\Program Files\\).
+
+    This works only if the target (tmp_path) does not contain spaces.
+
+    Return True iff the internal_data/ directory was found and copied.
+    """
+    igblastn_path = Path(shutil.which("igblastn"))
+    installation_path = igblastn_path.parent.parent
+    internal_data_path = installation_path / "internal_data"
+    if not internal_data_path.exists():
+        return False
+
+    shutil.copytree(internal_data_path, tmp_path / "internal_data")
+    logger.debug("Copied %s to %s", internal_data_path, tmp_path / "internal_data")
+    return True
 
 
 def chunked(iterable, chunksize: int):
