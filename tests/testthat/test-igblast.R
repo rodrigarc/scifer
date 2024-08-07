@@ -70,15 +70,16 @@ test_that("Threads argument inputs", {
 
 test_that("returns a data.frame object", {
     skip_if(basilisk.utils::isMacOSXArm() == TRUE, message = "This test is not supported on MacOSXArm")
+    if(isWindows()){
+      if(system("makeblastdb") %in% c(127, "Exit Code 127")){
+        skip_on_os(os = "windows")
+      }
+    }
     result <- igblast(
                     database = system.file("extdata/test_fasta/KIMDB_rm", package = "scifer"), 
                     system.file("extdata/test_fasta/test_igblast.txt", package = "scifer"), 
                     threads = 1
                     )
     expect_s3_class(result, "data.frame")
-    if(isWindows()){
-      if(system("makeblastdb") %in% c(127, "Exit Code 127")){
-        skip_on_os(os = "windows")
-      }
-    }
+
 })
