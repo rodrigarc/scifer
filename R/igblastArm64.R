@@ -10,13 +10,13 @@
 #' @examples
 #' ## Example with test sequences
 #' 
-#' igblast(
+#' igblastArm64(
 #'     database = system.file("/extdata/test_fasta/KIMDB_rm", package = "scifer"),
 #'     fasta = system.file("/extdata/test_fasta/test_igblast.txt", package = "scifer"),
 #'     threads = 1
 #' )
 #' @export
-igblast <- function(database = "path/to/folder", fasta = "path/to/file", threads = 1) {
+igblastArm64 <- function(database = "path/to/folder", fasta = "path/to/file", threads = 1) {
     db_dir <- here(database)
     fasta_dir <- here(fasta)
     if (!dir.exists(db_dir) || is.null(db_dir) || is.na(db_dir) || length(db_dir) > 1 || length(db_dir) == 0  || database == "" ) {
@@ -27,10 +27,8 @@ igblast <- function(database = "path/to/folder", fasta = "path/to/file", threads
         stop("The threads argument should be a numeric value.")
     }
   
-    proc <- basiliskStart(env)
-    on.exit(basiliskStop(proc))
-    py_script <- system.file("script/igblastwrap.py", package = "scifer")
-    run_igblastwrap <- basiliskRun(proc, fun = function(arg1, arg2, arg3) {
+      py_script <- system.file("script/igblastwrap.py", package = "scifer")
+      run_igblastwrap <- basiliskRun(proc, fun = function(arg1, arg2, arg3) {
         tryCatch(
             {
                 stderr_file <- tempfile()
@@ -39,25 +37,17 @@ igblast <- function(database = "path/to/folder", fasta = "path/to/file", threads
             },
             error = function(e) NULL
         )
-        if(isWindows()){
-          if(system("makeblastdb") %in% c(127, "Exit Code 127")){
-            stop("IgBLAST is not available on this system. Please install IgBLAST.\nFor more information, refer to the FAQ section in scifer's GitHub README.")
-          }
-        }
-        df <- system2("python",
-                      args = c(py_script, "--threads", threads, database, fasta),
-                      stdout = TRUE)
+
+        df <- system(paste("python", py_script, "--threads", threads, database, fasta, sep = " "),
+                     intern = TRUE
+        )
         if (length(df) == 0 || is.null(df) || all(is.na(df)) || all(df == "")) {
-            message("Data frame is empty. Sequences not aligned.")
-            results_airr <- NULL
+          message("Data frame is empty. Sequences not aligned.")
+          results_airr <- NULL
         } else {
-            if(basilisk.utils::isWindows()){
-              results_airr <- utils::read.table(text = df[-1], header = TRUE, sep = "\t")
-            } else {
-              results_airr <- utils::read.table(text = df, header = TRUE, sep = "\t")
-            }
+          results_airr <- utils::read.table(text = df, header = TRUE, sep = "\t")
         }
         return(final_output = results_airr)
-    }, arg1 = database, arg2 = fasta, arg3 = threads)
+      }, arg1 = database, arg2 = fasta, arg3 = threads)
     run_igblastwrap
 }
