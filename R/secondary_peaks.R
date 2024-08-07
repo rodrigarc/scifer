@@ -30,9 +30,8 @@
 #' )
 #'
 #' ## Summarise using summarise_abi_file()
-#' processed_seq <- secondary_peaks(s4_sangerseq)
+#' processed_seq <- scifer:::secondary_peaks(s4_sangerseq)
 #'
-#' @export
 secondary_peaks <- function(
     s, ratio = 0.33,
     output.folder = NA,
