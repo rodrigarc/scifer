@@ -46,7 +46,7 @@ summarise_abi_file <- function(
     processors = NULL) {
     seq.sanger <- sangerseq(seq.abif)
     ## Get secondary peaks
-    secondary.peaks.data <- secondary_peaks(seq.sanger,
+    secondary.peaks.data <- scifer:::secondary_peaks(seq.sanger,
         secondary.peak.ratio,
         output.folder, prefix,
         processors = processors

@@ -120,7 +120,7 @@ sf_filtered <- sf[["summaries"]] %>%
 
 pathnames <- as.character(sf_filtered$file.path)
 sangerseqlisted <- sapply(pathnames, sangerseqR::readsangerseq)
-sp <- lapply(sangerseqlisted, secondary_peaks, ratio = 0.33)
+sp <- lapply(sangerseqlisted, scifer:::secondary_peaks, ratio = 0.33)
 ```
 
 ```{r CDR3, echo=FALSE, include=FALSE, warning=FALSE}
@@ -307,7 +307,7 @@ chromatogramlisted <- sapply(name$file.path, sangerseqR::readsangerseq)
 
 dir.create(paste0(output_dir, "/chromatograms"), showWarnings=FALSE, recursive=TRUE)
 mapply(
-  FUN=secondary_peaks,
+  FUN=scifer:::secondary_peaks,
   s=chromatogramlisted,
   file.prefix=name$sequence_id,
   MoreArgs=list(output.folder = paste0(output_dir, "/chromatograms"))

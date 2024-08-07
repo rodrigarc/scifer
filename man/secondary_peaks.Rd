@@ -43,6 +43,6 @@ s4_sangerseq <- sangerseqR::readsangerseq(
 )
 
 ## Summarise using summarise_abi_file()
-processed_seq <- secondary_peaks(s4_sangerseq)
+processed_seq <- scifer:::secondary_peaks(s4_sangerseq)
 
 }
