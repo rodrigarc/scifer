@@ -40,6 +40,11 @@ igblast <- function(database = "path/to/folder", fasta = "path/to/file", threads
             },
             error = function(e) NULL
         )
+        if(isWindows()){
+          if(system("makeblastdb") %in% c(127, "Exit Code 127")){
+            stop("IgBLAST is not available on this system. Please install IgBLAST.\nFor more information, refer to the FAQ section in scifer's GitHub README.")
+          }
+        }
         df <- system(paste("python", py_script, "--threads", threads, database, fasta, sep = " "),
             intern = TRUE
         )
