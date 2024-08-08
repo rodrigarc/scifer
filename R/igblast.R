@@ -45,9 +45,9 @@ igblast <- function(database = "path/to/folder", fasta = "path/to/file", threads
             stop("IgBLAST is not available on this system. Please install IgBLAST.\nFor more information, refer to the FAQ section in scifer's GitHub README.")
           }
         }
-        df <- system(paste("python", py_script, "--threads", threads, database, fasta, sep = " "),
-            intern = TRUE
-        )
+        df <- system2("python",
+                      args = c(py_script, "--threads", threads, database, fasta),
+                      stdout = TRUE)
         if (length(df) == 0 || is.null(df) || all(is.na(df)) || all(df == "")) {
             message("Data frame is empty. Sequences not aligned.")
             results_airr <- NULL
