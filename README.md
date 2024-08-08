@@ -41,7 +41,7 @@ BiocManager::install(c("DECIPHER","sangerseqR","ape", "BiocStyle"), force = TRUE
 `scifer` with `ìgblast` functionality is currently available for macOSX-64 and windows platforms. 
 
 Windows
-*** In order to enable `ìgblast` on windows the user must first download and run `ncbi-igblast-1.22.0-win64.exe` from the NCBI igblast website [here](https://ftp.ncbi.nih.gov/blast/executables/igblast/release/LATEST/). ***
+In order to enable `ìgblast` on windows the user must first download and run `ncbi-igblast-1.22.0-win64.exe` from the NCBI igblast website [here](https://ftp.ncbi.nih.gov/blast/executables/igblast/release/LATEST/). Do not change the default installation location. If R-studio is open, please restart R-studio for the changes to take effect. 
 
 MacOSX-ARM64
 `igblast` functionality is not currently available for macOSX-arm64 platforms through `bioconda`. However, `scifer` can still use the function `igblast()` on macOSX-arm64 platforms by using the following steps: 
