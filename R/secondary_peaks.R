@@ -25,14 +25,15 @@
 #' ## Read abif using sangerseqR package
 #' s4_sangerseq <- sangerseqR::readsangerseq(
 #'     system.file("/extdata/sorted_sangerseq/E18_C1/A1_3_IgG_Inner.ab1",
-#'                  package = "scifer")
+#'         package = "scifer"
+#'     )
 #' )
 #'
 #' ## Summarise using summarise_abi_file()
-#' processed_seq <- secondary_peaks(s4_sangerseq)
+#' processed_seq <- scifer:::secondary_peaks(s4_sangerseq)
 #'
-#' @export
-secondary_peaks <- function(s, ratio = 0.33,
+secondary_peaks <- function(
+    s, ratio = 0.33,
     output.folder = NA,
     file.prefix = "seq",
     processors = NULL) {
@@ -50,9 +51,11 @@ secondary_peaks <- function(s, ratio = 0.33,
     primary.basecall <- primary.vector[diffs]
     secondary.basecall <- secondary.vector[diffs]
 
-    r <- data.frame("position" = diffs,
-                    "primary.basecall" = primary.basecall,
-                    "secondary.basecall" = secondary.basecall)
+    r <- data.frame(
+        "position" = diffs,
+        "primary.basecall" = primary.basecall,
+        "secondary.basecall" = secondary.basecall
+    )
 
     if (!is.na(output.folder)) {
         if (dir.exists(output.folder)) {
@@ -64,8 +67,10 @@ secondary_peaks <- function(s, ratio = 0.33,
                 trim3 = nchar(primary) - 150,
             )
         } else {
-            warning(sprintf("Couldn't find directory '%s', no files saved",
-                            output.folder))
+            warning(sprintf(
+                "Couldn't find directory '%s', no files saved",
+                output.folder
+            ))
         }
     }
 
@@ -134,8 +139,10 @@ fix.trims <- function(trims, seq.sanger, seq.abif, processors) {
     ## Align the original and recalled sequences
     recalled <- primarySeq(seq.sanger, string = TRUE)
     seqs <- DNAStringSet(c(original.trimmed, recalled))
-    pa <- AlignSeqs(seqs, iterations = 0, refinements = 0,
-                    verbose = FALSE, processors = processors)
+    pa <- AlignSeqs(seqs,
+        iterations = 0, refinements = 0,
+        verbose = FALSE, processors = processors
+    )
 
     ## Get the sequence out, and find the first and last gaps.
     aligned.trimmed <- as.character(pa[[1]])

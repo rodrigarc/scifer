@@ -38,6 +38,23 @@ If versions of `DECIPHER`, `sangerseqR`, `ape`, and `BiocStyle` are already inst
 BiocManager::install(c("DECIPHER","sangerseqR","ape", "BiocStyle"), force = TRUE)
 
 ```
+`scifer` with `ìgblast` functionality is currently available for macOSX-64 and windows platforms. 
+
+Windows
+In order to enable `ìgblast` on windows the user must first download and run `ncbi-igblast-1.22.0-win64.exe` from the NCBI igblast website [here](https://ftp.ncbi.nih.gov/blast/executables/igblast/release/LATEST/). Do not change the default installation location. If R-studio is open, please restart R-studio for the changes to take effect. 
+
+MacOSX-ARM64
+`igblast` functionality is not currently available for macOSX-arm64 platforms through `bioconda`. However, `scifer` can still use the function `igblast()` on macOSX-arm64 platforms by using the following steps: 
+
+1. Download version R-4.2.3 from CRAN: [here](https://cran.r-project.org/bin/macosx/base/R-4.2.3.pkg). Installing this version of R will allow `scifer` to use the `igblast()` function on macOSX-arm64 platforms once installed and should automatically become the default version of R when opening R-studio.
+
+2. Download and install the following packages before installing `scifer`: 
+```r
+install.packages(c("dplyr", "rmarkdown", "data.table", "plyr", "knitr", "stringr", "ggplot2", "gridExtra", "tibble", "scales", "rlang", "reticulate", "here"))
+
+BiocManager::install(c("basilisk", "basilisk.utils", "flowCore", "BiocStrings"))
+```
+If asked to compile from source, please select `yes`. 
 
 When installing `scifer` you should choose between installation from GitHub or from Bioconductor. The GitHub version is the most recent one with updated developmental features, changes, and bug fixes. The GitHub version is used for testing new features and bug fixes before they are submitted to Bioconductor. The Bioconductor version is the most stable one and compliant with Bioconductor's submission process. This version is updated every 6 months.
 
@@ -316,6 +333,14 @@ Then install devtools, decipher, sangerseq, and ape.
 * I have a Windows computer and I am having problems to build `scifer`. What can I do?
 
 You make sure that you have installed the most recent Rtools, which can be found [here](https://cran.r-project.org/bin/windows/Rtools/). After installing it, restart your R session and then try to build it again. 
+
+* I have a Mac with a M1/M2/M3 processor and I have encountered an error running `igblast()`. What can I do?
+
+An unexpected error may occur the first time running `ìgblast()` which fails to adequately set the environment variable for `python=3.9.19`. Running `igblast()` a second time creates the correct environment variable and the function runs as expected.
+
+* I have a Mac with a M1/M2/M3 processor and am having issues with the following error: `mach-o file, but is an incompatible architecture (have 'arm64', need 'x86_64'))` when installing the package dependencies. What can I do?
+
+This error is due to the fact that the package dependencies are not yet available for the arm64 architecture. To solve this issue, you must insure that the correct version of R is being used. This can be achieved by using RSwitch for updating the `R.framework/Versions/Current` directory following the instructions found here: [here](https://support.posit.co/hc/en-us/articles/200486138-Changing-R-versions-for-the-RStudio-Desktop-IDE). 
 
 
 ## Code of Conduct

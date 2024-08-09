@@ -29,14 +29,16 @@
 #' ## Read abif using sangerseqR package
 #' abi_seq <- sangerseqR::read.abif(
 #'     system.file("/extdata/sorted_sangerseq/E18_C1/A1_3_IgG_Inner.ab1",
-#'     package = "scifer")
+#'         package = "scifer"
+#'     )
 #' )
 #'
 #' ## Summarise using summarise_abi_file()
 #' summarise_abi_file(abi_seq)
 #'
 #' @export
-summarise_abi_file <- function(seq.abif,
+summarise_abi_file <- function(
+    seq.abif,
     trim.cutoff = 0.0001,
     secondary.peak.ratio = 0.33,
     output.folder = NA,
@@ -44,7 +46,7 @@ summarise_abi_file <- function(seq.abif,
     processors = NULL) {
     seq.sanger <- sangerseq(seq.abif)
     ## Get secondary peaks
-    secondary.peaks.data <- secondary_peaks(seq.sanger,
+    secondary.peaks.data <- scifer:::secondary_peaks(seq.sanger,
         secondary.peak.ratio,
         output.folder, prefix,
         processors = processors

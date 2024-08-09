@@ -35,23 +35,24 @@
 #' @import ggplot2 dplyr knitr
 #'
 #' @examples
-#' \donttest{
 #' quality_report(
 #'     folder_sequences = system.file("extdata/sorted_sangerseq",
-#'                                     package = "scifer"),
+#'         package = "scifer"),
 #'     outputfile = "QC-report.html",
-#'     output_dir = "~/test",
+#'      # output to a temporary directory
+#'     output_dir = tempdir(),
 #'     folder_path_fcs = system.file("/extdata/fcs_index_sorting",
-#'                                    package = "scifer"),
+#'         package = "scifer"),
 #'     processors = 1, compensation = TRUE, plate_wells = "96",
 #'     probe1 = "Pre.F", probe2 = "Post.F",
 #'     posvalue_probe1 = 600, posvalue_probe2 = 400,
 #'     cdr3_start = 100,
 #'     cdr3_end = 150
-#' )}
+#' )
 #'
 #' @export
-quality_report <- function(folder_sequences = "path/to/sanger_sequences",
+quality_report <- function(
+    folder_sequences = "path/to/sanger_sequences",
     outputfile = "QC_report.html",
     output_dir = "test/", processors = NULL,
     folder_path_fcs = NULL,
