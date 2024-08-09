@@ -14,7 +14,7 @@ test_that("Database directory inputs", {
     expect_error(
         igblast(database = character(0), fasta = system.file("extdata/test_fasta/test_igblast.txt", package = "scifer"), threads = 1),
         "The database directory does not exist.")
-    skip_if(basilisk.utils::isMacOSXArm() == TRUE, message = "This test is not supported on MacOSXArm")
+    skip_if(basilisk.utils::isMacOSXArm() == TRUE || (Sys.info()[["sysname"]] == "Linux" && Sys.info()[["machine"]] == "aarch64"), message = "This test is not supported on arm archictecture processors.")
     if(isWindows()){
       if(system("makeblastdb") %in% c(127, "Exit Code 127")){
         skip_on_os(os = "windows")
@@ -35,7 +35,7 @@ test_that("Fasta file directory inputs", {
     expect_error(
         igblast(database = system.file("extdata/test_fasta/KIMDB_rm", package = "scifer"), fasta = NULL, threads = 1),
         "The fasta file directory does not exist.")
-    skip_if(basilisk.utils::isMacOSXArm() == TRUE, message = "This test is not supported on MacOSXArm")
+    skip_if(Sys.info()[["sysname"]] == "Linux" && Sys.info()[["machine"]] == "aarch64", message = "This test is not supported on this platform")
     if(isWindows()){
       if(system("makeblastdb") %in% c(127, "Exit Code 127")){
         skip_on_os(os = "windows")
@@ -60,7 +60,7 @@ test_that("Threads argument inputs", {
         igblast(database = system.file("extdata/test_fasta/KIMDB_rm", package = "scifer"), 
             fasta = system.file("extdata/test_fasta/test_igblast.txt", package = "scifer"), 
             threads = character(0)), "The threads argument should be a numeric value.")
-    skip_if(basilisk.utils::isMacOSXArm() == TRUE, message = "This test is not supported on MacOSXArm")
+    skip_if(Sys.info()[["sysname"]] == "Linux" && Sys.info()[["machine"]] == "aarch64", message = "This test is not supported on this platform")
     if(isWindows()){
       if(system("makeblastdb") %in% c(127, "Exit Code 127")){
         skip_on_os(os = "windows")
@@ -69,7 +69,7 @@ test_that("Threads argument inputs", {
 })
 
 test_that("returns a data.frame object", {
-    skip_if(basilisk.utils::isMacOSXArm() == TRUE, message = "This test is not supported on MacOSXArm")
+  skip_if(Sys.info()[["sysname"]] == "Linux" && Sys.info()[["machine"]] == "aarch64", message = "This test is not supported on this platform")
     if(isWindows()){
       if(system("makeblastdb") %in% c(127, "Exit Code 127")){
         skip_on_os(os = "windows")
