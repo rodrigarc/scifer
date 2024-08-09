@@ -38,15 +38,17 @@ If versions of `DECIPHER`, `sangerseqR`, `ape`, and `BiocStyle` are already inst
 BiocManager::install(c("DECIPHER","sangerseqR","ape", "BiocStyle"), force = TRUE)
 
 ```
-`scifer` with `ìgblast` functionality is currently available for macOSX-64 and windows platforms. 
+`scifer` with `ìgblast` functionality is currently available for MacOS-64 and windows platforms. 
 
-Windows
+### Windows
+
 In order to enable `ìgblast` on windows the user must first download and run `ncbi-igblast-1.22.0-win64.exe` from the NCBI igblast website [here](https://ftp.ncbi.nih.gov/blast/executables/igblast/release/LATEST/). Do not change the default installation location. If R-studio is open, please restart R-studio for the changes to take effect. 
 
-MacOSX-ARM64
-`igblast` functionality is not currently available for macOSX-arm64 platforms through `bioconda`. However, `scifer` can still use the function `igblast()` on macOSX-arm64 platforms by using the following steps: 
+### MacOS-arm64 (M1/M2/M3 - Apple silicon processors)
 
-1. Download version R-4.2.3 from CRAN: [here](https://cran.r-project.org/bin/macosx/base/R-4.2.3.pkg). Installing this version of R will allow `scifer` to use the `igblast()` function on macOSX-arm64 platforms once installed and should automatically become the default version of R when opening R-studio.
+`igblast` functionality is not currently available for MacOS-arm64 platforms through `bioconda`. However, `scifer` can still use the function `igblast()` on MacOS-arm64 platforms by using the following steps: 
+
+1. Download version R-4.2.3 from CRAN: [here](https://cran.r-project.org/bin/macosx/base/R-4.2.3.pkg). Installing this version of R will allow `scifer` to use the `igblast()` function on MacOS-arm64 platforms once installed and should automatically become the default version of R when opening R-studio.
 
 2. Download and install the following packages before installing `scifer`: 
 ```r
@@ -55,6 +57,8 @@ install.packages(c("dplyr", "rmarkdown", "data.table", "plyr", "knitr", "stringr
 BiocManager::install(c("basilisk", "basilisk.utils", "flowCore", "BiocStrings"))
 ```
 If asked to compile from source, please select `yes`. 
+
+### Bioconductor or GitHub scifer versions
 
 When installing `scifer` you should choose between installation from GitHub or from Bioconductor. The GitHub version is the most recent one with updated developmental features, changes, and bug fixes. The GitHub version is used for testing new features and bug fixes before they are submitted to Bioconductor. The Bioconductor version is the most stable one and compliant with Bioconductor's submission process. This version is updated every 6 months.
 
@@ -342,6 +346,9 @@ An unexpected error may occur the first time running `ìgblast()` which fails to
 
 This error is due to the fact that the package dependencies are not yet available for the arm64 architecture. To solve this issue, you must insure that the correct version of R is being used. This can be achieved by using RSwitch for updating the `R.framework/Versions/Current` directory following the instructions found here: [here](https://support.posit.co/hc/en-us/articles/200486138-Changing-R-versions-for-the-RStudio-Desktop-IDE). 
 
+* When I run `igblast()` it takes too long. What can I do?
+
+It is normal that the first `igblast()` call is slow. This function is a wrapper that relies on conda environments that are built during the first time you use it. After the environments are created, reusing the function will be faster since the environments are already built.
 
 ## Code of Conduct
 

@@ -8,13 +8,19 @@ Authors@R:
              role = c("aut", "cre", "cph"),
              email = "rodrigo.arcoverdi@gmail.com",
              comment = c(ORCID = "0000-0002-1145-2534")),
+     person(given = "Marcel",
+             family = "Martin",
+             role = c("ctb")),
+     person(given = "Matthew James",
+             family = "Hinchcliff",
+             role = c("ctb")),
      person(given = "Sebastian",
              family = "Ols",
              role = c("aut", "dtc"),
              comment = c(ORCID = "0000-0001-9784-7176")),
      person(given = "Karin",
              family = "Loré",
-             role = c("dtc", "ths"),
+             role = c("dtc", "ths", "fnd"),
              comment = c(ORCID = "0000-0001-7679-9494")))
 URL: https://github.com/rodrigarc/scifer
 BugReports: https://github.com/rodrigarc/scifer/issues
