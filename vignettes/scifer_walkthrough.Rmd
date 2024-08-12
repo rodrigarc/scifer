@@ -211,11 +211,17 @@ quality_report(
 )
 ```
 
-## Checking for windows & osx-arm64 operating systems
 ```{r os_condition, warning=FALSE, include=FALSE}
 
-ifelse(basilisk.utils::isWindows() == TRUE | basilisk.utils::isMacOSXArm() == TRUE, 
- os_chunk <- FALSE, os_chunk <- TRUE)
+if(basilisk.utils::isWindows() == TRUE){
+  os_chunk <- FALSE
+} else if(basilisk.utils::isMacOSXArm() == TRUE){
+  os_chunk <- FALSE
+} else if(Sys.info()[["sysname"]] == "Linux" && Sys.info()[["machine"]] == "aarch64"){
+  os_chunk <- FALSE
+} else {
+  os_chunk <- TRUE
+}
 
 
 ```
