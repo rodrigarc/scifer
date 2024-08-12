@@ -18,6 +18,23 @@ env_unix <- list(
   pip = c("dnaio==1.2.1")
 )
 
+env_unix_arch64 <- list(
+  packages = c(
+    "python==3.9.19",
+    "igblast==1.22.0",
+    "cffi==1.16.0",
+    "python-isal==1.6.1",
+    "pip==24.0",
+    "pycparser==2.22",
+    "xopen==2.0.1",
+    "setuptools==70.1.1",
+    "wheel==0.43.0",
+    "python-zlib-ng==0.4.3",
+    "zstandard==0.22.0"),
+  channels = c("bioconda", "conda-forge"),
+  pip = c("dnaio==1.2.1")
+)
+
 env_osxArm <- list(
   packages = c(
     "python==3.9.19",
@@ -77,8 +94,11 @@ if (basilisk.utils::isWindows()) {
   env <- env_windows
 } else if (basilisk.utils::isMacOSXArm()) {
   # set the OSXArm environment to pass the tests
-  # at the momment igblast is not runnable from ARM architecture
-  env <- env_osxArm 
+  # at the momment igblast is not runnable from arm64 architecture
+  env <- env_osxArm
+} else if(Sys.info()[["sysname"]] == "Linux" && Sys.info()[["machine"]] == "aarch64"){
+  # set env for linux with arm64 architecture
+  env <- env_unix_arch64 
 } else if (Sys.info()[["sysname"]] == "Linux"|
            basilisk.utils::isMacOSX()) {
   # set env for linux and intel MacOS OS
