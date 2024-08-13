@@ -1,5 +1,9 @@
-#' Extract index sorting information from flow cytometry data
+#' Extract index sorting from flow cytometry data
 #'
+#' Extracts the Mean Fluoresnce Intensity (MFI) values from the flow cytometry 
+#' index files (.fcs) and assign specificity to each single-cell sorted well 
+#' according to the fluorescence intensity of the probes.
+#' 
 #' @param folder_path Folder containing all the flow data index filex (.fcs). Files should be named with their sample/plate ID.   eg. "E11_01.fcs"
 #' @param compensation Logical argument, TRUE or FALSE, to indicate if the index files were compensated or not. If TRUE, it will apply its compensation prior assigning specificity
 #' @param plate_wells Type of plate used for single-cell sorting. eg. "96" or "384"

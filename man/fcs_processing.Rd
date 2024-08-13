@@ -2,7 +2,7 @@
 % Please edit documentation in R/fcs_processing.R
 \name{fcs_processing}
 \alias{fcs_processing}
-\title{Extract index sorting information from flow cytometry data}
+\title{Extract index sorting from flow cytometry data}
 \usage{
 fcs_processing(
   folder_path = "test/test_dataset/fcs_files/",
@@ -33,7 +33,9 @@ fcs_processing(
 If saved as an object, it returns a table containing all the processed flow cytometry index files, with their fluorescence intensities for each channel and well position.
 }
 \description{
-Extract index sorting information from flow cytometry data
+Extracts the Mean Fluoresnce Intensity (MFI) values from the flow cytometry 
+index files (.fcs) and assign specificity to each single-cell sorted well 
+according to the fluorescence intensity of the probes.
 }
 \examples{
 index_sort_data <- fcs_processing(

@@ -2,7 +2,7 @@
 % Please edit documentation in R/igblast.R
 \name{igblast}
 \alias{igblast}
-\title{Run IgDiscover for IgBlast using basilisk, which enables the python environment for Igblast}
+\title{Run IgBLAST python wrapper}
 \usage{
 igblast(database = "path/to/folder", fasta = "path/to/file", threads = 1)
 }
@@ -14,10 +14,12 @@ igblast(database = "path/to/folder", fasta = "path/to/file", threads = 1)
 \item{threads}{Variable containing the number of cores when computing in parallel, default threads = 1}
 }
 \value{
-Creates a data frame with the Igblast analysis where each row is the tested sequence with columns containing the results for each sequence
+Creates a data frame with the IgBLAST annotation where each row is the queried sequence with columns containing the IgBLAST results
 }
 \description{
-Run IgDiscover for IgBlast using basilisk, which enables the python environment for Igblast
+A wrapper funtion to run the IgBLAST python script to annotate VDJ sequences.
+It is python based and relies on conda environments that are built when the
+funtion is called.
 }
 \examples{
 ## Example with test sequences

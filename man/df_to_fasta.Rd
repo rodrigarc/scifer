@@ -27,7 +27,7 @@ df_to_fasta(
 Saves a fasta file in the desired location, and also returns the stringset as BStringSet if saved as an object.
 }
 \description{
-Fasta file creation from dataframe columns and/or vectors.
+Creates a fasta file from vectors of names and sequences.
 }
 \examples{
 ## Example with vectors, default for save_fasta ir TRUE

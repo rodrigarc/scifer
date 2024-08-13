@@ -1,5 +1,8 @@
 #' Create a summary of a single ABI sequencing file
 #'
+#' Takes a single ABI sequencing file and returns a summary of the file. 
+#' The summary includes basic quality control metric of the sequence.
+#'
 #' @param seq.abif an abif.seq s4 object from the sangerseqR package
 #' @param trim.cutoff the cutoff at which you consider a base to be bad. This works on a logarithmic scale, such that if you want to consider a score of 10 as bad, you set cutoff to 0.1; for 20 set it at 0.01; for 30 set it at 0.001; for 40 set it at 0.0001; and so on. Contiguous runs of bases below this quality will be removed from the start and end of the sequence. Default is 0.0001.
 #' @param secondary.peak.ratio the ratio of the height of a secondary peak to a primary peak. Secondary peaks higher than this ratio are annotated. Those below the ratio are not.

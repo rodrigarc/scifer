@@ -1,5 +1,9 @@
 #' Run IgBLAST python wrapper
 #'
+#' A wrapper funtion to run the IgBLAST python script to annotate VDJ sequences.
+#' It is python based and relies on conda environments that are built when the
+#' funtion is called.
+#' 
 #' @param database Vector containing the database for VDJ sequences
 #' @param fasta Vector containing the sequences, usually a column from a data.frame. eg. df$sequences
 #' @param threads Variable containing the number of cores when computing in parallel, default threads = 1

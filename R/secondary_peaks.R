@@ -1,7 +1,8 @@
 #' Check for secondary peaks in a sangerseq object
 #'
 #' This function finds and reports secondary peaks in a sangerseq object.
-#' It returns a table of secondary peaks, and optionally saves an annotated chromatogram and a csv file of the peak locations.
+#' It returns a table of secondary peaks, and optionally saves an annotated 
+#' chromatogram and a csv file of the peak locations.
 #'
 #' @param s a sangerseq s4 object from the sangerseqR package
 #' @param ratio Ratio of the height of a secondary peak to a primary peak. Secondary peaks higher than this ratio are annotated. Those below the ratio are not.

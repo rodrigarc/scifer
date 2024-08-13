@@ -1,5 +1,5 @@
 #' Generate general and individualized reports
-#'
+#' 
 #' This function uses the other functions already described to create a HTML report based on sequencing quality. Besides the HTML reports, it also creates fasta files with all the sequences and individualized sequences, in addition to a csv file with the quality scores and sequences considered as good quality.
 #'
 #' @param folder_sequences Full file directory for searching all ab1 files in a recursive search method. It includes all files in subfolders

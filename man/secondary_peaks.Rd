@@ -32,7 +32,8 @@ A list with two elements:
 }
 \description{
 This function finds and reports secondary peaks in a sangerseq object.
-It returns a table of secondary peaks, and optionally saves an annotated chromatogram and a csv file of the peak locations.
+It returns a table of secondary peaks, and optionally saves an annotated 
+chromatogram and a csv file of the peak locations.
 }
 \examples{
 ## Read abif using sangerseqR package

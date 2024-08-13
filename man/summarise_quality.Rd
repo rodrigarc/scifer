@@ -2,7 +2,7 @@
 % Please edit documentation in R/summarise_quality.R
 \name{summarise_quality}
 \alias{summarise_quality}
-\title{Generate a summary table containing quality measurements from sanger sequencing abi files}
+\title{Summary table of quality measurements from Sanger sequencing}
 \usage{
 summarise_quality(
   folder_sequences = "input_folder",
@@ -26,7 +26,9 @@ List containing two items:
 * quality_scores: contains all the Phred quality score for each position.
 }
 \description{
-Generate a summary table containing quality measurements from sanger sequencing abi files
+Generate a summary table containing quality measurements from Sanger 
+sequencing `.abi` files. This function will read all the `.abi` files
+in a folder, and generate a summary table containing basic quality metrics.
 }
 \examples{
 sf <- summarise_quality(

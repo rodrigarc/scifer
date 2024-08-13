@@ -1,4 +1,8 @@
-#' Generate a summary table containing quality measurements from sanger sequencing abi files
+#' Summary table of quality measurements from Sanger sequencing
+#'
+#' Generate a summary table containing quality measurements from Sanger 
+#' sequencing `.abi` files. This function will read all the `.abi` files
+#' in a folder, and generate a summary table containing basic quality metrics.
 #'
 #' @param folder_sequences Folder containing all the sanger sequencing abi/ab1 files on subfolders. Each subfolder should have have a identifiable name, matching name with fcs data. eg. "E18_01", "E23_06". The first characters of the ab1 file name should be the well location. eg. "A1-sequence1.ab1", "F8_sequence-igg.ab1"
 #' @param trim.cutoff Cutoff at which you consider a base to be bad. This works on a logarithmic scale, such that if you want to consider a score of 10 as bad, you set cutoff to 0.1; for 20 set it at 0.01; for 30 set it at 0.001; for 40 set it at 0.0001; and so on. Contiguous runs of bases below this quality will be removed from the start and end of the sequence. Given the high quality reads expected of most modern ABI sequencers, the defualt is 0.0001.

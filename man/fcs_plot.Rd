@@ -13,7 +13,8 @@ fcs_plot(processed_fcs_list = NULL)
 Returns a ggplot object with a traditional flow density plot with the sorted cells and the selected thresholds for the two probes used in fcs_processing().
 }
 \description{
-Plot flow data from index sorted cells
+Plot a traditional flow density plot with the sorted cells and the selected 
+thresholds for the two probes used in `fcs_processing()`.
 }
 \examples{
 index_sort_data <- fcs_processing(

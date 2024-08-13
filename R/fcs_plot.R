@@ -1,5 +1,8 @@
 #' Plot flow data from index sorted cells
-#'
+#' 
+#' Plot a traditional flow density plot with the sorted cells and the selected 
+#' thresholds for the two probes used in `fcs_processing()`.
+#' 
 #' @param processed_fcs_list List generated using `fcs_processing()` containing two data.frames
 #'
 #' @return Returns a ggplot object with a traditional flow density plot with the sorted cells and the selected thresholds for the two probes used in fcs_processing().

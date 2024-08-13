@@ -42,7 +42,8 @@ A numeric vector including:
          }
 }
 \description{
-Create a summary of a single ABI sequencing file
+Takes a single ABI sequencing file and returns a summary of the file. 
+The summary includes basic quality control metric of the sequence.
 }
 \examples{
 ## Read abif using sangerseqR package

@@ -1,5 +1,7 @@
 #' Fasta file creation from dataframe columns and/or vectors.
 #'
+#' Creates a fasta file from vectors of names and sequences.
+#' 
 #' @param sequence_name Vector containing the names for each sequence, usually a column from a data.frame. eg. df$sequence_name
 #' @param sequence_strings Vector containing the DNA or RNA or AA sequences, usually a column from a data.frame. eg. df$sequences
 #' @param file_name Output file name to be saved as a fasta file

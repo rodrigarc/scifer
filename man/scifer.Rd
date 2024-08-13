@@ -2,11 +2,20 @@
 % Please edit documentation in R/scifer.R
 \docType{package}
 \name{scifer}
+\alias{scifer-package}
 \alias{scifer}
 \title{Scifer: Single-Cell Immunoglobulin Filtering of Sanger Sequences}
 \description{
 Integrating index single-cell sorted files with Sanger sequencing per plates,
 combining single-cell sorted data (FACS) and specificity with Sanger sequencing information.
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/rodrigarc/scifer}
+  \item Report bugs at \url{https://github.com/rodrigarc/scifer/issues}
+}
+
 }
 \author{
 Rodrigo Arcoverde Cerveira \email{rodrigo.arcoverdi@gmail.com}
