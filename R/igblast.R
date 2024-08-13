@@ -1,10 +1,10 @@
-#' Run IgDiscover for IgBlast using basilisk, which enables the python environment for Igblast
+#' Run IgBLAST python wrapper
 #'
 #' @param database Vector containing the database for VDJ sequences
 #' @param fasta Vector containing the sequences, usually a column from a data.frame. eg. df$sequences
 #' @param threads Variable containing the number of cores when computing in parallel, default threads = 1
 #'
-#' @return Creates a data frame with the Igblast analysis where each row is the tested sequence with columns containing the results for each sequence
+#' @return Creates a data frame with the IgBLAST annotation where each row is the queried sequence with columns containing the IgBLAST results
 #' @import reticulate here basilisk
 #' @importFrom utils read.table
 #' @examples
