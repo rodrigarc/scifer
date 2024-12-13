@@ -1,0 +1,10 @@
+bibentry(
+  bibtype  = "Article",
+  title    = "Scifer: An R/Bioconductor package for large-scale integration of Sanger sequencing and flow cytometry data of index-sorted single cells",
+  author   = "Arcoverde Cerveira, Rodrigo et al. ",
+  journal  = "ImmunoInformatics",
+  year     = "2024",
+  volume   = "16",
+  number   = "100046",
+  doi      = "10.1016/j.immuno.2024.100046"
+)
