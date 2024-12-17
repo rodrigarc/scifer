@@ -1,3 +1,7 @@
+# scifer 1.8.1
+
+* Update citation, scifer is now published in ImmunoInformatics (DOI: 10.1016/j.immuno.2024.100046). 
+
 # scifer 1.8.0
 
 NEW FEATURES
