@@ -15,8 +15,11 @@ Run IgBLAST and output the AIRR-formatted result table
 # dependencies = ["dnaio"]
 # ///
 
+# Code has been fixed to populate CDR3 and FR4 fields in the output using regex logic that existed but was not used.
+# Relevant code needed to augment IgBLAST output was adapted from:
+# - src/igdiscover/cli/augment.py
+
 import csv
-import errno
 import logging
 import multiprocessing
 import os
@@ -480,7 +483,7 @@ class RegionsRecord:
     def region_sequence(self, region: str) -> str:
         """
         Return the nucleotide sequence of a named region. Allowed names are:
-        CDR1, CDR2, CDR3, FR1, FR2, FR3. Sequences are extracted from the full read
+        CDR1, CDR2, FR1, FR2, FR3. Sequences are extracted from the full read
         using begin and end coordinates from IgBLAST’s "alignment summary" table.
         """
         if region not in self.COLUMNS_MAP:
@@ -541,7 +544,10 @@ def make_vdj_blastdb(blastdb_dir, database_dir):
             prefix="%",
         )
 
-
+################################################################################
+# The code below was not previously used, now it is called to populate CDR3 and FR4
+# fields in the output. See new code below this section.
+################################################################################
 # Regular expressions for CDR3 detection
 #
 # The idea comes from D’Angelo et al.: The antibody mining toolbox.
@@ -725,6 +731,125 @@ def cdr3_end(nt, locus):
 CDR3_SEARCH_START = 30
 
 
+################################################################################
+# This new code uses the regular expressions above to detect CDR3s and FR4.
+# This is then used to populate the CDR3 and FR4 fields in the output.
+################################################################################
+# 
+#
+COLUMN_TYPES = {
+    "v_sequence_start": int,
+    "v_sequence_end": int,
+    "v_germline_start": int,
+    "v_germline_end": int,
+    "j_sequence_start": int,
+    "j_sequence_end": int,
+    "j_germline_start": int,
+    "j_germline_end": int,
+    "cdr3_start" : int,
+    "cdr3_end" : int
+}
+
+ALLOWED_LOCI = {"IGH", "IGK", "IGL", "TRA", "TRB", "TRG", "TRD"}
+
+def set_cdr3_columns(record, database):
+    if (
+        not record["v_call"]
+        or not record["j_call"]
+        or record["locus"] not in ALLOWED_LOCI
+    ):
+        return
+
+    # CDR3 start
+    cdr3_ref_start = database.v_cdr3_start(
+        record["v_call"], record["locus"]
+    )
+    if cdr3_ref_start is None:
+        return
+    cdr3_query_start = query_position(record, "v", reference_position=cdr3_ref_start)
+    if cdr3_query_start is None:
+        # Alignment is not long enough to cover CDR3 start position; try to rescue it
+        # by assuming that the alignment would continue without indels.
+        cdr3_query_start = record["v_sequence_end"] + (
+            cdr3_ref_start - record["v_germline_end"]
+        )
+
+    # CDR3 end
+    cdr3_ref_end = database.j_cdr3_end(record["j_call"], record["locus"])
+    if cdr3_ref_end is None:
+        return
+
+    cdr3_query_end = query_position(record, "j", reference_position=cdr3_ref_end)
+    if cdr3_query_end is None:
+        return
+    cdr3_nt = record["sequence"][cdr3_query_start:cdr3_query_end]
+
+    record["cdr3_start"] = cdr3_query_start + 1
+    record["cdr3_end"] = cdr3_query_end
+    record["cdr3"] = cdr3_nt
+    record["cdr3_aa"] = nt_to_aa(cdr3_nt)
+
+
+def set_fwr4_columns(record, database):
+    j_call = record["j_call"]
+    if not j_call or record["locus"] not in ALLOWED_LOCI:
+        return
+
+    cdr3_ref_end = database.j_cdr3_end(record["j_call"], record["locus"])
+    cdr3_query_end = record["cdr3_end"]
+    if cdr3_ref_end is None or not cdr3_query_end:
+        return
+
+    fwr4_nt = record["sequence"][cdr3_query_end : record["j_sequence_end"]]
+
+    # This overwrites some existing columns
+    record["fwr4_start"] = cdr3_query_end + 1
+    record["fwr4_end"] = record["j_sequence_end"]
+    record["fwr4"] = fwr4_nt
+    record["fwr4_aa"] = nt_to_aa(fwr4_nt)
+
+
+def query_position(record, gene: str, reference_position: int):
+    """
+    Given a position on the reference, return the same position but relative to
+    the full query sequence.
+    """
+    ref_pos = record[gene + "_germline_start"] - 1
+    query_pos = record[gene + "_sequence_start"] - 1
+
+    # Iterate over alignment columns
+    if ref_pos == reference_position:
+        return query_pos
+
+    sequence_alignment = record[gene + "_sequence_alignment"]
+    germline_alignment = record[gene + "_germline_alignment"]
+
+    for ref_c, query_c in zip(germline_alignment, sequence_alignment):
+        if ref_c != "-":
+            ref_pos += 1
+        if query_c != "-":
+            query_pos += 1
+        if ref_pos == reference_position:
+            return query_pos
+    return None
+
+def parse_record(record):
+    for col, typ in COLUMN_TYPES.items():
+        record[col] = typ(record[col]) if record[col] else None
+    # Then remove leading %
+    for col in "v_call", "d_call", "j_call":
+        record[col] = record[col].lstrip("%")
+    return record
+
+def dict_to_tsv(row_dict, fieldnames):
+    """
+    Turn a row dictionary into a tab-separated string in the same column order as 'fieldnames'.
+    If a column is missing, use empty string.
+    """
+    return "\t".join(str(row_dict.get(f, "") or "") for f in fieldnames)
+
+################################################################################
+
 def main():
     logging.basicConfig(level=logging.INFO, format="%(message)s")
     parser = ArgumentParser(description=__doc__)
@@ -746,7 +871,7 @@ def main():
     )
     arg(
         "--species",
-        default=None,
+        default="human",
         help="Tell IgBLAST which species to use. Note that this setting does "
         "not seem to have any effect since we provide our own database to "
         "IgBLAST. Default: Use IgBLAST’s default",
@@ -759,8 +884,8 @@ def main():
     )
     arg("--limit", type=int, metavar="N", help="Limit processing to first N records")
 
-    arg("database", help="Database directory with V.fasta, D.fasta, J.fasta.")
-    arg("fasta", help="File with original reads")
+    arg("--database", help="Database directory with V.fasta, D.fasta, J.fasta.")
+    arg("--fasta", help="File with original reads")
 
     args = parser.parse_args()
     run_igblastwrap(**vars(args))
@@ -779,12 +904,25 @@ def run_igblastwrap(
         threads = available_cpu_count()
     start_time = time.time()
     last_status_update = 0
+
+    # Main function edited to perform inline augmentation of IgBLAST output
     with ExitStack() as stack:
         sequences = stack.enter_context(dnaio.open(fasta))
         sequences = islice(sequences, 0, limit)
 
-        n = 0  # number of records processed so far
-        for record in igblast_parallel_chunked(
+        # 1) Create the Database object here, so we can pass it to set_cdr3_columns:
+        db = Database(database, sequence_type)
+
+        csv.register_dialect(
+                "airr",
+                delimiter="\t",
+                lineterminator="\n",
+                strict=True,
+        )
+        n = 0  # number of data lines printed so far
+        chunk_count = 0
+        # 2) The IgBLAST results come in "chunks", each chunk is a chunk of text from IgBLAST
+        for chunk_output in igblast_parallel_chunked(
             database,
             sequences,
             sequence_type=sequence_type,
@@ -792,17 +930,45 @@ def run_igblastwrap(
             threads=threads,
             penalty=penalty,
         ):
-            lines = record.splitlines()
-            try:
-                if n == 0:
-                    print(*lines, sep="\n")
-                else:
-                    print(*lines[1:], sep="\n")
-            except IOError as e:
-                if e.errno == errno.EPIPE:
-                    sys.exit(1)
-                raise
-            n += len(lines) - 1
+            chunk_count += 1
+
+            # chunk_output is the raw multi-line AIRR table from IgBLAST for this chunk
+            lines = chunk_output.splitlines()
+            if not lines:
+                continue
+
+            # The first line in each chunk is typically the header if it's
+            # the standard AIRR format. But we only want to print the header once.
+            if chunk_count == 1:
+                # the very first chunk: print the header line
+                header_line = lines[0]
+                print(header_line)
+                data_lines = lines
+            else:
+                # subsequent chunks also have a header as lines[0], skip it
+                data_lines = lines[1:]
+
+            # Now parse the data lines into a CSV DictReader for augmentation
+            if data_lines:
+                text_data = "\n".join(data_lines)
+                f = StringIO(text_data)
+                reader = csv.DictReader(f, dialect="airr")
+                fieldnames = reader.fieldnames
+
+                # For each row in this chunk:
+                for row_dict in reader:
+                    # parse ints/floats if needed
+                    row_dict = parse_record(row_dict)
+
+                    # Now augment: set CDR3 and FR4
+                    set_cdr3_columns(row_dict, db)
+                    set_fwr4_columns(row_dict, db)
+
+                    # Re-print the augmented row as a tab-separated line
+                    print(dict_to_tsv(row_dict, fieldnames))
+                    n += 1
+
+            # Just for logging progress
             if n % 1000 == 0:
                 elapsed = time.time() - start_time
                 if elapsed >= last_status_update + 60:
@@ -812,6 +978,8 @@ def run_igblastwrap(
                         )
                     )
                     last_status_update = elapsed
+
+    # Done reading all chunks
     elapsed = time.time() - start_time
     logger.info(
         "Processed {:10,d} sequences at {:.1f} ms/sequence".format(n, elapsed / n * 1e3)
