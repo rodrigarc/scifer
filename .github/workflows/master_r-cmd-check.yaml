@@ -5,6 +5,7 @@ on:
     branches: [main, master, r-cmd-check_master]
   pull_request:
     branches: [main, master, r-cmd-check_master]
+  workflow_dispatch:  # 👈 allows manual triggering
 
 name: master_r-cmd-check
 
