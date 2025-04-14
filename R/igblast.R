@@ -50,7 +50,7 @@ igblast <- function(database = "path/to/folder", fasta = "path/to/file", threads
           }
         }
         df <- system2("python",
-                      args = c(py_script, "--threads", threads, database, fasta),
+                      args = c(py_script, "--threads", threads, "--database", database, "--fasta", fasta),
                       stdout = TRUE)
         if (length(df) == 0 || is.null(df) || all(is.na(df)) || all(df == "")) {
             message("Data frame is empty. Sequences not aligned.")
