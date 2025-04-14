@@ -1,3 +1,8 @@
+# scifer 1.9.1
+
+* fix igblast cdr3 bug with the contribution of Sebastian Ols (@sebbeols)
+	- this affects igblast.R function, but mainly the igblast wrapper igblastwrap.py
+
 # scifer 1.8.1
 
 * Update citation, scifer is now published in ImmunoInformatics (DOI: 10.1016/j.immuno.2024.100046). 
