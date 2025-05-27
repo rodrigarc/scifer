@@ -1,5 +1,4 @@
-#' @importFrom basilisk BasiliskEnvironment
-#' @importFrom basilisk.utils isMacOSX isMacOSXArm isWindows
+#' @importFrom basilisk BasiliskEnvironment isMacOSX isMacOSXArm isWindows
 #' @importFrom here here
 env_unix <- list(
   packages = c(
@@ -69,7 +68,7 @@ env_windows <- list(
 
 # Switch environment
 
-if (basilisk.utils::isWindows()) {
+if (basilisk::isWindows()) {
   # Not implemented yet, let the user download igblast rather than downloding it
   # Define the URL and destination path for Windows
   #url_igblast <- "https://ftp.ncbi.nih.gov/blast/executables/igblast/release/LATEST/ncbi-igblast-1.22.0-x64-win64.tar.gz"
@@ -92,7 +91,7 @@ if (basilisk.utils::isWindows()) {
   #}
   # set the windows environment
   env <- env_windows
-} else if (basilisk.utils::isMacOSXArm()) {
+} else if (basilisk::isMacOSXArm()) {
   # set the OSXArm environment to pass the tests
   # at the momment igblast is not runnable from arm64 architecture
   env <- env_osxArm
@@ -100,7 +99,7 @@ if (basilisk.utils::isWindows()) {
   # set env for linux with arm64 architecture
   env <- env_unix_arch64 
 } else if (Sys.info()[["sysname"]] == "Linux"|
-           basilisk.utils::isMacOSX()) {
+           basilisk::isMacOSX()) {
   # set env for linux and intel MacOS OS
   env <- env_unix
 } else {
