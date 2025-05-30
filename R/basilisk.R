@@ -1,4 +1,4 @@
-#' @importFrom basilisk BasiliskEnvironment isMacOSX isMacOSXArm isWindows
+#' @import basilisk
 #' @importFrom here here
 env_unix <- list(
   packages = c(
@@ -91,15 +91,14 @@ if (basilisk::isWindows()) {
   #}
   # set the windows environment
   env <- env_windows
-} else if (basilisk::isMacOSXArm()) {
+} else if (isMacOSXArm()) {
   # set the OSXArm environment to pass the tests
   # at the momment igblast is not runnable from arm64 architecture
   env <- env_osxArm
-} else if(Sys.info()[["sysname"]] == "Linux" && Sys.info()[["machine"]] == "aarch64"){
+} else if(isLinuxAarch64()){
   # set env for linux with arm64 architecture
   env <- env_unix_arch64 
-} else if (Sys.info()[["sysname"]] == "Linux"|
-           basilisk::isMacOSX()) {
+} else if (isLinux() | isMacOSX()) {
   # set env for linux and intel MacOS OS
   env <- env_unix
 } else {
