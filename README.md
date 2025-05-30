@@ -54,7 +54,7 @@ In order to enable `ìgblast` on windows the user must first download and run `n
 ```r
 install.packages(c("dplyr", "rmarkdown", "data.table", "plyr", "knitr", "stringr", "ggplot2", "gridExtra", "tibble", "scales", "rlang", "reticulate", "here"))
 
-BiocManager::install(c("basilisk", "basilisk.utils", "flowCore", "BiocStrings"))
+BiocManager::install(c("basilisk", "flowCore", "BiocStrings"))
 ```
 If asked to compile from source, please select `yes`. 
 
