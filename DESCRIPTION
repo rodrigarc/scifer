@@ -64,6 +64,7 @@ Imports: dplyr,
     basilisk,
     reticulate,
     here,
+    pwalign,
     utils
 RoxygenNote: 7.3.2
 VignetteBuilder: knitr
