@@ -53,6 +53,7 @@ igblast <- function(database, fasta, threads = 1) {
   
   # Create environment if needed
   env_name <- "igblast_wrap_basilisk"
+  basilisk.utils::find()
   env_path <- basilisk.utils::createEnvironment(
     pkg = "scifer",
     name = env_name,
