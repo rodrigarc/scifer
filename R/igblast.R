@@ -53,7 +53,11 @@ igblast <- function(database, fasta, threads = 1) {
   
   # Create environment if needed
   env_name <- "igblast_wrap_basilisk"
-  basilisk.utils::find()
+  conda_path <- basilisk.utils::find()
+  if (is.null(conda_path) || !file.exists(conda_path)) {
+    stop("Could not find conda executable via basilisk.utils::find(). 
+         Please install basilisk miniconda first.")
+  }
   env_path <- basilisk.utils::createEnvironment(
     pkg = "scifer",
     name = env_name,
@@ -71,10 +75,12 @@ igblast <- function(database, fasta, threads = 1) {
            "--database", db,
            "--fasta", fa)
   
+  message("Running command: ", paste(conda_path, paste(cmd, collapse = " ")))
+  
   res <- tryCatch(
-    system2("conda", cmd, stdout = TRUE, stderr = TRUE),
+    system2(conda_path, cmd, stdout = TRUE, stderr = TRUE),
     error = function(e) {
-      message("Failed to run igblast: ", e$message)
+      message("Failed to run igblast via conda: ", e$message)
       return(NULL)
     }
   )
