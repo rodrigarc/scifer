@@ -9,7 +9,7 @@
 #' @param threads Variable containing the number of cores when computing in parallel, default threads = 1
 #'
 #' @return Creates a data frame with the IgBLAST annotation where each row is the queried sequence with columns containing the IgBLAST results
-#' @import reticulate here basilisk
+#' @import reticulate here basilisk basilisk.utils
 #' @importFrom utils read.table
 #' @examples
 #' ## Example with test sequences
@@ -21,48 +21,84 @@
 #' )
 #' }
 #' @export
-igblast <- function(database = "path/to/folder", fasta = "path/to/file", threads = 1) {
-    db_dir <- here(database)
-    fasta_dir <- here(fasta)
-    if (!dir.exists(db_dir) || is.null(db_dir) || is.na(db_dir) || length(db_dir) > 1 || length(db_dir) == 0  || database == "" ) {
-        stop("The database directory does not exist.")
-    } else if (!file.exists(fasta_dir) || is.null(fasta_dir) || is.na(fasta_dir) || length(fasta_dir) > 1 || length(fasta_dir) == 0 || fasta == "" ) {
-        stop("The fasta file directory does not exist.")
-    } else if (!is.numeric(threads) || is.null(threads) || is.na(threads) || length(threads) == 0) {
-        stop("The threads argument should be a numeric value.")
+igblast <- function(database, fasta, threads = 1) {
+  # Input validation BEFORE path resolution
+  if (is.null(database) || length(database) == 0 || is.na(database) || database == "")
+    stop("The database directory does not exist.")
+  if (is.null(fasta) || length(fasta) == 0 || is.na(fasta) || fasta == "")
+    stop("The fasta file directory does not exist.")
+  if (!is.numeric(threads) || length(threads) != 1)
+    stop("The threads argument should be a numeric value.")
+  
+  db <- here::here(database)
+  fa <- here::here(fasta)
+  
+  if (!dir.exists(db)) stop("The database directory does not exist.")
+  if (!file.exists(fa)) stop("The fasta file directory does not exist.")
+  # Environment specification
+  env_spec <- list(
+    packages = c(
+      "python==3.9.19", "igblast==1.22.0", "cffi==1.16.0", "python-isal==1.6.1",
+      "pip==24.0", "pycparser==2.22", "setuptools==70.1.1", "wheel==0.43.0",
+      "xopen==2.0.1", "python-zlib-ng==0.4.3", "zstandard==0.22.0", "dnaio==1.2.1"
+    ),
+    channels = c("bioconda", "conda-forge")
+  )
+  
+  # Check OS support
+  if (!(isLinux() || (isMacOSX() && !isMacOSXArm()))) {
+    message("igblast environment setup not supported on this OS/architecture. Skipping.")
+    return(invisible(NULL))
+  }
+  
+  # Create environment if needed
+  env_name <- "igblast_wrap_basilisk"
+  conda_path <- basilisk.utils::find()
+  if (is.null(conda_path) || !file.exists(conda_path)) {
+    stop("Could not find conda executable via basilisk.utils::find(). 
+         Please install basilisk miniconda first.")
+  }
+  env_path <- basilisk.utils::createEnvironment(
+    pkg = "scifer",
+    name = env_name,
+    version = "1.0.0",
+    packages = env_spec$packages,
+    channels = env_spec$channels
+  )
+  
+  # Path to python script
+  py_script <- system.file("script/igblastwrap.py", package = "scifer")
+  
+  # Run python script inside the created conda env using 'conda run'
+  cmd <- c("run", "--prefix", env_path, "python", py_script,
+           "--threads", as.character(threads),
+           "--database", db,
+           "--fasta", fa)
+  
+  message("Running command: ", paste(conda_path, paste(cmd, collapse = " ")))
+  
+  res <- tryCatch(
+    system2(conda_path, cmd, stdout = TRUE, stderr = TRUE),
+    error = function(e) {
+      message("Failed to run igblast via conda: ", e$message)
+      return(NULL)
     }
-
-    proc <- basiliskStart(env)
-    on.exit(basiliskStop(proc))
-    py_script <- system.file("script/igblastwrap.py", package = "scifer")
-    run_igblastwrap <- basiliskRun(proc, fun = function(arg1, arg2, arg3) {
-        tryCatch(
-            {
-                stderr_file <- tempfile()
-                sink(stderr_file, type = "message")
-                try(source_python(py_script), silent = TRUE)
-            },
-            error = function(e) NULL
-        )
-        if(isWindows()){
-          if(system("makeblastdb") %in% c(127, "Exit Code 127")){
-            stop("IgBLAST is not available on this system. Please install IgBLAST.\nFor more information, refer to the FAQ section in scifer's GitHub README.")
-          }
-        }
-        df <- system2("python",
-                      args = c(py_script, "--threads", threads, database, fasta),
-                      stdout = TRUE)
-        if (length(df) == 0 || is.null(df) || all(is.na(df)) || all(df == "")) {
-            message("Data frame is empty. Sequences not aligned.")
-            results_airr <- NULL
-        } else {
-            if(basilisk.utils::isWindows()){
-              results_airr <- utils::read.table(text = df[-1], header = TRUE, sep = "\t")
-            } else {
-              results_airr <- utils::read.table(text = df, header = TRUE, sep = "\t")
-            }
-        }
-        return(final_output = results_airr)
-    }, arg1 = database, arg2 = fasta, arg3 = threads)
-    run_igblastwrap
+  )
+  
+  if (is.null(res) || length(res) == 0 || all(res == "")) {
+    message("No output returned from igblast.")
+    return(NULL)
+  }
+  
+  # Parse output to data.frame
+  df <- tryCatch({
+    header_line <- grep("^sequence_id", res)
+    txt <- paste(res[header_line:length(res)][res[header_line:length(res)] != ""], collapse = "\n")
+    read.table(text = txt, header = TRUE, sep = "\t", stringsAsFactors = FALSE)
+  }, error = function(e) {
+    message("Failed to parse igblast output: ", e$message)
+    NULL
+  })
+  
+  return(df)
 }

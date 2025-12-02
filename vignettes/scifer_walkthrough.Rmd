@@ -213,9 +213,9 @@ quality_report(
 
 ```{r os_condition, warning=FALSE, include=FALSE}
 
-if(basilisk.utils::isWindows() == TRUE){
+if(basilisk::isWindows() == TRUE){
   os_chunk <- FALSE
-} else if(basilisk.utils::isMacOSXArm() == TRUE){
+} else if(basilisk::isMacOSXArm() == TRUE){
   os_chunk <- FALSE
 } else if(Sys.info()[["sysname"]] == "Linux" && Sys.info()[["machine"]] == "aarch64"){
   os_chunk <- FALSE

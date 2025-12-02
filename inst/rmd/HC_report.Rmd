@@ -93,8 +93,9 @@ sf$summaries <- sf$summaries %>%
     plate = folder.name,
     well = gsub("\\-.*|\\_.*", "", file.name),
     well_number = gsub("[a-zA-Z]", "", well),
+    well_number = as.numeric(well_number), # converts well_number to numeric so leading zero can be added later
     well_letter = gsub("[[:digit:]]", "", well),
-    well = paste0(well_letter, sprintf("%02s", well_number)),
+    well = paste0(well_letter, sprintf("%02d", well_number)), # now correctly adds leading zero to well_number instead of a leading space
     ID = gsub("\\-.*|\\_.*", "", folder.name),
     sequence_id = sub("_R", "", paste(plate, well, sep = "_"))
   ) %>%

@@ -4,7 +4,7 @@
 \alias{igblast}
 \title{Run IgBLAST python wrapper}
 \usage{
-igblast(database = "path/to/folder", fasta = "path/to/file", threads = 1)
+igblast(database, fasta, threads = 1)
 }
 \arguments{
 \item{database}{Vector containing the database for VDJ sequences}

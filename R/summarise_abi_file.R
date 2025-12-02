@@ -79,7 +79,11 @@ summarise_abi_file <- function(
     }
 
     ## Get trimmed and untrimmed version of raw data
-    seq.trimmed <- seq.sanger@primarySeq[trim.start:trim.finish]
+    if (is.finite(trim.start) && is.finite(trim.finish) && trim.start < trim.finish) {
+      seq.trimmed <- seq.sanger@primarySeq[trim.start:trim.finish]
+    } else {
+      seq.trimmed <- Biostrings::DNAString("") # fallback empty sequence
+    }
     secondary.peaks.trimmed <- secondary.peaks %>%
         filter(.data$position >= trim.start, .data$position <= trim.finish)
 

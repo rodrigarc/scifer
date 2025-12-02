@@ -21,6 +21,7 @@
 #' @importFrom DECIPHER AlignSeqs
 #' @importFrom stringr str_locate_all
 #' @importFrom methods is
+#' @importFrom pwalign compareStrings
 #'
 #' @examples
 #' ## Read abif using sangerseqR package

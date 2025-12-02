@@ -1,3 +1,8 @@
+# scifer 1.9.1
+
+* fix igblast cdr3 bug with the contribution of Sebastian Ols (@sebbeols)
+	- this affects igblast.R function, but mainly the igblast wrapper igblastwrap.py
+
 # scifer 1.8.1
 
 * Update citation, scifer is now published in ImmunoInformatics (DOI: 10.1016/j.immuno.2024.100046). 
@@ -5,9 +10,9 @@
 # scifer 1.8.0
 
 NEW FEATURES
-# New igblast wrapper function to run igblast on fasta sequences
-# igblast function returns the output from a local igblast run with any custom database
-# New function requires additional steps for ARM processors, please read the README
+* New igblast wrapper function to run igblast on fasta sequences
+* igblast function returns the output from a local igblast run with any custom database
+* New function requires additional steps for ARM processors, please read the README
 
 # scifer 1.7.1 (2024-04-24)
 

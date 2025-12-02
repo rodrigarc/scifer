@@ -1,7 +1,7 @@
 Package: scifer
 Type: Package
 Title: Scifer: Single-Cell Immunoglobulin Filtering of Sanger Sequences
-Version: 1.8.1
+Version: 1.11.5
 Authors@R: 
     c(person(given = "Rodrigo",
              family = "Arcoverde Cerveira",
@@ -62,11 +62,12 @@ Imports: dplyr,
     flowCore,
     methods,
     basilisk,
+    basilisk.utils,
     reticulate,
     here,
-    utils,
-    basilisk.utils
-RoxygenNote: 7.3.1
+    pwalign,
+    utils
+RoxygenNote: 7.3.2
 VignetteBuilder: knitr
 Suggests:
     BiocBaseUtils,
