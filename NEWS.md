@@ -1,7 +1,3 @@
-# scifer 1.13.1
-* fix minor bug that crashed `quality_report` when some sequences had problematic quality and had NA or Inf values
-  - this affects `summarise_quality` and `summarise_abi_file`
-
 # scifer 1.9.1
 
 * fix igblast cdr3 bug with the contribution of Sebastian Ols (@sebbeols)
