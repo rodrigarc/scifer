@@ -1,7 +1,7 @@
 Package: scifer
 Type: Package
 Title: Scifer: Single-Cell Immunoglobulin Filtering of Sanger Sequences
-Version: 1.13.0
+Version: 1.13.1
 Authors@R: 
     c(person(given = "Rodrigo",
              family = "Arcoverde Cerveira",
