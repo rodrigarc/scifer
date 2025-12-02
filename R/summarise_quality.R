@@ -59,17 +59,28 @@ summarise_quality <-
             )
             message("Calculating read summaries...")
             ## Create a data.frame of summaries of all the files
-            summaries.dat <- mclapply(abi.seqs,
-                summarise_abi_file,
-                trim.cutoff = trim.cutoff,
-                secondary.peak.ratio = secondary.peak.ratio,
-                mc.cores = processors
-            )
+            
+            summaries.dat <- mclapply(abi.seqs, function(seq) {
+              summarise_abi_file(seq, trim.cutoff = trim.cutoff, 
+                                 secondary.peak.ratio = secondary.peak.ratio)
+            }, mc.cores = processors, mc.preschedule = FALSE)
+            
             message("Cleaning up")
-            summaries <- mclapply(summaries.dat,
-                function(x) x[["summary"]],
-                mc.cores = processors
-            )
+            
+            summaries <- mclapply(summaries.dat, function(x) {
+              if (!is.null(x) && "summary" %in% names(x)) {
+                return(x[["summary"]])
+              } else {
+                # Return a placeholder row with NAs for all expected columns
+                return(data.frame(
+                  raw.length = NA, trimmed.length = NA, trim.start = NA, trim.finish = NA,
+                  raw.secondary.peaks = NA, trimmed.secondary.peaks = NA,
+                  raw.mean.quality = NA, trimmed.mean.quality = NA,
+                  raw.min.quality = NA, trimmed.min.quality = NA
+                ))
+              }
+            }, mc.cores = processors, mc.preschedule = FALSE)
+            
             summaries <- do.call(rbind, summaries)
 
             folder.names <- basename(dirname(abi.fnames))
